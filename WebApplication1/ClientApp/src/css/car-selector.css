@@ -1,0 +1,17 @@
+﻿.car-selectors .car-cards {
+    width: 19rem;
+    height: 10rem;
+    text-align-last: center;
+    margin: 2% 4%;
+    padding: 7% 4%;
+    background-color: #ffac19;
+    color:white;
+}
+
+.car-selectors .car-cards .add-new-car{
+    font-size:5rem;
+}
+
+.car-selectors .user-cars{
+    display: contents;
+}

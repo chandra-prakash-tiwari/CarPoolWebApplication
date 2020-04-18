@@ -1,0 +1,39 @@
+﻿.home {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100%;
+    background-image: url(../Images/img3.png);
+}
+
+.home .welcome {
+    padding-left:27%;
+}
+
+.home .cards {
+    padding:2% 26%;
+}
+
+    .home .cards .ride {
+        background-color: #9319ff;
+        width: 20rem;
+        height: 12.5rem;
+        color: white;
+        margin-right: 5%;
+    }
+
+.home .cards .booking {
+    background-color:#ffac19;
+    width: 20rem;
+    height: 12.5rem;
+    color: white;
+}
+
+.home .cards .cards-element {
+    position: absolute;
+    top: 50%;
+    left:25%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}

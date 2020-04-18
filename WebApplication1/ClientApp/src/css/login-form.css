@@ -1,0 +1,55 @@
+﻿.login {
+    margin: auto;
+    height: 100%;
+    background-color: #9319ff;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-image: url(../Images/imgg2.png);
+}
+
+.login .header {
+    color: white;
+    text-align-last: center;
+}
+
+    .login .header .head {
+        font-size: 2.5rem;
+        padding-top:18%;
+    }
+
+.login .form{
+    width: 80%;
+    margin:20% 12% 2%;
+    overflow:hidden;
+}
+
+.login .form input{
+    background-color:white;
+    border-radius:1rem;
+}
+
+.login .form .input {
+    margin:5px;
+    width:90%;
+}
+
+.login .form .submit{
+    display:flex;
+}
+
+.login .form .submit button {
+    border-radius: 2rem;
+    margin: auto;
+    position: relative;
+    background-color: #ffac19;
+}
+
+.login .a{
+    display:flex;
+}
+
+.login a {
+    color: white;
+    font-size: larger;
+    margin: auto;
+}

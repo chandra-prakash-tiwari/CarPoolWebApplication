@@ -1,0 +1,29 @@
+﻿button{
+    margin:1rem 4rem;
+}
+
+.rides{
+    width:24rem;
+    height:15rem;
+    padding:1rem;
+}
+
+.ride-line{
+    display:flex;
+}
+
+    .ride-line .left{
+        width:50%;
+        text-align:start;
+    }
+
+    .ride-line .right {
+        width: 50%;
+        text-align:start;
+    }
+
+.label {
+    color: #a3a1a3;
+    font-size:11px;
+    font-weight:bolder;
+}

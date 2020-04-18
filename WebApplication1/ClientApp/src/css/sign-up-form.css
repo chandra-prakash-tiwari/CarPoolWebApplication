@@ -1,0 +1,54 @@
+﻿.signup {
+    margin: 8px 4px;
+    height: 100%;
+    background-color: #ffac19;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-image: url(../Images/imgg2.png);
+}
+
+.signup .header {
+    color: white;
+    text-align-last: center;
+    padding: 10%;
+}
+
+    .signup .header .head {
+        font-size: 2.5rem;
+    }
+
+.signup form {
+    width: 80%;
+    margin: 1% 12% 2%;
+    overflow: hidden;
+}
+
+.signup form .input {
+    margin: 5px;
+    width: 90%;
+}
+
+.signup form input {
+    background-color: white;
+    border-radius: 1rem;
+}
+
+    .signup form .submit {
+        display: flex;
+    }
+
+        .signup form .submit button {
+            border-radius: 2rem;
+            margin: auto;
+            background-color: #9319ff;
+        }
+
+    .signup .a {
+        display: flex;
+    }
+
+    .signup a {
+        color: white;
+        font-size: larger;
+        margin: auto;
+    }

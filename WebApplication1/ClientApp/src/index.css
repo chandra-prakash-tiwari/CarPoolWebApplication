@@ -1,0 +1,64 @@
+html,body{
+  height: 100%;
+  margin: auto;
+  background-image: url(./Images/logo.png);
+  background-repeat: no-repeat;
+  background-position: 3% 6%;
+}
+
+#root{
+  height: 100%;
+}
+
+.cointainer {
+    height: 100%;
+}
+
+.image {
+  background-image: url(./Images/img1.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  height: 100%;
+  width: 100%;
+  background-size:100%;
+}
+
+.paper {
+  margin: 8px 4px;
+  height: 100%;
+  flex-direction: column;
+  background-color: #ffac19;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-image: url(./Images/imgg2.png);
+}
+
+.input{
+  margin: 10px;
+}
+
+.cointainer {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100%;
+    background-image: url(./Images/img4.png);
+}
+
+.def {
+    margin-top: 30%;
+}
+    .def div{
+        width:440px;
+        height:220px;
+        display:inline-flex;
+        margin:6px;
+        padding:6px;
+    }
+
+.cointainer .Avatar{
+    padding:3%;
+    clear:both;
+    text-align:right;
+}

@@ -1,0 +1,15 @@
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Services.deps.json
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Services.dll
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Models.dll
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Models.pdb
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.csprojAssemblyReference.cache
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.AssemblyInfo.cs
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.csproj.CopyComplete
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Services.runtimeconfig.json
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Services.runtimeconfig.dev.json
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.genruntimeconfig.cache
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\bin\Debug\netcoreapp3.1\CarPoolWebApplication.Services.pdb
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.dll
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.pdb
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Services\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Services.csproj.CoreCompileInputs.cache

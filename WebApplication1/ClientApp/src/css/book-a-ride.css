@@ -1,0 +1,24 @@
+﻿.booking-a-ride .journey-details {
+    margin: 1% 10%;
+    padding: 1% 3%;
+    background-color: white;
+    display: inline-block;
+    box-shadow:0px 2px 6px 8px #ededed;
+    border-radius:1rem;
+}
+
+.booking-a-ride .journey-details .header .head{
+    display:flex;
+}
+
+.booking-a-ride .journey-details .header .head span{
+    margin-left:15%;
+}
+
+.booking-a-ride .journey-details .header .head span span{
+    margin:auto;
+}
+
+.booking-a-ride .journey-details label{
+    margin:2%;
+}
