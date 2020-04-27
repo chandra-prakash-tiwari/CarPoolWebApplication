@@ -21,11 +21,10 @@ namespace CarPoolWebApi.Controllers
         [ActionName("createride")]
         public IActionResult AddNew([FromBody] Ride ride)
         {
-            if (ride == null)
+            if (!_RideServices.CreateRide(ride))
             {
-                return NoContent();
+                return BadRequest();
             }
-            _RideServices.CreateRide(ride);
 
             return Ok();
         }
@@ -47,12 +46,13 @@ namespace CarPoolWebApi.Controllers
         [ActionName("modify")]
         public IActionResult Update([FromBody] Ride ride,string id)
         {
-            if (ride == null)
+            ride.Id = id;
+            if (_RideServices.ModifyRide(ride))
             {
-                return NoContent();
+                return Ok();
             }
-            _RideServices.ModifyRide(ride, id);
-            return Ok();
+
+            return BadRequest();
         }
 
         [HttpGet]

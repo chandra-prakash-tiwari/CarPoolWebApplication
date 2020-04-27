@@ -22,8 +22,38 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\AddViaPointsView.tsx" />
+    <None Remove="ClientApp\src\components\BookaRide.tsx" />
+    <None Remove="ClientApp\src\components\BookingSearch.tsx" />
+    <None Remove="ClientApp\src\components\CarSelector.tsx" />
+    <None Remove="ClientApp\src\components\CreateRide.tsx" />
+    <None Remove="ClientApp\src\components\Home.tsx" />
+    <None Remove="ClientApp\src\components\Login.tsx" />
+    <None Remove="ClientApp\src\components\MyBooking.tsx" />
+    <None Remove="ClientApp\src\components\MyRides.tsx" />
+    <None Remove="ClientApp\src\components\Profile.tsx" />
+    <None Remove="ClientApp\src\components\RiderDetails.tsx" />
+    <None Remove="ClientApp\src\components\SignUp.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CarPoolWebApplication.Models\CarPoolWebApplication.Models.csproj" />
     <ProjectReference Include="..\CarPoolWebApplication.Services\CarPoolWebApplication.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\User\Ride\AddViaPointsView.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Booking\BookaRide.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Booking\BookingSearch.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Car\CarSelector.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Ride\CreateRide.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\Home.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\Anonymus\Login.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Booking\MyBooking.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Ride\MyRides.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\User\Profile.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\User\Ride\RiderDetails.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\Anonymus\SignUp.tsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

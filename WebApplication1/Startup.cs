@@ -1,3 +1,4 @@
+using AutoMapper;
 using CarPoolingWebApiReact.Context;
 using CarPoolingWebApiReact.Services.Interfaces;
 using CarPoolingWebApiReact.Services.Service;
@@ -28,7 +29,6 @@ namespace WebApplication
         {
 
             services.AddControllersWithViews();
-
             services.AddCors();
             services.AddControllers();
             services.AddDbContext<CarPoolContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:CarPoolDataBase"]));
@@ -37,6 +37,7 @@ namespace WebApplication
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddAutoMapper(typeof(Startup));
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);

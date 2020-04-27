@@ -22,11 +22,8 @@ namespace CarPoolWebApi.Controllers
         [ActionName("addnewcar")]
         public IActionResult NewCar([FromBody] Car car,string ownerId)
         {
-            if (car == null)
-            {
-                return BadRequest();
-            }
-            if (!_CarServices.AddNewCar(car, ownerId))
+            car.OwnerId = ownerId;
+            if (!_CarServices.AddNewCar(car))
                 return BadRequest();
             return Ok();
         }
@@ -44,9 +41,7 @@ namespace CarPoolWebApi.Controllers
         [ActionName("cars")]
         public IActionResult GetOwnerCars(string ownerId)
         {
-            List<Car> cars = _CarServices.GetOwnerCars(ownerId);
-
-            return Ok(cars);
+            return Ok(_CarServices.GetOwnerCars(ownerId));
         }
 
         [HttpGet]

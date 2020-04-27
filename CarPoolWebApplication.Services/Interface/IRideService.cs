@@ -13,7 +13,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 
         bool SeatBookingResponse(string rideId);
 
-        bool ModifyRide(Ride newRide, string id);
+        bool ModifyRide(Ride newRide);
 
         Ride GetRide(string id);
 

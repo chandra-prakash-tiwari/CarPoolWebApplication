@@ -30,7 +30,7 @@
 
 .signup form input {
     background-color: white;
-    border-radius: 1rem;
+    border-radius: 5px;
 }
 
     .signup form .submit {
@@ -48,6 +48,12 @@
     }
 
     .signup a {
+        color: white;
+        font-size: larger;
+        margin: auto;
+    }
+
+    .signup p {
         color: white;
         font-size: larger;
         margin: auto;

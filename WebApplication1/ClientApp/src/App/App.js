@@ -1,20 +1,19 @@
 ﻿import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import Login from '../components/Login';
-import SignUp from '../components/SignUp';
-import Home from '../components/Home';
-import BookaRide from '../components/BookaRide';
-import BookingSearch from '../components/BookingSearch';
-import Authentication from '../Helper/authentication';
-import Profile from '../components/Profile';
-import CarSelector from '../components/CarSelector';
-import AddNewCar from '../components/AddNewCar';
-import CreateRide from '../components/CreateRide';
-import MyRides from '../components/MyRides';
-import MyBookings from '../components/MyBooking'
 import '../index.css';
-
+import Login from '../components/Anonymus/Login';
+import SignUp from '../components/Anonymus/SignUp';
+import userServices from '../components/Anonymus/Services';
+import Profile from '../components/User/User/Profile.tsx';
+import Home from '../components/Home';
+import BookaRide from '../components/User/Booking/BookaRide';
+import BookingSearch from '../components/User/Booking/BookingSearch';
+import CarSelector from '../components/User/Car/CarSelector';
+import AddNewCar from '../components/User/Car/AddNewCar';
+import CreateRide from '../components/User/Ride/CreateRide';
+import MyBookings from '../components/User/Booking/MyBooking';
+import MyRides from '../components/User/Ride/MyRides';
 
 export default class App extends Component {
 
@@ -22,7 +21,7 @@ export default class App extends Component {
         return (
             <Router>
                 {
-                    Authentication.currentUser !== null ?
+                    userServices.currentUser !== null ?
                         <Grid className='cointainer'>
                             <Profile/>
                             <Switch>

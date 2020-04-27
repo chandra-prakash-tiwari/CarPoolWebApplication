@@ -10,7 +10,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 
         bool DeleteUser(string id);
 
-        bool UpdateUser(User newDetails, string id);
+        bool UpdateUser(User newDetails);
 
         User GetUser(string id);
 

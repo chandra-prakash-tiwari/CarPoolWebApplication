@@ -23,7 +23,6 @@ namespace CarPoolWebApi.Controllers
         public IActionResult GetUser(string id)
         {
             User user = _UserService.GetUser(id);
-
             if (user == null)
             {
                 return NotFound();
@@ -41,9 +40,12 @@ namespace CarPoolWebApi.Controllers
             {
                 return NoContent();
             }
+            else if (!_UserService.AddNewUser(user))
+            {
+                return Ok(user);
+            }
 
-            _UserService.AddNewUser(user);
-            return Ok(user);
+            return BadRequest();
         }
 
         [Authorize(Roles ="Admin")]
@@ -51,38 +53,33 @@ namespace CarPoolWebApi.Controllers
         [ActionName("delete")]
         public IActionResult DeleteUser(string id)
         {
-            User user = _UserService.GetUser(id);
-            if (user == null)
+            if (!_UserService.DeleteUser(id))
             {
                 return NotFound();
             }
 
-            _UserService.DeleteUser(id);
-            return NoContent();
+            return Ok();
         }
 
         [HttpPut]
         [ActionName("update")]
-        public IActionResult UpdateUser(string id, [FromBody] User user)
+        public IActionResult UpdateUser([FromBody] User user)
         {
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            User old = _UserService.GetUser(id);
+            User old = _UserService.GetUser(user.Id);
             if (old == null)
             {
                 return NotFound();
             }
-
-            _UserService.UpdateUser(user, id);
-            return NoContent();
+            else if (!_UserService.UpdateUser(user))
+            {
+                return NotFound();
+            }
+            return Ok();
         }
 
         [AllowAnonymous]
         [HttpPost]
-        [ActionName("authenticate")]
+        [ActionName("login")]
         public IActionResult Authentication([FromBody] Login login)
         {
             var user = _UserService.Authentication(login);

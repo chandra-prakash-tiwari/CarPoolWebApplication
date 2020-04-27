@@ -6,7 +6,8 @@ export const Cars = {
 
 function AddNewCar(Number, Model, abc) {
     var token = Authentication.userToken;
-    var NoofSeat = parseInt(abc)
+    var NoofSeat = parseInt(abc);
+    console.log(Number, Model, abc);
     if (token) {
         return fetch(`/api/car/addnewcar?ownerid=${Authentication.currentUserId}`, {
             method: 'POST',

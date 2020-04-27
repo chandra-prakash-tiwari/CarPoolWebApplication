@@ -1,36 +1,24 @@
-import React from 'react'
-import { CardContent, Typography, Card, ButtonBase } from '@material-ui/core';
-import '../css/home.css';
-import Authentication from '../Helper/authentication'
-
-export default function Home() {
-    return (
-        <div className="home" >
-            <div className='welcome'>
-                <h1>Hey {Authentication.currentUser.name.split(' ')[0]}</h1>
-            </div>
-
-            <div className='cards' >
-                <ButtonBase href='/booking' >
-                    < Card className='ride'>            
-                        <CardContent >                            
-                            < Typography className='cards-element' component='h1' variant='h5' >                
-                                Book a Ride 
-                            </Typography>
-                        </CardContent>
-                    </Card> 
-                </ButtonBase>
-                <ButtonBase href='/createride'>
-                    < Card className='booking' >
-                        <CardContent >
-                            < Typography className='cards-element' component='h1' variant='h5' >
-                                Offer a Ride 
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </ButtonBase>
-            </div>
-        </div>
-        
-    )
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = require("react");
+var core_1 = require("@material-ui/core");
+require("../css/home.css");
+var Services_js_1 = require("../components/Anonymus/Services.js");
+function Home() {
+    return (React.createElement("div", { className: "home" },
+        React.createElement("div", { className: 'welcome' },
+            React.createElement("h1", null,
+                "Hey ",
+                Services_js_1.default.currentUser.name.split(' ')[0])),
+        React.createElement("div", { className: 'cards' },
+            React.createElement(core_1.ButtonBase, { href: '/booking' },
+                React.createElement(core_1.Card, { className: 'ride' },
+                    React.createElement(core_1.CardContent, null,
+                        React.createElement(core_1.Typography, { className: 'cards-element', component: 'h1', variant: 'h5' }, "Book a Ride")))),
+            React.createElement(core_1.ButtonBase, { href: '/car' },
+                React.createElement(core_1.Card, { className: 'booking' },
+                    React.createElement(core_1.CardContent, null,
+                        React.createElement(core_1.Typography, { className: 'cards-element', component: 'h1', variant: 'h5' }, "Offer a Ride")))))));
 }
+exports.default = Home;
+//# sourceMappingURL=Home.js.map

@@ -1,6 +1,6 @@
-﻿using CarPoolingWebApiReact.Context;
+﻿using AutoMapper;
+using CarPoolingWebApiReact.Context;
 using CarPoolingWebApiReact.Services.Interfaces;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +9,15 @@ namespace CarPoolingWebApiReact.Services.Service
 {
     public class RideService : IRideService
     {
-        private CarPoolContext Db { get; set; }
+        private readonly CarPoolContext _db;
+        private readonly IBookingService _bookingService;
+        private readonly IMapper _mapper;
 
-        private IBookingService BookingService { get; set; }
-
-        public RideService(CarPoolContext context, IBookingService bookingService)
+        public RideService(CarPoolContext context, IBookingService bookingService, IMapper mapper)
         {
-            this.Db = context;
-
-            this.BookingService = bookingService;
+            _db = context;
+            _bookingService = bookingService;
+            _mapper = mapper;
         }
 
         public bool CreateRide(Models.Client.Ride ride)
@@ -25,9 +25,9 @@ namespace CarPoolingWebApiReact.Services.Service
             ride.RideDate = DateTime.Now;
             ride.Id = Guid.NewGuid().ToString();
             ride.Status = Models.Client.RideStatus.Active;
-            this.Db.Rides.Add(Mapper.Map<Models.Client.Ride, Models.Data.Ride>(ride));
+            _db.Rides.Add(_mapper.Map<Models.Data.Ride>(ride));
 
-            return this.Db.SaveChanges() > 0;
+            return _db.SaveChanges() > 0;
         }
 
         public List<Models.Client.Ride> GetRidesOffers(Models.Client.SearchRideRequest booking)
@@ -35,7 +35,7 @@ namespace CarPoolingWebApiReact.Services.Service
             int count = 0;
             List<Models.Data.Ride> rides = new List<Models.Data.Ride>();
 
-            foreach (var ride in this.Db.Rides)
+            foreach (var ride in _db.Rides)
             {
                 count++;
                 //var viaPoints = 
@@ -55,16 +55,16 @@ namespace CarPoolingWebApiReact.Services.Service
                 }
             }
 
-            return ListMapper.Map<Models.Data.Ride, Models.Client.Ride>(rides);
+            return _mapper.Map<List<Models.Client.Ride>>(rides);
         }
 
         public bool CancelRide(string rideId)
         {
-            Models.Data.Ride ride = this.Db.Rides.FirstOrDefault(a => a.Id == rideId);
-            if (ride != null && this.BookingService.GetBookings(rideId).Any())
+            var ride = _db.Rides.FirstOrDefault(a => a.Id == rideId);
+            if (ride != null && _bookingService.GetBookings(rideId).Any())
             {
                 ride.Status = Models.Client.RideStatus.Cancel;
-                return this.Db.SaveChanges() > 0;
+                return _db.SaveChanges() > 0;
             }
 
             return false;
@@ -72,19 +72,19 @@ namespace CarPoolingWebApiReact.Services.Service
 
         public bool SeatBookingResponse(string rideId)
         {
-            Models.Data.Ride ride = Mapper.Map<Models.Client.Ride, Models.Data.Ride>(GetRide(rideId));
+            var ride = _mapper.Map<Models.Data.Ride>(GetRide(rideId));
             if (ride.AvailableSeats > 0)
             {
                 ride.AvailableSeats--;
-                return this.Db.SaveChanges() > 0;
+                return _db.SaveChanges() > 0;
             }
 
             return false;
         }
 
-        public bool ModifyRide(Models.Client.Ride newRide, string id)
+        public bool ModifyRide(Models.Client.Ride newRide)
         {
-            Models.Data.Ride oldRide = Mapper.Map<Models.Client.Ride, Models.Data.Ride>(this.GetRide(id));
+            var oldRide = _mapper.Map<Models.Data.Ride>(this.GetRide(newRide.Id));
             if (oldRide != null)
             {
                 oldRide.RideDate = newRide.RideDate;
@@ -93,17 +93,17 @@ namespace CarPoolingWebApiReact.Services.Service
                 oldRide.To = newRide.To;
             }
 
-            return this.Db.SaveChanges() > 0;
+            return _db.SaveChanges() > 0;
         }
 
         public Models.Client.Ride GetRide(string id)
         {
-            return Mapper.Map<Models.Data.Ride, Models.Client.Ride>(this.Db.Rides?.FirstOrDefault(ride => ride.Id == id));
+            return _mapper.Map<Models.Client.Ride>(_db.Rides.FirstOrDefault(ride => ride.Id == id));
         }
 
         public List<Models.Client.Ride> GetRides(string ownerId)
         {
-            return ListMapper.Map<Models.Data.Ride, Models.Client.Ride>(this.Db.Rides?.Where(ride => ride.OwnerId == ownerId).ToList());
+            return _mapper.Map<List<Models.Client.Ride>>(_db.Rides.Where(ride => ride.OwnerId == ownerId).ToList());
         }
     }
 }

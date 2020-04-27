@@ -5,7 +5,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 {
     public interface IBookingService
     {
-        bool CreateBooking(Booking booking, string rideId);
+        bool CreateBooking(Booking booking);
 
         bool CancelRideRequest(string id);
 
