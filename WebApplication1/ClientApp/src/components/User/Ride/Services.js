@@ -6,7 +6,7 @@ export const Services = {
 }
 
 function AllRides() {
-    fetch(`/api/ride/yourride?ownerId=${UserServices.currentUserId}`, {
+    return fetch(`/api/ride/yourride?ownerId=${UserServices.currentUserId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,8 +19,7 @@ function AllRides() {
             return Promise.reject();
         }
         console.log(data)
-        this.setState({ rides: data })
-        return data;
+        return Promise.resolve(data);
     }).catch(error => {
         console.log(error);
     })
@@ -63,7 +62,7 @@ function AddRides(viaPoints) {
 
                 localStorage.removeItem('carSetails');
                 localStorage.removeItem('rideDetails');
-                return data;
+                return Promise.resolve(data);
             }).catch(error => {
                 sessionStorage.clear();
                 return console.log(error);

@@ -1,7 +1,7 @@
 ﻿import * as React from 'react'
 import { Card, ButtonBase } from '@material-ui/core';
 import '../../../css/car-selector.css';
-import Services from './Services.js'
+import Services from './Services.js';
 
 type allCars = {
     cars: [];
@@ -16,9 +16,8 @@ export default class CarSelector extends React.Component<{}, allCars> {
     }
 
     componentDidMount() {
-        var data=Services.GetCars()
-        console.log(data);
-        //this.setState({cars:data})
+        var data = Services.GetCars();
+        data.then((myCars) => this.setState({ cars: myCars }))
     }
 
     handleclick = (carRecord:any) => {

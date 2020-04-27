@@ -23,11 +23,9 @@ function SearchRide(BookingSearch) {
         .then(async response => {
             const data = await response.json();
             if (!response.ok) {
-                console.log(response);
-                const error = (data && data.message) || response.status;
-                return Promise.reject(error);
+                return Promise.reject();
             }
-            return data;
+            return Promise.resolve(data);
         }).catch(error => {
             alert("Your session has been expired please login again");
             sessionStorage.clear();
@@ -36,7 +34,7 @@ function SearchRide(BookingSearch) {
 }
 
 function MyBookings() {
-    fetch(`/api/booking/userbooking?ownerId=${userServices.currentUserId}`, {
+    return fetch(`/api/booking/userbooking?ownerId=${userServices.currentUserId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -48,7 +46,7 @@ function MyBookings() {
         if (!response.ok) {
             return Promise.reject();
         }
-        return data;
+        return Promise.resolve(data);
     }).catch(error => {
         console.log(error);
     })

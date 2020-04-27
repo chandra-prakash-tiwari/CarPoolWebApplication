@@ -46,8 +46,7 @@ function GetCars() {
         if (!response.ok) {
             return Promise.reject();
         }
-        console.log(data);
-        return data;
+        return Promise.resolve(data);
     }).catch(error => {
         alert("Your session has been expired please login again");
         sessionStorage.clear();

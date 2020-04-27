@@ -17,11 +17,10 @@ export default class MyRides extends React.Component<{}, allRides> {
 
     componentDidMount() {
         var data = Services.AllRides();
-        //this.setState({ rides: data })
+        data.then((myRides) => this.setState({ rides: myRides }))
     }
 
     render() {
-
         const RidesDetails = this.state.rides.map((ride:any, i) => (
             <ButtonBase key={i} style={{ margin:'1rem 4rem' }}>
                 <Card className='rides'>

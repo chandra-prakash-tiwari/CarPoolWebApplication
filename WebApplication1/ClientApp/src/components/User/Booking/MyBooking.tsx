@@ -17,13 +17,10 @@ export default class MyBookings extends React.Component<{}, allBookings> {
 
     componentDidMount() {
         var data = Services.MyBookings();
-        if (data == null)
-            return;
-       // this.setState({ bookings:data })
+        data.then((myBookings) => this.setState({ bookings: myBookings }))
     }
 
     render() {
-
         const RidesDetails = this.state.bookings.map((booking: any, i) => (
             <ButtonBase key={i} style={{ margin: '1rem 4rem' }}>
                 <Card className='bookings'>
