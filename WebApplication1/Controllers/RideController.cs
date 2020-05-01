@@ -59,11 +59,12 @@ namespace CarPoolWebApi.Controllers
         [ActionName("ride")]
         public IActionResult GetRide(string rideId)
         {
+            if (rideId == null)
+                return BadRequest();
+
             Ride ride = _RideServices.GetRide(rideId);
             if (ride == null)
-            {
                 return NotFound();
-            }
 
             return Ok(ride);
         }
@@ -72,6 +73,9 @@ namespace CarPoolWebApi.Controllers
         [ActionName("yourride")]
         public IActionResult GetOwnerRides(string ownerId)
         {
+            if (ownerId == null)
+                return BadRequest();
+
             return Ok(_RideServices.GetRides(ownerId));
         }
 

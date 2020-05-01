@@ -1,7 +1,7 @@
 using AutoMapper;
 using CarPoolingWebApiReact.Context;
 using CarPoolingWebApiReact.Services.Interfaces;
-using CarPoolingWebApiReact.Services.Service;
+using CarPoolingWebApiReact.Services.Services;
 using CarPoolWebApiReact.Models.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

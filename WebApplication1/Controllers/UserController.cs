@@ -22,11 +22,12 @@ namespace CarPoolWebApi.Controllers
         [ActionName("getuser")]
         public IActionResult GetUser(string id)
         {
+            if (id == null)
+                return BadRequest();
+
             User user = _UserService.GetUser(id);
             if (user == null)
-            {
                 return NotFound();
-            }
 
             return Ok(user);
         }
@@ -103,9 +104,8 @@ namespace CarPoolWebApi.Controllers
         public IActionResult UserNameAvailability(string userName)
         {
             if (_UserService.CheckUserName(userName))
-            {
                 return BadRequest();
-            }
+
             return Ok();
         }
     }

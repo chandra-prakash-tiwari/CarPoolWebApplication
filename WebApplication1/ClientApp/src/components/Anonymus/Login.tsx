@@ -49,7 +49,7 @@ export default class Login extends React.Component<{}, login> {
                         </div>
                     </form>
                     <div className='a'>
-                        <Typography>Not a member yet?<Link href="/signup">SIGN UP</Link></Typography>
+                        <Typography>Not a member yet? <Link href="/signup">SIGN UP</Link></Typography>
                     </div>
                 </div>
             </Grid>

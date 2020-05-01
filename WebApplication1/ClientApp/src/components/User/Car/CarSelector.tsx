@@ -51,7 +51,7 @@ export default class CarSelector extends React.Component<{}, allCars> {
                 <div className='user-cars'>{carDetails}</div>
                 <ButtonBase href='/car/addnewcar' >
                     < Card className='car-cards'>
-                        <div className='add-new-car'>+</div>
+                        <div className='add-car'>+</div>
                     </Card>
                 </ButtonBase>
             </div>

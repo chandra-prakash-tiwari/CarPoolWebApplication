@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CarPoolingWebApiReact.Services.Service
+namespace CarPoolingWebApiReact.Services.Services
 {
     public class RideService : IRideService
     {
@@ -23,7 +23,7 @@ namespace CarPoolingWebApiReact.Services.Service
         public bool CreateRide(Models.Client.Ride ride)
         {
             ride.RideDate = DateTime.Now;
-            ride.Id = Guid.NewGuid().ToString();
+            ride.Id = ExtensionClass.Id();
             ride.Status = Models.Client.RideStatus.Active;
             _db.Rides.Add(_mapper.Map<Models.Data.Ride>(ride));
 

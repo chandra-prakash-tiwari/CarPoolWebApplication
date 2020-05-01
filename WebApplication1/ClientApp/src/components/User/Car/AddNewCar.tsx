@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
-import { TextField, Switch } from '@material-ui/core';
-import Services from './Services'
+import { TextField, Switch, Grid } from '@material-ui/core';
+import Services from './Services';
 
 type Car ={
     carNumber?: string,
@@ -31,7 +31,7 @@ export default class AddNewCar extends React.Component<{},Car> {
 
     render() {
         return (
-            <div className='add-new-car'>
+            <Grid item md={4} className='add-new-car'>
                 <form className='car-details'>
                     <div className='header'>
                         <div className='head'>
@@ -47,7 +47,7 @@ export default class AddNewCar extends React.Component<{},Car> {
                         <button type='submit' color='primary' onClick={this.submit}>Submit</button>
                     </div>
                 </form>
-            </div>
+            </Grid>
         )
     }
 }

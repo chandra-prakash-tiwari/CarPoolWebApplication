@@ -21,7 +21,9 @@ export default class BookingSearch extends React.Component<{}, allBookings> {
         if (BookingSearchStr === null)
             return;
         if (token) {
-            Services.SearchRide(JSON.parse(BookingSearchStr))
+            var data = Services.SearchRide(JSON.parse(BookingSearchStr));
+            console.log(data)
+            data.then((searchBooking) => this.setState({ bookings: searchBooking }));
         }
     }
 

@@ -1,4 +1,4 @@
-﻿import UserServices from '../../Anonymus/Services'
+﻿import UserServices from '../../Anonymus/Services';
 
 export const Services = {
     AllRides,

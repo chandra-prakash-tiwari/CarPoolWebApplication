@@ -7,6 +7,13 @@ export const Services = {
 
 function AddNewCar(CarDetails) {
     var token = userServices.userToken;
+    console.log(CarDetails);
+    var details = {
+        number: CarDetails.carNumber,
+        noofseat: parseInt(CarDetails.noofSeats),
+        model: CarDetails.carModel
+    }
+    console.log(JSON.stringify( details ),);
     if (token) {
         fetch(`/api/car/addnewcar?ownerid=${userServices.currentUserId}`, {
             method: 'POST',
@@ -15,7 +22,7 @@ function AddNewCar(CarDetails) {
                 Accept: 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ CarDetails }),
+            body: JSON.stringify(details),
         })
             .then(async response => {
                 const data = await response.json();

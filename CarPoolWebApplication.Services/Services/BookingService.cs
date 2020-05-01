@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace CarPoolingWebApiReact.Services.Service
+namespace CarPoolingWebApiReact.Services.Services
 {
     public class BookingService : IBookingService
     {
@@ -21,6 +21,7 @@ namespace CarPoolingWebApiReact.Services.Service
 
         public bool CreateBooking(Models.Client.Booking booking)
         {
+            booking.Id = ExtensionClass.Id();
             booking.Id = Guid.NewGuid().ToString();
             _db.Bookings.Add(_mapper.Map<Models.Data.Booking>(booking));
 

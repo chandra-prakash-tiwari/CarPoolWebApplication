@@ -1,0 +1,35 @@
+﻿.add-new-car {
+    margin: 1% 12%;
+    padding: 5% 7%;
+    background-color: white;
+    display: inline-block;
+    box-shadow: 0px 2px 6px 8px #ededed;
+    border-radius: 1rem;
+    width: 80%;
+}
+
+    .add-new-car .car-details .header .head {
+        display: flex;
+    }
+
+    .add-new-car .car-details .header .head span {
+        margin-left: 15%;
+    }
+
+        .add-new-car .car-details .header .head span span {
+            margin: auto;
+        }
+
+.add-new-car .car-details label {
+    margin: 2%;
+}
+
+.add span {
+    color: blue;
+    font-size: 2.2rem
+}
+
+.add {
+    width: 3.1rem;
+    height: 4.1rem;
+}

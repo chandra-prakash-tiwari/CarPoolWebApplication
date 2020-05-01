@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { CardContent, Typography, Card, ButtonBase } from '@material-ui/core';
 import '../css/home.css';
+import '../css/add-new-car.css'
 import userServices from '../components/Anonymus/Services.js'
 
 export default function Home() {

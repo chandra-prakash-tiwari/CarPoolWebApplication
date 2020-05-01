@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace CarPoolingWebApiReact.Services.Service
+namespace CarPoolingWebApiReact.Services.Services
 {
     public class UserService : IUserService
     {
@@ -27,7 +27,7 @@ namespace CarPoolingWebApiReact.Services.Service
 
         public bool AddNewUser(Models.Client.User user)
         {
-            user.Id = Guid.NewGuid().ToString();
+            user.Id = ExtensionClass.Id();
             var userData = _mapper.Map<Models.Data.User>(user);
             _db.Users.Add(userData);
             return _db.SaveChanges() > 0;

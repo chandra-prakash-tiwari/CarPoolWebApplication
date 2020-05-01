@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using CarPoolingWebApiReact.Context;
 using CarPoolingWebApiReact.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CarPoolingWebApiReact.Services.Service
+namespace CarPoolingWebApiReact.Services.Services
 {
     public class CarService : ICarService
     {
         private readonly CarPoolContext _db;
-        private readonly MapperConfiguration _config;
         private readonly IMapper _mapper;
 
         public CarService(CarPoolContext context, IMapper mapper)
@@ -24,7 +22,7 @@ namespace CarPoolingWebApiReact.Services.Service
         {
             if (car.OwnerId != null)
             {
-                car.Id = Guid.NewGuid().ToString();
+                car.Id = ExtensionClass.Id();
                 _db.Cars.Add(_mapper.Map<Models.Data.Car>(car));                
                 return _db.SaveChanges() > 0;
             }

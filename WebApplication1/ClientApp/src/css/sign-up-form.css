@@ -1,5 +1,4 @@
 ﻿.signup {
-    margin: 8px 4px;
     height: 100%;
     background-color: #ffac19;
     background-repeat: no-repeat;
@@ -10,7 +9,7 @@
 .signup .header {
     color: white;
     text-align-last: center;
-    padding: 10%;
+    padding: 8%;
 }
 
     .signup .header .head {
@@ -19,7 +18,7 @@
 
 .signup form {
     width: 80%;
-    margin: 1% 12% 2%;
+    margin: 1% 12% auto;
     overflow: hidden;
 }
 
@@ -35,6 +34,7 @@
 
     .signup form .submit {
         display: flex;
+        margin-top:6px;
     }
 
         .signup form .submit button {

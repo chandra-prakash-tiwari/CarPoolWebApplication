@@ -19,7 +19,7 @@
 
 .login .form{
     width: 80%;
-    margin:20% 12% 2%;
+    margin:20% 12% auto;
     overflow:hidden;
 }
 
@@ -35,6 +35,7 @@
 
 .login .form .submit{
     display:flex;
+    margin-top:6px;
 }
 
 .login .form .submit button {
