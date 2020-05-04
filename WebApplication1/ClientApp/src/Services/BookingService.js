@@ -1,24 +1,25 @@
-﻿import userServices from '../../Anonymus/Services'
+﻿import userServices from './UserService'
 
-export const Services = {
+export const BookingService = {
     SearchRide,
     MyBookings
 };
 
 function SearchRide(BookingSearch) {
     var token = userServices.userToken;
-    return fetch(`/api/ride/searchride`, {
+    var data = {
+        From: BookingSearch.from,
+        To: BookingSearch.to,
+        TravelDate: BookingSearch.date
+    }
+    return fetch('/api/ride/offers', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-            From: BookingSearch.from,
-            To: BookingSearch.to,
-            TravelDate: BookingSearch.date
-        }),
+        body: JSON.stringify(data),
     })
         .then(async response => {
             const data = await response.json();
@@ -27,6 +28,7 @@ function SearchRide(BookingSearch) {
             }
             return Promise.resolve(data);
         }).catch(error => {
+            alert(error);
             alert("Your session has been expired please login again");
             sessionStorage.clear();
             return console.log(error);
@@ -34,7 +36,7 @@ function SearchRide(BookingSearch) {
 }
 
 function MyBookings() {
-    return fetch(`/api/booking/userbooking?ownerId=${userServices.currentUserId}`, {
+    return fetch(`/api/booking/getbyuserid?userid=${userServices.currentUserId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -52,4 +54,4 @@ function MyBookings() {
     })
 }
 
-export default Services;
+export default BookingService;

@@ -1,30 +1,32 @@
-import * as React from 'react'
+import * as React from 'react';
 import { Card, ButtonBase, Avatar, Grid } from '@material-ui/core';
-import userServices from '../../Anonymus/Services';
-import Services from './Services';
+import UserService from '../../../Services/UserService';
+import BookingService from '../../../Services/BookingService';
 import '../../../css/booking-search.css';
 
-type allBookings = {
-    bookings:[]
+type AllBookings = {
+    bookings: [],
 }
 
-export default class BookingSearch extends React.Component<{}, allBookings> {
-    constructor(props: allBookings) {
+export default class BookingSearch extends React.Component<{}, AllBookings> {
+    constructor(props: AllBookings) {
         super(props);
         this.state = {
-            bookings:[]
+            bookings: [],
         }
     }
 
     componentDidMount() {
-        var token = userServices.userToken;
         var BookingSearchStr = localStorage.getItem('bookingSearch');
         if (BookingSearchStr === null)
             return;
-        if (token) {
-            var data = Services.SearchRide(JSON.parse(BookingSearchStr));
-            data.then((searchBooking) => this.setState({ bookings: searchBooking }));
-        }
+        console.log(JSON.parse(BookingSearchStr))
+        var data = BookingService.SearchRide(JSON.parse(BookingSearchStr));
+        data.then((searchBooking) => this.setState({ bookings: searchBooking }));
+    }
+
+    user(id: any) {
+        return UserService.GetUser(id).then((user) => { return user });
     }
 
     render() {
@@ -34,7 +36,7 @@ export default class BookingSearch extends React.Component<{}, allBookings> {
                     <Card className='bookings'>
                         <div className='head'>
                             <Grid item md={10}>
-                                <h4> </h4>
+                                <h1> </h1>
                             </Grid>
                             <Grid item md={2}>
                                 <Avatar></Avatar>

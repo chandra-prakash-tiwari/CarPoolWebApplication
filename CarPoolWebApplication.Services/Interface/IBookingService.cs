@@ -5,22 +5,22 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 {
     public interface IBookingService
     {
-        bool CreateBooking(Booking booking);
+        bool Create(Booking booking);
 
-        bool CancelRideRequest(string id);
+        bool Cancel(string id);
 
-        List<Booking> BookingsStatus(string id);
+        List<Booking> Status(string id);
 
-        bool BookingResponse(string id, BookingStatus status);
+        bool Response(string id, BookingStatus status);
 
-        string GetRequester(string id);
+        string GetRequesterById(string id);
 
-        List<Booking> GetUserBookings(string userId);
+        List<Booking> GetByUserId(string userId);
 
-        List<Booking> GetBookings(string rideId);
+        List<Booking> GetByRideId(string rideId);
 
-        List<Booking> GetPendingBookings(string rideId);
+        List<Booking> RequestPending(string rideId);
 
-        Booking GetBooking(string bookingId);
+        Booking GetById(string bookingId);
     }
 }

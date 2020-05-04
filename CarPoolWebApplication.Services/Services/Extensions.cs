@@ -4,9 +4,9 @@ using System.Text;
 
 namespace CarPoolingWebApiReact.Services.Services
 {
-    static class ExtensionClass
+    static class Extensions
     {
-        public static string Id()
+        public static string GenerateId()
         {
             return Guid.NewGuid().ToString();
         }

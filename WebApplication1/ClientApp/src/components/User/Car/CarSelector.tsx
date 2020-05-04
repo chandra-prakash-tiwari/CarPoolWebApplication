@@ -1,14 +1,14 @@
 ﻿import * as React from 'react'
 import { Card, ButtonBase } from '@material-ui/core';
 import '../../../css/car-selector.css';
-import Services from './Services.js';
+import CarService from '../../../Services/CarService'
 
-type allCars = {
+type AllCars = {
     cars: [];
 }
 
-export default class CarSelector extends React.Component<{}, allCars> {
-    constructor(props: allCars) {
+export default class CarSelector extends React.Component<{}, AllCars> {
+    constructor(props: AllCars) {
         super(props);
         this.state = {
             cars: []
@@ -16,7 +16,7 @@ export default class CarSelector extends React.Component<{}, allCars> {
     }
 
     componentDidMount() {
-        var data = Services.GetCars();
+        var data = CarService.GetCars();
         data.then((myCars) => this.setState({ cars: myCars }))
     }
 

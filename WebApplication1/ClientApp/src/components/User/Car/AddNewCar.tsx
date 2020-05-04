@@ -1,18 +1,18 @@
 ﻿import * as React from 'react';
 import { TextField, Grid, ButtonBase } from '@material-ui/core';
-import Services from './Services';
+import CarService from '../../../Services/CarService'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
-type Car ={
+type CarDetails ={
     carNumber?: string,
     carModel?: string,
     noofSeats: number,
     switch:boolean
 }
 
-export default class AddNewCar extends React.Component<{},Car> {
-    constructor(props: Car) {
+export default class AddNewCar extends React.Component<{}, CarDetails> {
+    constructor(props: CarDetails) {
         super(props);
         this.state = {
             carNumber: '',
@@ -35,7 +35,7 @@ export default class AddNewCar extends React.Component<{},Car> {
 
     submit = (event: any) => {
         event.preventDefault();
-        Services.AddNewCar(this.state);
+        CarService.AddNewCar(this.state);
         window.location.pathname = '/home';
     }
 

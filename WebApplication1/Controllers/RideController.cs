@@ -18,10 +18,10 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpPost]
-        [ActionName("createride")]
-        public IActionResult AddNew([FromBody] Ride ride)
+        [ActionName("create")]
+        public IActionResult Create([FromBody] Ride ride)
         {
-            if (!_RideServices.CreateRide(ride))
+            if (!_RideServices.Create(ride))
             {
                 return BadRequest();
             }
@@ -31,10 +31,10 @@ namespace CarPoolWebApi.Controllers
 
         [Authorize(Roles ="Admin")]
         [HttpPut]
-        [ActionName("cancelride")]
-        public IActionResult CancelRide(string rideId)
+        [ActionName("cancel")]
+        public IActionResult Cancel(string rideId)
         {
-            if (!_RideServices.CancelRide(rideId))
+            if (!_RideServices.Cancel(rideId))
             {
                 return NoContent();
             }
@@ -43,11 +43,11 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpPut]
-        [ActionName("modify")]
+        [ActionName("update")]
         public IActionResult Update([FromBody] Ride ride,string id)
         {
             ride.Id = id;
-            if (_RideServices.ModifyRide(ride))
+            if (_RideServices.Update(ride))
             {
                 return Ok();
             }
@@ -56,13 +56,13 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpGet]
-        [ActionName("ride")]
-        public IActionResult GetRide(string rideId)
+        [ActionName("getbyid")]
+        public IActionResult GetById(string id)
         {
-            if (rideId == null)
+            if (id == null)
                 return BadRequest();
 
-            Ride ride = _RideServices.GetRide(rideId);
+            Ride ride = _RideServices.GetById(id);
             if (ride == null)
                 return NotFound();
 
@@ -70,20 +70,20 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpGet]
-        [ActionName("yourride")]
+        [ActionName("getallrides")]
         public IActionResult GetOwnerRides(string ownerId)
         {
             if (ownerId == null)
                 return BadRequest();
 
-            return Ok(_RideServices.GetRides(ownerId));
+            return Ok(_RideServices.GetByOwnerId(ownerId));
         }
 
         [HttpPost]
-        [ActionName("searchride")]
-        public IActionResult GetRidesOffers(SearchRideRequest booking)
+        [ActionName("offers")]
+        public IActionResult GetOffers([FromBody] SearchRideRequest booking)
         {
-            return Ok(_RideServices.GetRidesOffers(booking));
+            return Ok(_RideServices.GetOffers(booking));
         }
 
     }

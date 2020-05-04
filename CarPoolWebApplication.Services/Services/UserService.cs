@@ -25,17 +25,17 @@ namespace CarPoolingWebApiReact.Services.Services
             _mapper = mapper;
         }
 
-        public bool AddNewUser(Models.Client.User user)
+        public bool Create(Models.Client.User user)
         {
-            user.Id = ExtensionClass.Id();
+            user.Id = Extensions.GenerateId();
             var userData = _mapper.Map<Models.Data.User>(user);
             _db.Users.Add(userData);
             return _db.SaveChanges() > 0;
         }
 
-        public Models.Client.User Authentication(Models.Client.Login credentials)
+        public Models.Client.User Authenticate(Models.Client.LoginRequest credentials)
         {
-            var user = _mapper.Map<Models.Client.User>(_db.Users.FirstOrDefault(a => (a.UserName == credentials.UserName || a.Email == credentials.UserName) && a.Password == credentials.Password));
+            var user = _mapper.Map<Models.Client.User>(_db.Users.FirstOrDefault(a => (a.UserName.ToLower() == credentials.UserName.ToLower() || a.Email.ToLower() == credentials.UserName.ToLower()) && a.Password == credentials.Password));
 
             if (user == null)
                 return null;
@@ -59,7 +59,7 @@ namespace CarPoolingWebApiReact.Services.Services
             return user;
         }
 
-        public bool DeleteUser(string id)
+        public bool Delete(string id)
         {
             var user = _db.Users.FirstOrDefault(a => a.Id == id);
 
@@ -72,7 +72,7 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool UpdateUser(Models.Client.User newDetails)
+        public bool Update(Models.Client.User newDetails)
         {
             Models.Data.User oldDetails = _db.Users.FirstOrDefault(a => a.Id == newDetails.Id);
             if (oldDetails != null)
@@ -87,14 +87,19 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public Models.Client.User GetUser(string id)
+        public Models.Client.User GetById(string id)
         {
             return _mapper.Map<Models.Client.User>(_db.Users.FirstOrDefault(a => a.Id == id));
         }
 
-        public bool CheckUserName(string userName)
+        public bool HasUserName(string userName)
         {
             return _db.Users.FirstOrDefault(a => a.UserName == userName) != null;
+        }
+
+        public bool HasEmail(string email)
+        {
+            return _db.Users.FirstOrDefault(a => a.Email == email) != null;
         }
     }
 }

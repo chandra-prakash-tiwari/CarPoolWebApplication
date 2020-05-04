@@ -1,14 +1,14 @@
 ﻿import * as React from 'react';
 import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
 import '../../../css/my-rides.css';
-import Services from './Services.js'
+import RideService from '../../../Services/RideService'
 
-type allRides = {
+type AllRides = {
     rides:[]
 }
 
-export default class MyRides extends React.Component<{}, allRides> {
-    constructor(props: allRides) {
+export default class MyRides extends React.Component<{}, AllRides> {
+    constructor(props: AllRides) {
         super(props);
         this.state = {
             rides:[]
@@ -16,7 +16,7 @@ export default class MyRides extends React.Component<{}, allRides> {
     }
 
     componentDidMount() {
-        var data = Services.AllRides();
+        var data = RideService.AllRides();
         data.then((myRides) => this.setState({ rides: myRides }))
     }
 

@@ -5,18 +5,18 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 {
     public interface IRideService
     {
-        bool CreateRide(Ride ride);
+        bool Create(Ride ride);
 
-        List<Ride> GetRidesOffers(SearchRideRequest booking);
+        List<Ride> GetOffers(SearchRideRequest booking);
 
-        bool CancelRide(string rideId);
+        bool Cancel(string rideId);
 
-        bool SeatBookingResponse(string rideId);
+        bool OfferResponse(string rideId);
 
-        bool ModifyRide(Ride newRide);
+        bool Update(Ride newRide);
 
-        Ride GetRide(string id);
+        Ride GetById(string id);
 
-        List<Ride> GetRides(string ownerId);
+        List<Ride> GetByOwnerId(string ownerId);
     }
 }

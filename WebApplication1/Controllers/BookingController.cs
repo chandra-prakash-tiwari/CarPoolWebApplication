@@ -18,11 +18,11 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpPost]
-        [ActionName("createbooking")]
-        public IActionResult CreateBookig([FromBody]Booking booking, string rideId)
+        [ActionName("create")]
+        public IActionResult Create([FromBody]Booking booking, string rideId)
         {
             booking.Id = rideId;
-            if (!_BookingService.CreateBooking(booking))
+            if (!_BookingService.Create(booking))
             {
                 return Ok();
             }
@@ -31,64 +31,50 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpPut]
-        [ActionName("cancelbooking")]
-        public IActionResult CancelBooking(string id)
+        [ActionName("cancel")]
+        public IActionResult Cancel(string id)
         {
-            if (!_BookingService.CancelRideRequest(id))
+            if (!_BookingService.Cancel(id))
             {
                 return BadRequest();
             }
 
-            return Ok(_BookingService.GetBooking(id));
+            return Ok(_BookingService.GetById(id));
         }
 
         [HttpGet()]
-        [ActionName("booking")]
-        public IActionResult UserBooking(string ownerId)
+        [ActionName("getstatusbyownerid")]
+        public IActionResult GetStatusByOwnerId(string ownerId)
         {
-            return Ok(_BookingService.BookingsStatus(ownerId));
+            return Ok(_BookingService.Status(ownerId));
         }
 
         [HttpGet]
-        [ActionName("requester")]
+        [ActionName("getrequesterbyid")]
         public IActionResult Requester(string id)
         {
-            return Ok(_BookingService.GetRequester(id));
+            return Ok(_BookingService.GetRequesterById(id));
         }
 
         [HttpGet]
-        [ActionName("viewbookers")]
-        public IActionResult GetAllBookers(string rideId)
+        [ActionName("getallbyrideid")]
+        public IActionResult GetAllByRideId(string rideId)
         {
-            return Ok(_BookingService.GetBooking(rideId));
+            return Ok(_BookingService.GetByRideId(rideId));
         }
 
         [HttpGet]
-        [ActionName("userbooking")]
-        public IActionResult GetUserBookings(string userId)
+        [ActionName("getbyuserid")]
+        public IActionResult GetByUserId(string userId)
         {
-            return Ok(_BookingService.GetUserBookings(userId));
+            return Ok(_BookingService.GetByUserId(userId));
         }
 
         [HttpGet]
-        [ActionName("pendingbookings")]
-        public IActionResult GetPendingBookings(string rideId)
+        [ActionName("getbyid")]
+        public IActionResult GetById(string id)
         {
-                return Ok(_BookingService.GetPendingBookings(rideId));
-        }
-
-        [HttpGet]
-        [ActionName("booking")]
-        public IActionResult GetBooking(string bookigId)
-        {
-            return Ok(_BookingService.GetBooking(bookigId));
-        }
-
-        [HttpGet]
-        [ActionName("allbookings")]
-        public IActionResult GetBooing(string rideId)
-        {
-                return Ok(_BookingService.GetBookings(rideId));
+            return Ok(_BookingService.GetById(id));
         }
     }
 }

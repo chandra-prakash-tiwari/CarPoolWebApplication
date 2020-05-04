@@ -2,8 +2,8 @@
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import userServices from '../../Anonymus/Services.js'
-import { Avatar, ButtonBase, SvgIcon, capitalize } from '@material-ui/core';
+import UserService from '../../../Services/UserService'
+import { Avatar, ButtonBase, SvgIcon } from '@material-ui/core';
 
 
 export default function Profile() {
@@ -18,7 +18,7 @@ export default function Profile() {
     }
 
     const logout = () => {
-        userServices.Logout();
+        UserService.Logout();
         window.location.pathname = '/login';
     }
 
@@ -29,7 +29,7 @@ export default function Profile() {
     return (
         <div className='Avatar'>
             <Button aria-controls="menu" onClick={handleClick} style={{ margin: "0px 4px" }}>
-                <p style={{ margin: '5px', fontFamily: 'Roboto', fontSize: '1.2rem', textTransform: "capitalize" }}>{userServices.currentUser.name}</p>
+                <p style={{ margin: '5px', fontFamily: 'Roboto', fontSize: '1.2rem', textTransform: "capitalize" }}>{UserService.currentUser.name}</p>
                 <Avatar/>
             </Button>
             <Menu id="menu" anchorEl={close} open={Boolean(close)} >

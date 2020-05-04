@@ -4,18 +4,18 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 {
     public interface IUserService
     {
-        bool AddNewUser(User user);
+        bool Create(User user);
 
-        User Authentication(Login credentials);
+        User Authenticate(LoginRequest credentials);
 
-        bool DeleteUser(string id);
+        bool Delete(string id);
 
-        bool UpdateUser(User newDetails);
+        bool Update(User newDetails);
 
-        User GetUser(string id);
+        User GetById(string id);
 
-        bool CheckUserName(string userName);
+        bool HasUserName(string userName);
 
-        bool CheckEmail(string email);
+        bool HasEmail(string email);
     }
 }

@@ -20,17 +20,17 @@ namespace CarPoolingWebApiReact.Services.Services
             _mapper = mapper;
         }
 
-        public bool CreateRide(Models.Client.Ride ride)
+        public bool Create(Models.Client.Ride ride)
         {
             ride.RideDate = DateTime.Now;
-            ride.Id = ExtensionClass.Id();
+            ride.Id = Extensions.GenerateId();
             ride.Status = Models.Client.RideStatus.Active;
             _db.Rides.Add(_mapper.Map<Models.Data.Ride>(ride));
 
             return _db.SaveChanges() > 0;
         }
 
-        public List<Models.Client.Ride> GetRidesOffers(Models.Client.SearchRideRequest booking)
+        public List<Models.Client.Ride> GetOffers(Models.Client.SearchRideRequest booking)
         {
             int count = 0;
             List<Models.Data.Ride> rides = new List<Models.Data.Ride>();
@@ -58,10 +58,10 @@ namespace CarPoolingWebApiReact.Services.Services
             return _mapper.Map<List<Models.Client.Ride>>(rides);
         }
 
-        public bool CancelRide(string rideId)
+        public bool Cancel(string rideId)
         {
             var ride = _db.Rides.FirstOrDefault(a => a.Id == rideId);
-            if (ride != null && _bookingService.GetBookings(rideId).Any())
+            if (ride != null && _bookingService.GetByRideId(rideId).Any())
             {
                 ride.Status = Models.Client.RideStatus.Cancel;
                 return _db.SaveChanges() > 0;
@@ -70,9 +70,9 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool SeatBookingResponse(string rideId)
+        public bool OfferResponse(string rideId)
         {
-            var ride = _mapper.Map<Models.Data.Ride>(GetRide(rideId));
+            var ride = _mapper.Map<Models.Data.Ride>(GetById(rideId));
             if (ride.AvailableSeats > 0)
             {
                 ride.AvailableSeats--;
@@ -82,9 +82,9 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool ModifyRide(Models.Client.Ride newRide)
+        public bool Update(Models.Client.Ride newRide)
         {
-            var oldRide = _mapper.Map<Models.Data.Ride>(this.GetRide(newRide.Id));
+            var oldRide = _mapper.Map<Models.Data.Ride>(GetById(newRide.Id));
             if (oldRide != null)
             {
                 oldRide.RideDate = newRide.RideDate;
@@ -96,12 +96,12 @@ namespace CarPoolingWebApiReact.Services.Services
             return _db.SaveChanges() > 0;
         }
 
-        public Models.Client.Ride GetRide(string id)
+        public Models.Client.Ride GetById(string id)
         {
             return _mapper.Map<Models.Client.Ride>(_db.Rides.FirstOrDefault(ride => ride.Id == id));
         }
 
-        public List<Models.Client.Ride> GetRides(string ownerId)
+        public List<Models.Client.Ride> GetByOwnerId(string ownerId)
         {
             return _mapper.Map<List<Models.Client.Ride>>(_db.Rides.Where(ride => ride.OwnerId == ownerId).ToList());
         }

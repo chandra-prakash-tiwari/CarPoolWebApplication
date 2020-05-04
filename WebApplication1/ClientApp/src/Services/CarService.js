@@ -1,21 +1,19 @@
-﻿import userServices from '../../Anonymus/Services'
+﻿import userServices from './UserService'
 
-export const Services = {
+export const CarService = {
     AddNewCar,
     GetCars,
 };
 
 function AddNewCar(CarDetails) {
     var token = userServices.userToken;
-    console.log(CarDetails);
     var details = {
         number: CarDetails.carNumber,
         noofseat: parseInt(CarDetails.noofSeats),
         model: CarDetails.carModel
     }
-    console.log(JSON.stringify( details ),);
     if (token) {
-        fetch(`/api/car/addnewcar?ownerid=${userServices.currentUserId}`, {
+        fetch(`/api/car/create?ownerid=${userServices.currentUserId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +39,7 @@ function AddNewCar(CarDetails) {
 }
 
 function GetCars() {
-    return fetch(`/api/car/cars?ownerId=${userServices.currentUserId}`, {
+    return fetch(`/api/car/getbyownerid?ownerId=${userServices.currentUserId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -61,4 +59,4 @@ function GetCars() {
     })
 }
 
-export default Services;
+export default CarService;

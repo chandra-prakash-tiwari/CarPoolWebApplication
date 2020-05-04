@@ -19,36 +19,36 @@ namespace CarPoolWebApi.Controllers
         }
 
         [HttpPost]
-        [ActionName("addnewcar")]
-        public IActionResult NewCar([FromBody] Car car,string ownerId)
+        [ActionName("create")]
+        public IActionResult Create([FromBody] Car car,string ownerId)
         {
             car.OwnerId = ownerId;
-            if (!_CarServices.AddNewCar(car))
+            if (!_CarServices.Create(car))
                 return BadRequest();
             return Ok();
         }
 
         [HttpDelete]
-        [ActionName("removecar")]
+        [ActionName("delete")]
         public IActionResult Remove(string id)
         {
-            if (!_CarServices.RemoveCar(id))
+            if (!_CarServices.Delete(id))
                 return BadRequest();
             return Ok();
         }
 
         [HttpGet]
-        [ActionName("cars")]
-        public IActionResult GetOwnerCars(string ownerId)
+        [ActionName("getbyownerid")]
+        public IActionResult GetByOwnerId(string ownerId)
         {
-            return Ok(_CarServices.GetOwnerCars(ownerId));
+            return Ok(_CarServices.GetByOwnerId(ownerId));
         }
 
         [HttpGet]
-        [ActionName("car")]
-        public IActionResult Car(string carId)
+        [ActionName("getbyid")]
+        public IActionResult GetById(string id)
         {
-            return Ok(_CarServices.GetCar(carId));
+            return Ok(_CarServices.GetById(id));
         }
     }
 }

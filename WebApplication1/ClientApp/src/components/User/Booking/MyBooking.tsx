@@ -1,14 +1,14 @@
 ﻿import * as React from 'react';
 import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
-import Services from './Services'
+import BookingService from '../../../Services/BookingService';
 import '../../../css/my-bookings.css';
 
-type allBookings = {
+type AllBookings = {
     bookings:[]
 }
 
-export default class MyBookings extends React.Component<{}, allBookings> {
-    constructor(props: allBookings) {
+export default class MyBookings extends React.Component<{}, AllBookings> {
+    constructor(props: AllBookings) {
         super(props);
         this.state = {
             bookings: []
@@ -16,7 +16,7 @@ export default class MyBookings extends React.Component<{}, allBookings> {
     }
 
     componentDidMount() {
-        var data = Services.MyBookings();
+        var data = BookingService.MyBookings();
         data.then((myBookings) => this.setState({ bookings: myBookings }))
     }
 

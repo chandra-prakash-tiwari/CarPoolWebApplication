@@ -4,7 +4,7 @@ import '../../../css/book-a-ride.css';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
-type journeyDetails = {
+type JourneyDetails = {
     from?: string,
     to?: string,
     date?: string,
@@ -15,8 +15,8 @@ type journeyDetails = {
     dateValidity:string
 }
 
-export default class BookaRide extends React.Component<{}, journeyDetails> {
-    constructor(props: journeyDetails) {
+export default class BookaRide extends React.Component<{}, JourneyDetails> {
+    constructor(props: JourneyDetails) {
         super(props);
         this.state = {
             from: '',
@@ -116,13 +116,3 @@ export default class BookaRide extends React.Component<{}, journeyDetails> {
         )
     }
 }
-//<MuiPickersUtilsProvider utils={DateFnsUtils}>
-//    <KeyboardDatePicker
-//        format="MM/dd/yyyy"
-//        value={this.state.date}
-//        onChange={this.changes}
-//        KeyboardButtonProps={{
-//            'aria-label': 'change date',
-//        }}
-//    />
-//</MuiPickersUtilsProvider>

@@ -5,12 +5,12 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 {
     public interface ICarService
     {
-        bool AddNewCar(Car car);
+        bool Create(Car car);
 
-        bool RemoveCar(string id);
+        bool Delete(string id);
 
-        List<Models.Client.Car> GetOwnerCars(string id);
+        List<Models.Client.Car> GetByOwnerId(string ownerId);
 
-        Car GetCar(string id);
+        Car GetById(string id);
     }
 }

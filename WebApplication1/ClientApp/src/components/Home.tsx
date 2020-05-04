@@ -2,13 +2,13 @@ import * as React from 'react'
 import { CardContent, Typography, Card, ButtonBase } from '@material-ui/core';
 import '../css/home.css';
 import '../css/add-new-car.css'
-import userServices from '../components/Anonymus/Services.js'
+import UserService from '../Services/UserService'
 
 export default function Home() {
     return (
         <div className="home" >
             <div className='welcome'>
-                <p>Hey {userServices.currentUser.name.split(' ')[0]}!</p>
+                <p>Hey {UserService.currentUser.name.split(' ')[0]}!</p>
             </div>
 
             <div className='cards' >

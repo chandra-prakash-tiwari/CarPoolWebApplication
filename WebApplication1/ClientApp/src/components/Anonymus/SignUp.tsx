@@ -3,13 +3,13 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Services from'./Services'
+import UserService from '../../Services/UserService';
 import '../../css/sign-up-form.css'
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { InputAdornment } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-type signUp= {
+type SignUpDetails= {
     name?: string,
     mobile?: string,
     userName?: string,
@@ -29,8 +29,8 @@ type signUp= {
     passwordVisibilty: 'text' | 'password'
 }
 
-export default class SignUp extends React.Component<{}, signUp> {
-    constructor(props: signUp) {
+export default class SignUp extends React.Component<{}, SignUpDetails> {
+    constructor(props: SignUpDetails) {
         super(props);
         this.state = {
             name: '',
@@ -51,7 +51,6 @@ export default class SignUp extends React.Component<{}, signUp> {
             invalidConfirmPassword: '',
             passwordVisibilty: 'password'
         }
-        this.emailValidator = this.emailValidator.bind(this);
     }
 
     changes = (event:any) => {
@@ -60,46 +59,14 @@ export default class SignUp extends React.Component<{}, signUp> {
             [event.target.name]: event.target.value
         });
 
-        switch (event.target.name) {
-            case 'name':
-                this.nameValidator(event.target.value);
-                break;
-
-            case 'mobile':
-                this.mobileNumberValidator(event.target.value);
-                break;
-
-            case 'userName':
-                this.userNamevalidator(event.target.value);
-                break;
-
-            case 'address':
-                this.addressValidator(event.target.value);
-                break;
-
-            case 'drivingLicence':
-                this.drivingLicenceValidator(event.target.value);
-                break;
-
-            case 'email':
-                this.emailValidator(event.target.value);
-                break;
-
-            case 'password':
-                this.passwordValidator(event.target.value);
-                break;
-
-            case 'confirmPassword':
-                this.confirmPasswordValidator(event.target.value);
-                break;
-        }
+        this.Validator(event.target.name, event)
     }
 
     submit =(event: any)=> {
         event.preventDefault();
-        if (this.nameValidator(this.state.name) && this.mobileNumberValidator(this.state.mobile) && this.userNamevalidator(this.state.userName) &&
-            this.addressValidator(this.state.address) && this.drivingLicenceValidator(this.state.drivingLicence) && this.emailValidator(this.state.email) &&
-            this.passwordValidator(this.state.password) && this.confirmPasswordValidator(this.state.confirmPassword)) {
+        if (this.Validator('name', this.state.name) && this.Validator('mobile', this.state.mobile) && this.Validator('userName', this.state.userName) &&
+            this.Validator('address', this.state.address) && this.Validator('drivingLicence', this.state.drivingLicence) && this.Validator('userName', this.state.userName) &&
+            this.Validator('password', this.state.password) && this.Validator('confirmPassword', this.state.confirmPassword)) {
             var data = {
                 username: this.state.userName,
                 password: this.state.password,
@@ -109,110 +76,70 @@ export default class SignUp extends React.Component<{}, signUp> {
                 address: this.state.address,
                 drivingLicence: this.state.drivingLicence
             }
-            Services.AddNewUser(data);
+            UserService.AddNewUser(data);
             window.location.pathname = '/login';
         }
             
     }
 
-    nameValidator(inputName: any): boolean{
-        var name = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
-        if (inputName === null || inputName.length === 0) {
-            this.setState({ invalidName: "Please enter name" });
-            return false;
-        }
-        else if (!inputName?.match(name)) {
-            this.setState({ invalidName: "Please enter correct name" });
-            return false;
-        }
-        else {
-            this.setState({ invalidName: '' });
-            return true;
-        }
+    IsNull(value:any) {
+        return (value===null||value.length===0)
     }
 
-    passwordValidator(inputPassword: any): boolean{
-        if (inputPassword === null || inputPassword.length === 0) {
-            this.setState({ invalidPassword: "Please enter password" });
-            return false;
-        }
-        else {
-            this.setState({ invalidPassword: "" });
-            return true;
-        }
+    IsValidPassword(value: any) {
+        return (!value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/))
     }
 
-    userNamevalidator(userName: any): boolean{
-        if (userName === null || userName.length === 0) {
-            this.setState({ invalidUserName: "Please enter username" });
-            return false;
-        }
-        else {
-            this.setState({ invalidUserName: "" });
-            return true;
-        }
+    IsString(value: any) {
+        return (!value.match(/^[a-zA-Z]+(\s[a-zA-Z]+)?$/))
     }
 
-    emailValidator(inputEmail: any): boolean{
-        var syntax = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (inputEmail === null || inputEmail.length === 0) {
-            this.setState({ invalidEmail: "Please enter email" });
-            return false;
-        }
-        else if (!inputEmail.match(syntax)) {
-            this.setState({ invalidEmail: "Enter correct format" });
-            return false;
-        }
-        else {
-            this.setState({ invalidEmail: "" })
-            return true;
-        }
+    IsValidEmail(value: any) {
+        return (!value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/));
     }
 
-    confirmPasswordValidator(rePassword: any): boolean {
-        var password = this.state.password;
-        if (rePassword == null || rePassword.length == 0) {
-            this.setState({ invalidConfirmPassword: "Re-enter password" });
-            return false;
-        }
-        else if (password != rePassword) {
-            this.setState({ invalidConfirmPassword: "password-can't matched" });
-            return false;
-        }
-        else {
-            this.setState({ invalidConfirmPassword: "" });
-            return true;
-        }
+    IsValidMobile(value: any) {
+        return (!value.match(/^[789]\d{9}$/));
     }
 
-    drivingLicenceValidator(drivingLicence: any): boolean {
-        return true
+    MatchPassword(value: any) {
+        return this.state.password === value;
     }
 
-    addressValidator(address: any): boolean {
-        if (address == null || address.length == 0) {
-            this.setState({ invalidAddress: "Please enter address" });
-            return false;
-        }
-        else {
-            this.setState({ invalidAddress: "" });
-            return true;
-        }
-    }
+    Validator(name:any, value:any) {
+        switch (name) {
+            case 'userName':
+                this.IsNull(value) ? this.setState({ invalidUserName: "Please enter username" }) : this.setState({ invalidUserName: "" });
+                return this.IsNull(value);
+  
+            case 'password':
+                this.IsNull(value) ? this.setState({ invalidPassword: "Please enter password" }) :
+                    (this.IsValidPassword ? this.setState({ invalidPassword: "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" }) : this.setState({ invalidPassword: "" }));
+                return this.IsNull(value);
+            case 'name':
+                this.IsNull(value) ? this.setState({ invalidName: "Please enter name" }) : (this.IsString ? this.setState({ invalidName: "Please enter correct name" }) : this.setState({ invalidName: '' }))
+                
+                break;
+            case 'mobile':
+                this.IsNull(value) ? this.setState({ invalidMobile: "Please enter mobile number" }) : (this.IsValidMobile ? this.setState({ invalidMobile: "Enter correct mobile number" }) : this.setState({ invalidMobile: "" }));
+                return this.IsNull(value) && !this.IsValidMobile(value);
+                break;
 
-    mobileNumberValidator(mobile: any): boolean {
-        var syntax = /^[789]\d{9}$/;
-        if (mobile == null || mobile.length == 0) {
-            this.setState({ invalidMobile: "Please enter mobile number" });
-            return false;
-        }
-        else if (!mobile.match(syntax)) {
-            this.setState({ invalidMobile: "Enter correct mobile number" });
-            return false;
-        }
-        else {
-            this.setState({ invalidMobile: "" });
-            return true;
+            case 'email':
+                this.IsNull(value) ? this.setState({ invalidEmail: "Please enter email" }) : (this.IsValidEmail ? this.setState({ invalidEmail: "Enter correct format" }) : this.setState({ invalidEmail: "" }))
+                return this.IsNull(value) && !this.IsValidEmail(value);
+
+            case 'address':
+                this.IsNull(value) ? this.setState({ invalidAddress: "Please enter address" }) : this.setState({ invalidAddress: "" });
+                return this.IsNull(value);
+
+            case 'drivingLicence':
+                this.IsNull(value) ? this.setState({ invalidDrivingLicence: "Please enter driving licence" }) : this.setState({ invalidDrivingLicence: "" });
+                return this.IsNull(value);
+
+            case 'confirmPassword':
+                this.IsNull(value) ? this.setState({ invalidConfirmPassword: "Re-enter password" }) : (this.MatchPassword ? this.setState({ invalidConfirmPassword: "password-can't matched" }) : this.setState({ invalidConfirmPassword: "" }))
+                return this.IsNull(value) && this.MatchPassword(value);
         }
     }
 

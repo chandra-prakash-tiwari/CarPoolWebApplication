@@ -4,12 +4,12 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import '../../css/login-form.css';
-import Services from './Services';
+import UserService from '../../Services/UserService'
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { InputAdornment } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-type login = {
+type LoginProps = {
     userName: string,
     password: string,
     validUserName: string,
@@ -17,8 +17,8 @@ type login = {
     passwordVisibilty: 'text'|'password'
 }; 
 
-export default class Login extends React.Component<{}, login> {
-    constructor(props: login) {
+export default class Login extends React.Component<{}, LoginProps> {
+    constructor(props: LoginProps) {
         super(props);
         this.state = {
             userName: '',
@@ -35,37 +35,28 @@ export default class Login extends React.Component<{}, login> {
             [event.target.name]: event.target.value
         });
 
-        switch (event.target.name) {
+        this.validator(event.target.name, event.target.value);
+    }
+
+
+    isNull(value:any){
+        return (value===null||value.length===0)
+    }
+
+    IsValidPassword(value: any) {
+        return (!value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/))
+    }
+
+    validator(name:any, value:any) {
+        switch (name) {
             case 'userName':
-                this.userNameValidator(event.target.value);
-                break;
+                this.isNull(value) ? this.setState({ validUserName: "Please enter username or email address" }) : this.setState({ validUserName: "" });
+                return this.isNull(value);
 
             case 'password':
-                this.passwordValidator(event.target.value);
-                break;
-        }
-
-    }
-
-    userNameValidator(userName: any) {
-        if (userName == null || userName.length==0) {
-            this.setState({ validUserName: "Please enter username or email address" });
-            return false;
-        }
-        else {
-            this.setState({ validUserName: "" });
-            return true;
-        }
-    }
-
-    passwordValidator(password: any) {
-        if (password == null || password.length == 0) {
-            this.setState({ validPassword: "Please enter password" })
-            return false;
-        }
-        else {
-            this.setState({ validPassword: "" })
-            return true;
+                this.isNull(value) ? this.setState({ validPassword: "Please enter password" }) :
+                    (this.IsValidPassword ? this.setState({ validPassword: "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" }) : this.setState({ validPassword: "" }));
+                return this.isNull(value);
         }
     }
 
@@ -77,12 +68,12 @@ export default class Login extends React.Component<{}, login> {
 
     handleAuthentication = (event:any) => {
         event.preventDefault();
-        if (this.userNameValidator(this.state.userName) && this.passwordValidator(this.state.password)) {
+        if (this.validator('userName', this.state.userName) && this.validator('password',this.state.password)) {
             var data = {
                 userName: this.state.userName,
                 password: this.state.password
             }
-            Services.Login(data);
+            UserService.Login(data);
             window.location.pathname = '/home';
         }
     }

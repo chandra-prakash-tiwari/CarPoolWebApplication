@@ -1,13 +1,12 @@
-﻿import UserServices from '../../Anonymus/Services';
-import RiderDetails from './RiderDetails';
+﻿import UserServices from './UserService';
 
-export const Services = {
+export const RideService = {
     AllRides,
     AddRides,
 }
 
 function AllRides() {
-    return fetch(`/api/ride/yourride?ownerId=${UserServices.currentUserId}`, {
+    return fetch(`/api/ride/getallrides?ownerId=${UserServices.currentUserId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -34,7 +33,7 @@ function AddRides(viaPoints) {
     var RideDetails = JSON.parse(rideDetailsStr);
     var cardetails = JSON.parse(carDetailsStr);
     if (token) {
-        return fetch(`/api/ride/createride`, {
+        return fetch('/api/ride/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,4 +66,4 @@ function AddRides(viaPoints) {
     }
 }
 
-export default Services;
+export default RideService;

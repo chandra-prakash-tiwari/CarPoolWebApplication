@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import '../index.css';
 import Login from '../components/Anonymus/Login';
 import SignUp from '../components/Anonymus/SignUp';
-import userServices from '../components/Anonymus/Services';
+import UserService from '../Services/UserService'
 import Profile from '../components/User/User/Profile.tsx';
 import Home from '../components/Home';
 import BookaRide from '../components/User/Booking/BookaRide';
@@ -21,7 +21,7 @@ export default class App extends Component {
         return (
             <Router>
                 {
-                    userServices.currentUser !== null ?
+                    UserService.currentUser !== null ?
                         <Grid className='cointainer'>
                             <Profile/>
                             <Switch>

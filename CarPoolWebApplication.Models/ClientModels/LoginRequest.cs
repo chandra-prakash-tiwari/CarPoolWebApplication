@@ -2,7 +2,7 @@
 
 namespace CarPoolingWebApiReact.Models.Client
 {
-    public class Login
+    public class LoginRequest
     {
         [Required(ErrorMessage ="Please Enter UserName")]
         public string UserName { get; set; }

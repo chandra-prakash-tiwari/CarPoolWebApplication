@@ -1,13 +1,13 @@
 ﻿import * as React from 'react';
 import { TextField,  Grid, ButtonBase } from '@material-ui/core';
 import '../../../css/add-via-points.css';
-import Services from './Services';
+import RideService from '../../../Services/RideService';
 import Icon from '@material-ui/core/Icon';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
-type viaPointsDetails = {
+type ViaPointsDetails = {
     viaPoints: {
         city: string,
         longitude: number,
@@ -18,8 +18,8 @@ type viaPointsDetails = {
     switch: boolean
 };
 
-export default class AddViaPointsView extends React.Component<{}, viaPointsDetails> {
-    constructor(props: viaPointsDetails) {
+export default class AddViaPointsView extends React.Component<{}, ViaPointsDetails> {
+    constructor(props: ViaPointsDetails) {
         super(props)
         this.state = {
             viaPoints: [{
@@ -63,7 +63,7 @@ export default class AddViaPointsView extends React.Component<{}, viaPointsDetai
 
     submit = (event:any) => {
         event.preventDefault();
-        Services.AddRides(this.state);
+        RideService.AddRides(this.state);
         window.location.pathname = '/home';
     }
 
@@ -93,7 +93,7 @@ export default class AddViaPointsView extends React.Component<{}, viaPointsDetai
                     <ButtonBase className='icon' onClick={this.addViaPoints}><Icon>add_circle</Icon></ButtonBase><br />
                     <TextField label='Available seat' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='availableSeats' value={this.state.availableSeats} onChange={this.changes} />
                     <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.changes} />
-                    <button type='submit' className='submitButton' onSubmit={this.submit}><span>Submit </span></button>
+                    <button type='submit' className='submitButton' onClick={this.submit}><span>Submit </span></button>
                 </form>
             </Grid>
             )

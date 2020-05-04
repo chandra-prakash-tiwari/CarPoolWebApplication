@@ -18,11 +18,11 @@ namespace CarPoolingWebApiReact.Services.Services
             _mapper = mapper;
         }
 
-        public bool AddNewCar(Models.Client.Car car)
+        public bool Create(Models.Client.Car car)
         {
             if (car.OwnerId != null)
             {
-                car.Id = ExtensionClass.Id();
+                car.Id = Extensions.GenerateId();
                 _db.Cars.Add(_mapper.Map<Models.Data.Car>(car));                
                 return _db.SaveChanges() > 0;
             }
@@ -30,7 +30,7 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool RemoveCar(string id)
+        public bool Delete(string id)
         {
             var car = _db.Cars.FirstOrDefault(a => a.Id == id);
             if (car != null)
@@ -42,12 +42,12 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public List<Models.Client.Car> GetOwnerCars(string id)
+        public List<Models.Client.Car> GetByOwnerId (string ownerId)
         {
-            return _mapper.Map<List<Models.Client.Car>>(_db.Cars.Where(a => a.OwnerId == id).ToList());
+            return _mapper.Map<List<Models.Client.Car>>(_db.Cars.Where(a => a.OwnerId == ownerId).ToList());
         }
 
-        public Models.Client.Car GetCar(string id)
+        public Models.Client.Car GetById(string id)
         {
             return _mapper.Map<Models.Client.Car>(_db.Cars.FirstOrDefault(a => a.Id == id));
         }
