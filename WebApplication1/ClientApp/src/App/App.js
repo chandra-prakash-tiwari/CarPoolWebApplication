@@ -63,7 +63,7 @@ export default class App extends Component {
                                         </Grid>
                                         <Grid item md={4}>
                                             <MyRides />
-                                        </Grid>s
+                                        </Grid>
                                     </Grid>
                                 </Route>
                                 <Route path='/'>

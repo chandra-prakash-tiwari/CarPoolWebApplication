@@ -99,11 +99,22 @@ namespace CarPoolWebApi.Controllers
         }
         
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         [ActionName("usernameavailability")]
         public IActionResult UserNameAvailability(string userName)
         {
             if (_UserService.CheckUserName(userName))
+                return BadRequest();
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [ActionName("emailavailabilty")]
+        public IActionResult EmailAvailabilty(string email)
+        {
+            if (_UserService.CheckEmail(email))
                 return BadRequest();
 
             return Ok();

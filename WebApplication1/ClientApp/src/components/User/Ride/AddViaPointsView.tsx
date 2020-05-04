@@ -1,7 +1,11 @@
 ﻿import * as React from 'react';
-import { TextField, Switch,  Grid, ButtonBase } from '@material-ui/core';
-import '../../../css/create-ride.css';
+import { TextField,  Grid, ButtonBase } from '@material-ui/core';
+import '../../../css/add-via-points.css';
 import Services from './Services';
+import Icon from '@material-ui/core/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
 type viaPointsDetails = {
     viaPoints: {
@@ -11,8 +15,8 @@ type viaPointsDetails = {
     }[],
     availableSeats: number,
     ratePerKM: number,
+    switch: boolean
 };
-
 
 export default class AddViaPointsView extends React.Component<{}, viaPointsDetails> {
     constructor(props: viaPointsDetails) {
@@ -25,6 +29,7 @@ export default class AddViaPointsView extends React.Component<{}, viaPointsDetai
                 }],
             availableSeats: 0,
             ratePerKM: 0,
+            switch:true
         }
     }
 
@@ -39,6 +44,12 @@ export default class AddViaPointsView extends React.Component<{}, viaPointsDetai
         this.setState({ viaPoints:this.state.viaPoints });
     }
 
+    deleteViaPoints = (index:any) => {
+        const list = [...this.state.viaPoints];
+        list.splice(index, 1);
+        this.setState({ viaPoints: list });
+    };
+
     changes = (event:any) => {
         this.setState({
             ...this.state,
@@ -46,34 +57,43 @@ export default class AddViaPointsView extends React.Component<{}, viaPointsDetai
         });
     }
 
-    submit = () => {
-        Services.AddRides(this.state)
+    switchChanges = () => {
+        this.setState({ switch: !this.state.switch })
+    }
+
+    submit = (event:any) => {
+        event.preventDefault();
+        Services.AddRides(this.state);
+        window.location.pathname = '/home';
     }
 
     render() {
         return (
-            <Grid className='create-ride' item md={4} id='viapointdetails'>
-                <form className='ride-details' onSubmit={this.submit}>
+            <Grid className='add-viaPoints' item md={4} id='viapointdetails'>
+                <form className='form'>
                     <div className='header'>
                         <div className='head'>
-                            <h1>Create Ride</h1>
-                            <Switch color="secondary" name="checkedB" />
+                            <h1>Add Via Points</h1>
+                            <ButtonBase onClick={this.switchChanges}>
+                                {this.state.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }} />}
+                            </ButtonBase>
                         </div>
-                        <p>we get you the matches asap!</p>
+                        <p>add all new via points</p>
                     </div>
                     {
                         this.state.viaPoints.map((viapoint, index) => {
                             return (
                                 <div key={index} className='input-via-points'>
-                                    <TextField label={'stop ' + (index + 1)} style={{ margin: 8 }} InputLabelProps={{ shrink: true }} type='text' value={viapoint.city} onChange={(event) => this.editViaPoints(event,index)} />
+                                    <TextField label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={viapoint.city} onChange={(event) => this.editViaPoints(event, index)} />
+                                    <ButtonBase className='icon' onClick={() => this.deleteViaPoints(index)}><DeleteIcon /></ButtonBase>
                                 </div>
                             )
                         })
-                    }
-                    <ButtonBase className='add' onClick={this.addViaPoints}><span>+</span></ButtonBase><br />
-                    <TextField label='Available seat' style={{ margin: 8 }} InputLabelProps={{ shrink: true }} type='number' name='availableSeats' value={this.state.availableSeats} onChange={this.changes} />
-                    <TextField label='Rate per km' style={{ margin: 8 }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.changes} />
-                    <button type='submit'>Sumbit </button>
+                    }            
+                    <ButtonBase className='icon' onClick={this.addViaPoints}><Icon>add_circle</Icon></ButtonBase><br />
+                    <TextField label='Available seat' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='availableSeats' value={this.state.availableSeats} onChange={this.changes} />
+                    <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.changes} />
+                    <button type='submit' className='submitButton' onSubmit={this.submit}><span>Submit </span></button>
                 </form>
             </Grid>
             )

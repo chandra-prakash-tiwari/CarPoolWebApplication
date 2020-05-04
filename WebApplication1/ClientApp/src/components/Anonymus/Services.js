@@ -22,16 +22,16 @@ function Login(loginDetails) {
     return fetch('/api/user/login', requestOptions)
         .then(async response => {
             const data = await response.json();
-            if (!response.ok) {
-                alert(JSON.stringify(data.errors))
-                const error = (data && data.message) || response.status;
-                return Promise.reject(error);
+            if (response.ok) {
+                sessionStorage.setItem('currentUserId', data.id);
+                sessionStorage.setItem('userToken', data.userToken);
+                sessionStorage.setItem('currentUser', JSON.stringify(data));
+                return data;
             }
 
-            sessionStorage.setItem('currentUserId', data.id);
-            sessionStorage.setItem('userToken', data.userToken);
-            sessionStorage.setItem('currentUser', JSON.stringify(data));
-            return data;
+            alert("Wrong userid or password")
+            return Promise.reject();
+            
         }).catch(error => {
             return console.log(error);
         })
@@ -42,8 +42,6 @@ function Logout() {
 }
 
 function AddNewUser(userData) {
-    console.log(this.state);
-
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,6 +61,36 @@ function AddNewUser(userData) {
         }).catch(error => {
             return console.log(error);
         })
+}
+
+function ValidUserName(userName) {
+    return fetch(`/api/user?usernameavailability=${userName}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+            return Promise.reject();
+        }
+        return Promise.resolve(data);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
+function ValidEmail(email) {
+    return fetch(`/api/user?emailavailabilty=${email}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+            return Promise.reject();
+        }
+        return Promise.resolve(data);
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 export default Services;

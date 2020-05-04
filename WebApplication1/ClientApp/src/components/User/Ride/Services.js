@@ -1,4 +1,5 @@
 ﻿import UserServices from '../../Anonymus/Services';
+import RiderDetails from './RiderDetails';
 
 export const Services = {
     AllRides,
@@ -18,7 +19,6 @@ function AllRides() {
         if (!response.ok) {
             return Promise.reject();
         }
-        console.log(data)
         return Promise.resolve(data);
     }).catch(error => {
         console.log(error);
@@ -44,9 +44,9 @@ function AddRides(viaPoints) {
             body: JSON.stringify({
                 From: RideDetails.from,
                 To: RideDetails.to,
-                TravelDate: RideDetails.date,
-                AvailableSeats: viaPoints.availableSeats,
-                RatePerKM: viaPoints.ratePerKM,
+                TravelDate: RideDetails.date.toString(),
+                AvailableSeats: parseInt(viaPoints.availableSeats),
+                RatePerKM: parseInt(viaPoints.ratePerKM),
                 ViaPoints: (JSON.stringify(viaPoints.viaPoints)).toString(),
                 OwnerId: cardetails.ownerId,
                 CarId: cardetails.id,
@@ -55,16 +55,13 @@ function AddRides(viaPoints) {
             .then(async response => {
                 const data = await response.json();
                 if (!response.ok) {
-                    console.log(response);
-                    const error = (data && data.message) || response.status;
-                    return Promise.reject(error);
+                    return Promise.reject();
                 }
 
                 localStorage.removeItem('carSetails');
                 localStorage.removeItem('rideDetails');
                 return Promise.resolve(data);
             }).catch(error => {
-                sessionStorage.clear();
                 return console.log(error);
             })
     }

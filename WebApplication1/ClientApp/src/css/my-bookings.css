@@ -1,22 +1,22 @@
-﻿.my-ride{
+﻿.my-bookings{
     margin:1rem 4rem;
 }
 
-.rides{
+.bookings{
     width:24rem;
     padding:1rem;
 }
 
-.ride-line{
+.booking-line{
     display:flex;
 }
 
-    .ride-line .left{
+    .booking-line .left{
         width:50%;
         text-align:start;
     }
 
-    .ride-line .right {
+    .booking-line .right {
         width: 50%;
         text-align:start;
     }
@@ -27,21 +27,21 @@
     font-weight:bolder;
 }
 
-.my-ride .head-card .header {
+.my-bookings .head-card .header {
     width: 12rem;
     height: 2.7rem;
-    background-color: #ffac19;
+    background-color: #9319ff;
     color: white;
-    margin:auto 4rem;
+    margin: auto 4rem;
     font-size: 1.2rem;
     padding: 0.4rem;
 }
 
-.my-ride .rides .head{
+.my-bookings .rides .head{
     display:flex;
 }
 
-.my-ride .rides-cards .no-bookings {
+.my-bookings .all-bookings .no-bookings {
     font-size: 1.5rem;
     margin: 25% auto;
 }

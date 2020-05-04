@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import { ButtonBase, Card, Avatar } from '@material-ui/core';
+import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
 import '../../../css/my-rides.css';
 import Services from './Services.js'
 
@@ -21,12 +21,17 @@ export default class MyRides extends React.Component<{}, allRides> {
     }
 
     render() {
-        const RidesDetails = this.state.rides.map((ride:any, i) => (
+        const RidesDetails =this.state.rides.length>0?(
+            this.state.rides.map((ride: any, i) => (
             <ButtonBase key={i} style={{ margin:'1rem 4rem' }}>
                 <Card className='rides'>
-                    <div>
-                        <h4></h4>
-                        <Avatar></Avatar>
+                    <div className='head'>
+                        <Grid item md={10}>
+                            <h4> </h4>
+                        </Grid>
+                        <Grid item md={2}>
+                            <Avatar></Avatar>
+                        </Grid>
                     </div>
                     <div className='ride-line'>
                         <div className='left'>
@@ -53,16 +58,20 @@ export default class MyRides extends React.Component<{}, allRides> {
                             <span className='label'>Price</span><br />
                             <span>{ride.ratePerKM}</span>
                         </div>
+                        <div className='right'>
+                            <span className='label'>Available seats</span><br />
+                            <span>{ride.availableSeats}</span>
+                        </div>
                     </div>
                 </Card>
-            </ButtonBase>
-            ))
+                </ButtonBase>
+            ))) : (<p className='no-bookings'>you have not created any ride offer</p>)
         return (
             <div className='my-ride'>
-                <ButtonBase>
-                    <Card className='header'>Offered Ride</Card>
+                <ButtonBase className='head-card'>
+                    <Card className='header'>Offered rides</Card>
                 </ButtonBase>
-                <div>{RidesDetails}</div>
+                <div className='rides-cards'>{RidesDetails}</div>
             </div>
             )
     }

@@ -14,14 +14,23 @@
 
     .login .header .head {
         font-size: 2.5rem;
-        padding-top:18%;
+        padding-top: 18%;
+        font-family: 'Noto Sans TC', sans-serif;
     }
 
-.login .form{
-    width: 80%;
-    margin:20% 12% auto;
-    overflow:hidden;
+.login .header .header-underline {
+    background-color: white;
+    width: 5.5rem;
+    height: 2.5px;
+    margin: 0.5rem auto;
 }
+
+    .login .form {
+        width: 80%;
+        margin: 20% 12% auto;
+        overflow: hidden;
+        font-family: 'Open Sans', sans-serif;
+    }
 
 .login .form input{
     background-color:white;
@@ -33,30 +42,72 @@
     width:90%;
 }
 
+.login .form .input div{
+    background-color:white;
+}
+
+    .login .form .input div div {
+        color: #dcd7db;
+    }
+
+
+.login .form label {
+    font-weight: 100;
+    color: #dcd7db;
+}
+
 .login .form .submit{
     display:flex;
     margin-top:6px;
 }
 
-.login .form .submit button {
-    border-radius: 2rem;
-    margin: auto;
-    position: relative;
-    background-color: #ffac19;
-}
-
-    .login .a {
-        display: flex;
+    .login .form .submit span {
+        font-weight: 600;
+        color: white;
+        font-size: 1rem;
     }
 
-.login a {
-    color: white;
-    font-size: larger;
-    margin: auto;
+    .login .form .submit button {
+        border-radius: 2rem;
+        margin: auto;
+        background-color: #ffac19;
+        width: 9rem;
+        height: 3rem;
+        border: 0;
+    }
+
+    .login .footer {
+        display: grid;
+    }
+
+.login .footer .footer-underline {
+    height: 2.5px;
+    width: 4rem;
+    background-color: white;
+    margin: 2px 60%;
 }
 
-    .login p {
+    .login a {
+        font-family: 'Open Sans', sans-serif;
         color: white;
         font-size: larger;
         margin: auto;
+        font-weight: 600;
+    }
+
+    .login a:hover{
+        text-decoration:none;
+    }
+
+    .login .footer p {
+        color: white;
+        font-size: larger;
+        margin: auto;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .login .form .input p {
+        color: red;
+        font-size: 1rem;
+        font-family: 'Open Sans', sans-serif;
     }

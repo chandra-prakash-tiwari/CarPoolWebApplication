@@ -15,3 +15,15 @@
 .car-selectors .user-cars{
     display: contents;
 }
+
+.car-selectors .header .head {
+    margin: auto 1rem 2rem;
+    color: #9319ff;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.user-cars .user-cars .car-cards .car-details {
+    font-family: 'Noto Sans TC', sans-serif;
+}

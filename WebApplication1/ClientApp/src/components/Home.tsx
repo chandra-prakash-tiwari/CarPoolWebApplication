@@ -8,25 +8,21 @@ export default function Home() {
     return (
         <div className="home" >
             <div className='welcome'>
-                <h1>Hey {userServices.currentUser.name.split(' ')[0]}</h1>
+                <p>Hey {userServices.currentUser.name.split(' ')[0]}!</p>
             </div>
 
             <div className='cards' >
                 <ButtonBase href='/booking' >
                     < Card className='ride'>            
                         <CardContent >                            
-                            < Typography className='cards-element' component='h1' variant='h5' >                
-                                Book a Ride 
-                            </Typography>
+                            < Typography className='cards-element' component='h1' variant='h5' >Book a ride </Typography>
                         </CardContent>
                     </Card> 
                 </ButtonBase>
                 <ButtonBase href='/car'>
                     < Card className='booking' >
                         <CardContent >
-                            < Typography className='cards-element' component='h1' variant='h5' >
-                                Offer a Ride 
-                            </Typography>
+                            < Typography className='cards-element' component='h1' variant='h5' >Offer a ride </Typography>
                         </CardContent>
                     </Card>
                 </ButtonBase>

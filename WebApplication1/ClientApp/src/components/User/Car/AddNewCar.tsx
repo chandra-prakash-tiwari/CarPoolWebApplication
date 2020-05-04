@@ -1,11 +1,14 @@
 ﻿import * as React from 'react';
-import { TextField, Switch, Grid } from '@material-ui/core';
+import { TextField, Grid, ButtonBase } from '@material-ui/core';
 import Services from './Services';
+import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
 type Car ={
     carNumber?: string,
     carModel?: string,
-    noofSeats: number
+    noofSeats: number,
+    switch:boolean
 }
 
 export default class AddNewCar extends React.Component<{},Car> {
@@ -14,7 +17,8 @@ export default class AddNewCar extends React.Component<{},Car> {
         this.state = {
             carNumber: '',
             carModel: '',
-            noofSeats:0
+            noofSeats: 0,
+            switch: true
         }
     }
 
@@ -25,8 +29,14 @@ export default class AddNewCar extends React.Component<{},Car> {
         });
     }
 
-    submit = () => {
-        Services.AddNewCar(this.state)
+    switchChanges = () => {
+        this.setState({ switch: !this.state.switch })
+    }
+
+    submit = (event: any) => {
+        event.preventDefault();
+        Services.AddNewCar(this.state);
+        window.location.pathname = '/home';
     }
 
     render() {
@@ -35,16 +45,18 @@ export default class AddNewCar extends React.Component<{},Car> {
                 <form className='car-details'>
                     <div className='header'>
                         <div className='head'>
-                            <h1>Add a new car</h1>
-                            <Switch color="secondary" name="checkedB" />
+                            <h1>Add new car</h1>
+                            <ButtonBase onClick={this.switchChanges} style={{ marginLeft: '5rem' }}>
+                                {this.state.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#808080' }} />}
+                            </ButtonBase>
                         </div>
                         <p>we get you the matches asap!</p>
                     </div>
-                    <TextField label="CarNumber" style={{ margin: 8 }} InputLabelProps={{ shrink: true }} type='text' value={this.state.carNumber}  onChange={this.changes} name='carNumber' />
-                    <TextField label="Model" style={{ margin: 8 }} InputLabelProps={{ shrink: true }} type='text' value={this.state.carModel} onChange={this.changes} name='carModel' />
-                    <TextField label="Max Number Of Seat" style={{ margin: 8 }} InputLabelProps={{ shrink: true }} type='number' value={this.state.noofSeats} onChange={this.changes} name='noofSeats' />  
+                    <TextField className='input' label="CarNumber" InputLabelProps={{ shrink: true }} type='text' value={this.state.carNumber}  onChange={this.changes} name='carNumber' />
+                    <TextField className='input' label="Model" InputLabelProps={{ shrink: true }} type='text' value={this.state.carModel} onChange={this.changes} name='carModel' />
+                    <TextField className='input' label="Max Number Of Seat" InputLabelProps={{ shrink: true }} type='number' value={this.state.noofSeats} onChange={this.changes} name='noofSeats' />  
                     <div>
-                        <button type='submit' color='primary' onClick={this.submit}>Submit</button>
+                        <button type='submit' className='submitButton' onClick={this.submit}>Submit</button>
                     </div>
                 </form>
             </Grid>

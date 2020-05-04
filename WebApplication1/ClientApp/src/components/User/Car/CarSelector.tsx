@@ -30,15 +30,9 @@ export default class CarSelector extends React.Component<{}, allCars> {
         const carDetails = this.state.cars.map((carRecord:any, i) => (
             <ButtonBase key={i} onClick={() => this.handleclick(carRecord)} >
                 < Card className='car-cards'>
-                    <div>
-                        <p>Model : {carRecord.model}</p>
-                    </div>
-                    <div>
-                        <p>Car Number : {carRecord.number}</p>
-                    </div>
-                    <div>
-                        <p>MAX NUMBER OF SEAT: {carRecord.noofSeat}</p>
-                    </div>
+                     <p className='car-details'>Model : {carRecord.model}</p>
+                     <p className='car-details'>Car Number : {carRecord.number}</p>
+                     <p className='car-details'>MAX NUMBER OF SEAT: {carRecord.noofSeat}</p>
                 </Card>
             </ButtonBase>
         ))
@@ -46,7 +40,7 @@ export default class CarSelector extends React.Component<{}, allCars> {
         return (
             <div className='car-selectors'>
                 <div className='header'>
-                    <h3>Select one car if not present then add that car</h3>
+                    <p className='head'>Select a car for a ride or add new car</p>
                 </div>
                 <div className='user-cars'>{carDetails}</div>
                 <ButtonBase href='/car/addnewcar' >
