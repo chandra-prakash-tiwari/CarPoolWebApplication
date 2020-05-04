@@ -15,5 +15,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
         User GetUser(string id);
 
         bool CheckUserName(string userName);
+
+        bool CheckEmail(string email);
     }
 }
