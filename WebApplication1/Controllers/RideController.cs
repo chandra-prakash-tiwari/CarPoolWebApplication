@@ -51,20 +51,23 @@ namespace CarPoolWebApi.Controllers
         [ActionName("update")]
         public IActionResult Update([FromBody] Ride updateRide,string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             updateRide.Id = id;
             if (_RideServices.Update(updateRide))
             {
                 return Ok();
             }
 
-            return BadRequest();
+            return NoContent();
         }
 
         [HttpGet]
         [ActionName("getbyid")]
         public IActionResult GetById(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
                 return BadRequest();
 
             Ride ride = _RideServices.GetById(id);
@@ -78,7 +81,7 @@ namespace CarPoolWebApi.Controllers
         [ActionName("getallrides")]
         public IActionResult GetOwnerRides(string ownerId)
         {
-            if (ownerId == null)
+            if (string.IsNullOrEmpty(ownerId))
                 return BadRequest();
 
             return Ok(_RideServices.GetByOwnerId(ownerId));
