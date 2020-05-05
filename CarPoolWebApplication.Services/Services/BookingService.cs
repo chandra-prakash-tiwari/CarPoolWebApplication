@@ -22,7 +22,6 @@ namespace CarPoolingWebApiReact.Services.Services
         public bool Create(Models.Client.Booking booking)
         {
             booking.Id = Extensions.GenerateId();
-            booking.Id = Guid.NewGuid().ToString();
             _db.Bookings.Add(_mapper.Map<Models.Data.Booking>(booking));
 
             return _db.SaveChanges() > 0;

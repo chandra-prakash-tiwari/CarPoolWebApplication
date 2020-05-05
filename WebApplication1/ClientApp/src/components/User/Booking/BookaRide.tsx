@@ -43,35 +43,23 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
         this.setState({ switch: !this.state.switch })
     }
 
+    IsNull(value:any) {
+        return (value.length === 0 || value === null);
+    }
+
     validator(name: any, value: any) {
         switch (name) {
             case 'from':
-                if (value.length === 0 || value === null) {
-                    this.setState({ fromValidity: 'Please enter starting point' })
-                    return false;
-                }
-                else {
-                    this.setState({ fromValidity: '' })
-                    return true;
-                }
+                this.IsNull(value) ? this.setState({ fromValidity: 'Please enter starting point' }) : this.setState({ fromValidity: '' });
+                return !this.IsNull(value);
+
             case 'to':
-                if (value.length === 0 || value === null) {
-                    this.setState({ toValidity: 'Please enter end point' });
-                    return false;
-                }
-                else {
-                    this.setState({ toValidity: '' });
-                    return true;
-                }
+                this.IsNull(value) ? this.setState({ toValidity: 'Please enter end point' }) : this.setState({ toValidity: '' });
+                return !this.IsNull(value);
+
             case 'date':
-                if (value.length === 0 || value === null) {
-                    this.setState({ dateValidity: 'Please enter date' })
-                    return false;
-                }
-                else {
-                    this.setState({ dateValidity: '' })
-                    return true;
-                }
+                this.IsNull(value) ? this.setState({ dateValidity: 'Please enter date' }) : this.setState({ dateValidity: '' });
+                return !this.IsNull(value);
         }
     }
 

@@ -22,9 +22,13 @@ namespace CarPoolWebApi.Controllers
         [ActionName("create")]
         public IActionResult Create([FromBody] Car car,string ownerId)
         {
+            if (string.IsNullOrEmpty(ownerId) || car == null)
+                return BadRequest();
+
             car.OwnerId = ownerId;
             if (!_CarServices.Create(car))
-                return BadRequest();
+                return NotFound();
+
             return Ok();
         }
 
@@ -32,8 +36,12 @@ namespace CarPoolWebApi.Controllers
         [ActionName("delete")]
         public IActionResult Remove(string id)
         {
-            if (!_CarServices.Delete(id))
+            if (string.IsNullOrEmpty(id))
                 return BadRequest();
+
+            if (!_CarServices.Delete(id))
+                return NotFound();
+
             return Ok();
         }
 
@@ -41,6 +49,9 @@ namespace CarPoolWebApi.Controllers
         [ActionName("getbyownerid")]
         public IActionResult GetByOwnerId(string ownerId)
         {
+            if (string.IsNullOrEmpty(ownerId))
+                return BadRequest();
+
             return Ok(_CarServices.GetByOwnerId(ownerId));
         }
 
@@ -48,6 +59,9 @@ namespace CarPoolWebApi.Controllers
         [ActionName("getbyid")]
         public IActionResult GetById(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             return Ok(_CarServices.GetById(id));
         }
     }

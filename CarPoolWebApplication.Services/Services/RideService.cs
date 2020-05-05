@@ -32,28 +32,8 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Ride> GetOffers(Models.Client.SearchRideRequest booking)
         {
-            int count = 0;
-            List<Models.Data.Ride> rides = new List<Models.Data.Ride>();
-
-            foreach (var ride in _db.Rides)
-            {
-                count++;
-                //var viaPoints = 
-                //    JsonConvert.DeserializeObject<List<Models.Client.Point>>(ride.ViaPoints);
-
-                //if (viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.Equals(booking.To, StringComparison.InvariantCultureIgnoreCase))) >
-                //    viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.Equals(booking.From, StringComparison.InvariantCultureIgnoreCase)))
-                //    && ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
-                //{
-                //    rides.Add(ride);
-                //}
-
-                if (ride.TravelDate == booking.TravelDate && (ride.To).Equals(booking.To,StringComparison.InvariantCultureIgnoreCase) &&
-                    (ride.From).Equals(booking.From,StringComparison.InvariantCultureIgnoreCase) && ride.AvailableSeats > 0)
-                {
-                    rides.Add(ride);
-                }
-            }
+            var rides = _db.Rides.Where(ride => ride.TravelDate == booking.TravelDate && (ride.To).Equals(booking.To, StringComparison.InvariantCultureIgnoreCase) &&
+                    (ride.From).Equals(booking.From, StringComparison.InvariantCultureIgnoreCase) && ride.AvailableSeats > 0).ToList();
 
             return _mapper.Map<List<Models.Client.Ride>>(rides);
         }
@@ -72,7 +52,7 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool OfferResponse(string rideId)
         {
-            var ride = _mapper.Map<Models.Data.Ride>(GetById(rideId));
+            var ride = _mapper.Map<Models.Data.Ride>(this.GetById(rideId));
             if (ride.AvailableSeats > 0)
             {
                 ride.AvailableSeats--;
@@ -82,15 +62,15 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool Update(Models.Client.Ride newRide)
+        public bool Update(Models.Client.Ride updateRide)
         {
-            var oldRide = _mapper.Map<Models.Data.Ride>(GetById(newRide.Id));
-            if (oldRide != null)
+            var ride = _mapper.Map<Models.Data.Ride>(this.GetById(updateRide.Id));
+            if (ride != null)
             {
-                oldRide.RideDate = newRide.RideDate;
-                oldRide.From = newRide.From;
-                oldRide.CarId = newRide.CarId;
-                oldRide.To = newRide.To;
+                ride.RideDate = updateRide.RideDate;
+                ride.From = updateRide.From;
+                ride.CarId = updateRide.CarId;
+                ride.To = updateRide.To;
             }
 
             return _db.SaveChanges() > 0;

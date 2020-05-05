@@ -9,7 +9,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 
         bool Delete(string id);
 
-        List<Models.Client.Car> GetByOwnerId(string ownerId);
+        List<Car> GetByOwnerId(string ownerId);
 
         Car GetById(string id);
     }

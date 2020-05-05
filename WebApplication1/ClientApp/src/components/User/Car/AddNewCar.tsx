@@ -3,6 +3,7 @@ import { TextField, Grid, ButtonBase } from '@material-ui/core';
 import CarService from '../../../Services/CarService'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
+import '../../../css/add-new-car.css'
 
 type CarDetails ={
     carNumber?: string,

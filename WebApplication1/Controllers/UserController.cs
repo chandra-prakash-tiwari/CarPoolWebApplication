@@ -66,11 +66,13 @@ namespace CarPoolWebApi.Controllers
         [ActionName("update")]
         public IActionResult Update([FromBody] User user)
         {
+            if (user == null)
+                return BadRequest();
+
             User old = _UserService.GetById(user.Id);
             if (old == null)
-            {
-                return NotFound();
-            }
+                return NoContent();
+
             else if (!_UserService.Update(user))
             {
                 return NotFound();
@@ -83,10 +85,12 @@ namespace CarPoolWebApi.Controllers
         [ActionName("authenticate")]
         public IActionResult Authenticate([FromBody] LoginRequest login)
         {
-            var user = _UserService.Authenticate(login);
-
-            if (user == null)
+            if (login == null)
                 return BadRequest();
+
+            var user = _UserService.Authenticate(login);
+            if (user == null)
+                return NoContent();
 
             return Ok(new
             {
@@ -101,23 +105,17 @@ namespace CarPoolWebApi.Controllers
         [AllowAnonymous]
         [HttpGet]
         [ActionName("hasusername")]
-        public IActionResult HasUserName(string userName)
+        public bool HasUserName(string userName)
         {
-            if (_UserService.HasUserName(userName))
-                return BadRequest();
-
-            return Ok();
+            return !(_UserService.HasUserName(userName));
         }
 
         [AllowAnonymous]
         [HttpGet]
         [ActionName("hasemail")]
-        public IActionResult HasEmail(string email)
+        public bool HasEmail(string email)
         {
-            if (_UserService.HasEmail(email))
-                return BadRequest();
-
-            return Ok();
+            return !_UserService.HasEmail(email);
         }
     }
 }

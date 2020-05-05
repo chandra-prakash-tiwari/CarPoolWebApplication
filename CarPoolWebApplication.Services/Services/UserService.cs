@@ -28,14 +28,14 @@ namespace CarPoolingWebApiReact.Services.Services
         public bool Create(Models.Client.User user)
         {
             user.Id = Extensions.GenerateId();
-            var userData = _mapper.Map<Models.Data.User>(user);
-            _db.Users.Add(userData);
+            _db.Users.Add(_mapper.Map<Models.Data.User>(user));
             return _db.SaveChanges() > 0;
         }
 
         public Models.Client.User Authenticate(Models.Client.LoginRequest credentials)
         {
-            var user = _mapper.Map<Models.Client.User>(_db.Users.FirstOrDefault(a => (a.UserName.ToLower() == credentials.UserName.ToLower() || a.Email.ToLower() == credentials.UserName.ToLower()) && a.Password == credentials.Password));
+            var response = _db.Users.FirstOrDefault(a => (a.UserName.ToLower() == credentials.UserName.ToLower() || a.Email.ToLower() == credentials.UserName.ToLower()) && a.Password == credentials.Password);
+            var user = response!=null ? _mapper.Map<Models.Client.User>(response):null;
 
             if (user == null)
                 return null;
@@ -72,14 +72,14 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool Update(Models.Client.User newDetails)
+        public bool Update(Models.Client.User updateUser)
         {
-            Models.Data.User oldDetails = _db.Users.FirstOrDefault(a => a.Id == newDetails.Id);
-            if (oldDetails != null)
+            Models.Data.User user = _db.Users.FirstOrDefault(a => a.Id == updateUser.Id);
+            if (user != null)
             {
-                oldDetails.Name = newDetails.Name;
-                oldDetails.Address = newDetails.Address;
-                oldDetails.Mobile = newDetails.Mobile;
+                user.Name = updateUser.Name;
+                user.Address = updateUser.Address;
+                user.Mobile = updateUser.Mobile;
 
                 return _db.SaveChanges() > 0;
             }

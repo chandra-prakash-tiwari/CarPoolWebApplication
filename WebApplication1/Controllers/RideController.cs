@@ -21,9 +21,12 @@ namespace CarPoolWebApi.Controllers
         [ActionName("create")]
         public IActionResult Create([FromBody] Ride ride)
         {
-            if (!_RideServices.Create(ride))
-            {
+            if (ride == null)
                 return BadRequest();
+
+            else if (!_RideServices.Create(ride))
+            {
+                return NoContent();
             }
 
             return Ok();
@@ -34,6 +37,8 @@ namespace CarPoolWebApi.Controllers
         [ActionName("cancel")]
         public IActionResult Cancel(string rideId)
         {
+            if(string.IsNullOrEmpty(rideId))
+
             if (!_RideServices.Cancel(rideId))
             {
                 return NoContent();
@@ -44,10 +49,10 @@ namespace CarPoolWebApi.Controllers
 
         [HttpPut]
         [ActionName("update")]
-        public IActionResult Update([FromBody] Ride ride,string id)
+        public IActionResult Update([FromBody] Ride updateRide,string id)
         {
-            ride.Id = id;
-            if (_RideServices.Update(ride))
+            updateRide.Id = id;
+            if (_RideServices.Update(updateRide))
             {
                 return Ok();
             }
@@ -83,6 +88,9 @@ namespace CarPoolWebApi.Controllers
         [ActionName("offers")]
         public IActionResult GetOffers([FromBody] SearchRideRequest booking)
         {
+            if (booking == null)
+                return BadRequest();
+
             return Ok(_RideServices.GetOffers(booking));
         }
 

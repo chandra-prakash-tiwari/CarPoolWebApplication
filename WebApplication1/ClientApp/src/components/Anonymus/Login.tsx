@@ -43,10 +43,6 @@ export default class Login extends React.Component<{}, LoginProps> {
         return (value===null||value.length===0)
     }
 
-    IsValidPassword(value: any) {
-        return (!value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/))
-    }
-
     validator(name:any, value:any) {
         switch (name) {
             case 'userName':
@@ -54,8 +50,7 @@ export default class Login extends React.Component<{}, LoginProps> {
                 return this.isNull(value);
 
             case 'password':
-                this.isNull(value) ? this.setState({ validPassword: "Please enter password" }) :
-                    (this.IsValidPassword ? this.setState({ validPassword: "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" }) : this.setState({ validPassword: "" }));
+                this.isNull(value) ? this.setState({ validPassword: "Please enter password" }) : this.setState({ validPassword: "" });
                 return this.isNull(value);
         }
     }
@@ -68,7 +63,7 @@ export default class Login extends React.Component<{}, LoginProps> {
 
     handleAuthentication = (event:any) => {
         event.preventDefault();
-        if (this.validator('userName', this.state.userName) && this.validator('password',this.state.password)) {
+        if (!this.validator('userName', this.state.userName) && !this.validator('password',this.state.password)) {
             var data = {
                 userName: this.state.userName,
                 password: this.state.password

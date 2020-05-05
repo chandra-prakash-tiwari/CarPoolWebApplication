@@ -1,4 +1,4 @@
-﻿import userServices from './UserService'
+﻿import UserService from './UserService'
 
 export const CarService = {
     AddNewCar,
@@ -6,45 +6,41 @@ export const CarService = {
 };
 
 function AddNewCar(CarDetails) {
-    var token = userServices.userToken;
     var details = {
         number: CarDetails.carNumber,
         noofseat: parseInt(CarDetails.noofSeats),
         model: CarDetails.carModel
     }
-    if (token) {
-        fetch(`/api/car/create?ownerid=${userServices.currentUserId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(details),
-        })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) {
-                    console.log(response);
-                    const error = (data && data.message) || response.status;
-                    return Promise.reject(error);
-                }
+    fetch(`/api/car/create?ownerid=${UserService.currentUser.id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${UserService.currentUser.userToken}`,
+        },
+        body: JSON.stringify(details),
+    }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+            console.log(response);
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+        }
 
-                window.location.pathname = '/car'
-                return data;
-            }).catch(error => {
-                return console.log(error);
-            })
-    }
+        window.location.pathname = '/car'
+        return data;
+    }).catch(error => {
+            return console.log(error);
+    })
 }
 
 function GetCars() {
-    return fetch(`/api/car/getbyownerid?ownerId=${userServices.currentUserId}`, {
+    return fetch(`/api/car/getbyownerid?ownerId=${UserService.currentUser.id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            Authorization: `Bearer ${userServices.userToken}`
+            Authorization: `Bearer ${UserService.currentUser.userToken}`
         }
     }).then(async response => {
         const data = await response.json();

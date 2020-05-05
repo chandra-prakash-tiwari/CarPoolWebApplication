@@ -1,6 +1,4 @@
-﻿const getCurrentUserId = sessionStorage.getItem('currentUserId');
-const getUserToken = sessionStorage.getItem('userToken');
-const getCurrentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+﻿const getCurrentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
 export const UserService = {
     GetUser,
@@ -9,8 +7,6 @@ export const UserService = {
     AddNewUser,
     ValidEmail,
     ValidUserName,
-    currentUserId: getCurrentUserId,
-    userToken: getUserToken,
     currentUser: getCurrentUser
 }
 
@@ -20,20 +16,16 @@ function Login(loginDetails) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginDetails)
     };
-
     return fetch('/api/user/authenticate', requestOptions)
         .then(async response => {
             const data = await response.json();
-            if (response.ok) {
-                sessionStorage.setItem('currentUserId', data.id);
-                sessionStorage.setItem('userToken', data.userToken);
-                sessionStorage.setItem('currentUser', JSON.stringify(data));
-                return data;
+            if (!response.ok) {
+                alert("Wrong userid or password")
+                return Promise.reject();
             }
-
-            alert("Wrong userid or password")
-            return Promise.reject();
-
+            sessionStorage.setItem('currentUser', JSON.stringify(data));
+            return data;
+            
         }).catch(error => {
             return console.log(error);
         })
@@ -70,13 +62,7 @@ function ValidUserName(userName) {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
-            return Promise.reject();
-        }
-        return Promise.resolve(data);
-    }).catch(error => {
-        console.log(error);
+        return await response.json();
     })
 }
 
@@ -84,14 +70,8 @@ function ValidEmail(email) {
     return fetch(`/api/user/hasemail?email=${email}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
-    }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
-            return Promise.reject();
-        }
-        return Promise.resolve(data);
-    }).catch(error => {
-        console.log(error);
+    }).then(response => {
+        return response;
     })
 }
 
@@ -101,7 +81,7 @@ function GetUser(id) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            Authorization: `Bearer ${this.userToken}`
+            Authorization: `Bearer ${this.currentUser.userToken}`
         }
     }).then(async response => {
         const data = await response.json();

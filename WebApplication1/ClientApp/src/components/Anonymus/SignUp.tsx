@@ -59,14 +59,14 @@ export default class SignUp extends React.Component<{}, SignUpDetails> {
             [event.target.name]: event.target.value
         });
 
-        this.Validator(event.target.name, event)
+        this.Validator(event.target.name, event.target.value)
     }
 
     submit =(event: any)=> {
         event.preventDefault();
-        if (this.Validator('name', this.state.name) && this.Validator('mobile', this.state.mobile) && this.Validator('userName', this.state.userName) &&
-            this.Validator('address', this.state.address) && this.Validator('drivingLicence', this.state.drivingLicence) && this.Validator('userName', this.state.userName) &&
-            this.Validator('password', this.state.password) && this.Validator('confirmPassword', this.state.confirmPassword)) {
+        if (!this.Validator('name', this.state.name) && !this.Validator('mobile', this.state.mobile) && !this.Validator('userName', this.state.userName) &&
+            !this.Validator('address', this.state.address) && !this.Validator('drivingLicence', this.state.drivingLicence) && !this.Validator('userName', this.state.userName) &&
+            !this.Validator('email', this.state.email) && !this.Validator('password', this.state.password) && !this.Validator('confirmPassword', this.state.confirmPassword)) {
             var data = {
                 username: this.state.userName,
                 password: this.state.password,
@@ -103,30 +103,42 @@ export default class SignUp extends React.Component<{}, SignUpDetails> {
     }
 
     MatchPassword(value: any) {
-        return this.state.password === value;
+        return this.state.password !== value;
+    }
+
+    IsValidDrivingLicence(value: any) {
+        return (!value.match(/^[0-9a-zA-Z]{4,9}$/))
+    }
+
+    IsValidUserName(value: any) {
+        UserService.ValidUserName(value).then((valid) => { return valid} )
+    }
+
+    DuplicacyEmail(value: any) {
+        UserService.ValidEmail(value).then((valid) => { return valid })
     }
 
     Validator(name:any, value:any) {
         switch (name) {
             case 'userName':
+                console.log(this.IsValidUserName(value))
                 this.IsNull(value) ? this.setState({ invalidUserName: "Please enter username" }) : this.setState({ invalidUserName: "" });
                 return this.IsNull(value);
   
             case 'password':
                 this.IsNull(value) ? this.setState({ invalidPassword: "Please enter password" }) :
-                    (this.IsValidPassword ? this.setState({ invalidPassword: "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" }) : this.setState({ invalidPassword: "" }));
+                    (this.IsValidPassword(value) ? this.setState({ invalidPassword: "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" }) : this.setState({ invalidPassword: "" }));
                 return this.IsNull(value);
             case 'name':
-                this.IsNull(value) ? this.setState({ invalidName: "Please enter name" }) : (this.IsString ? this.setState({ invalidName: "Please enter correct name" }) : this.setState({ invalidName: '' }))
+                this.IsNull(value) ? this.setState({ invalidName: "Please enter name" }) : (this.IsString(value) ? this.setState({ invalidName: "Please enter correct name" }) : this.setState({ invalidName: '' }))
+                return this.IsNull(value) && !this.IsString(value)
                 
-                break;
             case 'mobile':
-                this.IsNull(value) ? this.setState({ invalidMobile: "Please enter mobile number" }) : (this.IsValidMobile ? this.setState({ invalidMobile: "Enter correct mobile number" }) : this.setState({ invalidMobile: "" }));
+                this.IsNull(value) ? this.setState({ invalidMobile: "Please enter mobile number" }) : (this.IsValidMobile(value) ? this.setState({ invalidMobile: "Enter correct mobile number" }) : this.setState({ invalidMobile: "" }));
                 return this.IsNull(value) && !this.IsValidMobile(value);
-                break;
 
             case 'email':
-                this.IsNull(value) ? this.setState({ invalidEmail: "Please enter email" }) : (this.IsValidEmail ? this.setState({ invalidEmail: "Enter correct format" }) : this.setState({ invalidEmail: "" }))
+                this.IsNull(value) ? this.setState({ invalidEmail: "Please enter email" }) : (this.IsValidEmail(value) ? this.setState({ invalidEmail: "Please enter correct email" }) : this.setState({ invalidEmail: "" }))
                 return this.IsNull(value) && !this.IsValidEmail(value);
 
             case 'address':
@@ -134,17 +146,17 @@ export default class SignUp extends React.Component<{}, SignUpDetails> {
                 return this.IsNull(value);
 
             case 'drivingLicence':
-                this.IsNull(value) ? this.setState({ invalidDrivingLicence: "Please enter driving licence" }) : this.setState({ invalidDrivingLicence: "" });
+                this.IsNull(value) ? this.setState({ invalidDrivingLicence: "Please enter driving licence" }) : (this.IsValidDrivingLicence(value) ? this.setState({ invalidDrivingLicence:"Driving licence is not correct"}) : this.setState({ invalidDrivingLicence: "" }));
                 return this.IsNull(value);
 
             case 'confirmPassword':
-                this.IsNull(value) ? this.setState({ invalidConfirmPassword: "Re-enter password" }) : (this.MatchPassword ? this.setState({ invalidConfirmPassword: "password-can't matched" }) : this.setState({ invalidConfirmPassword: "" }))
+                this.IsNull(value) ? this.setState({ invalidConfirmPassword: "Re-enter password" }) : (this.MatchPassword(value) ? this.setState({ invalidConfirmPassword: "password-can't matched" }) : this.setState({ invalidConfirmPassword: "" }))
                 return this.IsNull(value) && this.MatchPassword(value);
         }
     }
 
     visibity = () => {
-        this.state.passwordVisibilty == 'password' ?
+        this.state.passwordVisibilty === 'password' ?
             this.setState({ passwordVisibilty: 'text' }) :
             this.setState({ passwordVisibilty: 'password' })
     }
