@@ -15,25 +15,25 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public BookingService(CarPoolContext context, IMapper mapper)
         {
-            _db = context;
-            _mapper = mapper;
+            this._db = context;
+            this._mapper = mapper;
         }
 
         public bool Create(Models.Client.Booking booking)
         {
             booking.Id = Extensions.GenerateId();
-            _db.Bookings.Add(_mapper.Map<Models.Data.Booking>(booking));
+            this._db.Bookings.Add(this._mapper.Map<Models.Data.Booking>(booking));
 
-            return _db.SaveChanges() > 0;
+            return this._db.SaveChanges() > 0;
         }
 
         public bool Cancel(string id)
         {
-            Models.Data.Booking booking = _db.Bookings.FirstOrDefault(a => a.Id == id);
+            Models.Data.Booking booking = this._db.Bookings.FirstOrDefault(a => a.Id == id);
             if (booking != null && booking.Status == Models.Client.BookingStatus.Pending)
             {
                 booking.Status = Models.Client.BookingStatus.Cancel;
-                return _db.SaveChanges() > 0;
+                return this._db.SaveChanges() > 0;
             }
 
             return false;
@@ -41,12 +41,12 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Booking> Status(string id)
         {
-            return _mapper.Map<List<Models.Client.Booking>>(_db.Bookings.Where(a => a.BookerId == id && a.Status != Models.Client.BookingStatus.Completed).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings.Where(a => a.BookerId == id && a.Status != Models.Client.BookingStatus.Completed).ToList());
         }
 
         public bool Response(string id, Models.Client.BookingStatus status)
         {
-            var bookingResponse = _db.Bookings.FirstOrDefault(booking => booking.Id == id);
+            var bookingResponse = this._db.Bookings.FirstOrDefault(booking => booking.Id == id);
             if (bookingResponse == null)
             {
                 return false;
@@ -54,32 +54,32 @@ namespace CarPoolingWebApiReact.Services.Services
 
             bookingResponse.Status = status;
 
-            return _db.SaveChanges() > 0;
+            return this._db.SaveChanges() > 0;
         }
 
         public string GetRequesterById(string id)
         {
-            return _db.Bookings.FirstOrDefault(a => a.Id == id).RideId;
+            return this._db.Bookings.FirstOrDefault(a => a.Id == id).RideId;
         }
 
         public List<Models.Client.Booking> GetByUserId(string userId)
         {
-            return _mapper.Map<List<Models.Client.Booking>>(_db.Bookings.Where(booking => booking.BookerId == userId).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings.Where(booking => booking.BookerId == userId).ToList());
         }
 
         public List<Models.Client.Booking> GetByRideId(string rideId)
         {
-            return _mapper.Map<List<Models.Client.Booking>>(_db.Bookings.Where(booking => booking.RideId == rideId).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings.Where(booking => booking.RideId == rideId).ToList());
         }
 
         public List<Models.Client.Booking> RequestPending(string rideId)
         {
-            return _mapper.Map<List<Models.Client.Booking>>(_db.Bookings?.Where(booking => booking.Status == Models.Client.BookingStatus.Pending && booking.RideId == rideId).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings?.Where(booking => booking.Status == Models.Client.BookingStatus.Pending && booking.RideId == rideId).ToList());
         }
 
         public Models.Client.Booking GetById(string id)
         {
-            return _mapper.Map<Models.Client.Booking>(_db.Bookings?.FirstOrDefault(booking => booking.Id == id));
+            return this._mapper.Map<Models.Client.Booking>(this._db.Bookings?.FirstOrDefault(booking => booking.Id == id));
         }
     }
 }

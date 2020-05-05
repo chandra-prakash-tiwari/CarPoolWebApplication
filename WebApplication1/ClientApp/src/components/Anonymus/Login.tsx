@@ -9,66 +9,61 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import { InputAdornment } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-type LoginProps = {
-    userName: string,
-    password: string,
-    validUserName: string,
-    validPassword: string,
-    passwordVisibilty: 'text'|'password'
-}; 
+export class LoginProps{
+    userName: string;
+    password: string;
+    userNameError: string;
+    passwordError: string;
+    passwordType: boolean;
+    constructor(value: any) {
+        this.userName = value.userName;
+        this.password = value.password;
+        this.userNameError = value.userNameError;
+        this.passwordError = value.passwordError;
+        this.passwordType = value.passwordType;
+    }
+} 
 
 export default class Login extends React.Component<{}, LoginProps> {
     constructor(props: LoginProps) {
         super(props);
-        this.state = {
+        this.state = new LoginProps({
             userName: '',
             password: '',
-            validUserName: '',
-            validPassword: '',
-            passwordVisibilty: 'password'
-        }
+            userNameError: '',
+            passwordError:'',
+            passwordType: true
+        });
     }
 
-    changes = (event: any) => {
+    onChanges = (event: any) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value
         });
-
-        this.validator(event.target.name, event.target.value);
     }
 
-
-    isNull(value:any){
-        return (value===null||value.length===0)
+    IsEmpty(value: string) {
+        return !value || (value && value.trim().length === 0);
     }
 
-    validator(name:any, value:any) {
-        switch (name) {
-            case 'userName':
-                this.isNull(value) ? this.setState({ validUserName: "Please enter username or email address" }) : this.setState({ validUserName: "" });
-                return this.isNull(value);
-
-            case 'password':
-                this.isNull(value) ? this.setState({ validPassword: "Please enter password" }) : this.setState({ validPassword: "" });
-                return this.isNull(value);
-        }
+    UserNameValidator(value: string) {
+        let inValid = this.IsEmpty(value);
+        this.setState({ userNameError: inValid ? "Please enter username or email address" : "" });
+        return inValid;
     }
 
-    visibity = () => {
-        this.state.passwordVisibilty == 'password'?
-            this.setState({ passwordVisibilty: 'text' }) :
-            this.setState({ passwordVisibilty:'password' })
+    PasswordValidator(value: string) {
+        let inValid = this.IsEmpty(value);
+        this.setState({ passwordError: inValid ? "Please enter password" : "" })
+        return inValid;
     }
 
-    handleAuthentication = (event:any) => {
+    onSubmit = (event:any) => {
         event.preventDefault();
-        if (!this.validator('userName', this.state.userName) && !this.validator('password',this.state.password)) {
-            var data = {
-                userName: this.state.userName,
-                password: this.state.password
-            }
-            UserService.Login(data);
+        console.log(this.state)
+        if (!this.UserNameValidator(this.state.userName) && !this.PasswordValidator(this.state.password)) {
+            UserService.Login(this.state);
             window.location.pathname = '/home';
         }
     }
@@ -82,17 +77,17 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <div className='header-underline'></div>
                     </div>
                     <form className='form'>
-                        <TextField variant="filled" className='input' value={this.state.userName} onChange={this.changes} id="userName" label="Enter Email or UserName Id " helperText={this.state.validUserName} name="userName" autoFocus />
-                        <TextField variant="filled" className='input' value={this.state.password} onChange={this.changes} name="password" label="Enter Password" type={this.state.passwordVisibilty} helperText={this.state.validPassword} id="password"
+                        <TextField variant="filled" className='input' value={this.state.userName} onChange={(event) => { this.onChanges(event); this.UserNameValidator(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id " helperText={this.state.userNameError} autoFocus />
+                        <TextField variant="filled" className='input' value={this.state.password} onChange={(event) => { this.onChanges(event); this.PasswordValidator(event.target.value) }} name="password" type={this.state.passwordType ? 'password' : 'text'} label="Enter Password" helperText={this.state.passwordError}
                             InputProps={{
                                 endAdornment: (
-                                    <InputAdornment position='end' onClick={this.visibity} >
-                                        {this.state.passwordVisibilty == 'password' ? <VisibilityIcon /> : <VisibilityOff />}
+                                    <InputAdornment position='end' onClick={() => (this.setState({ passwordType: !this.state.passwordType }))} >
+                                        {this.state.passwordType ? <VisibilityIcon /> : <VisibilityOff />}
                                     </InputAdornment>
                                 )
                             }} />
                         <div className='submit'>
-                            <button type="submit" onClick={this.handleAuthentication}><span> Submit </span></button>
+                            <button type="submit" onClick={this.onSubmit}><span> Submit </span></button>
                         </div>
                     </form>
                     <div className='footer'>

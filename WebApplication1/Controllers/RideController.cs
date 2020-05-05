@@ -10,11 +10,11 @@ namespace CarPoolWebApi.Controllers
     [ApiController]
     public class RideController : ControllerBase
     {
-        private readonly IRideService _RideServices;
+        private readonly IRideService _rideServices;
 
         public RideController(IRideService rideServices)
         {
-            _RideServices = rideServices;
+            this._rideServices = rideServices;
         }
 
         [HttpPost]
@@ -24,7 +24,7 @@ namespace CarPoolWebApi.Controllers
             if (ride == null)
                 return BadRequest();
 
-            else if (!_RideServices.Create(ride))
+            else if (!this._rideServices.Create(ride))
             {
                 return NoContent();
             }
@@ -39,7 +39,7 @@ namespace CarPoolWebApi.Controllers
         {
             if(string.IsNullOrEmpty(rideId))
 
-            if (!_RideServices.Cancel(rideId))
+            if (!this._rideServices.Cancel(rideId))
             {
                 return NoContent();
             }
@@ -55,7 +55,7 @@ namespace CarPoolWebApi.Controllers
                 return BadRequest();
 
             updateRide.Id = id;
-            if (_RideServices.Update(updateRide))
+            if (this._rideServices.Update(updateRide))
             {
                 return Ok();
             }
@@ -70,7 +70,7 @@ namespace CarPoolWebApi.Controllers
             if (string.IsNullOrEmpty(id))
                 return BadRequest();
 
-            Ride ride = _RideServices.GetById(id);
+            Ride ride = this._rideServices.GetById(id);
             if (ride == null)
                 return NotFound();
 
@@ -84,7 +84,7 @@ namespace CarPoolWebApi.Controllers
             if (string.IsNullOrEmpty(ownerId))
                 return BadRequest();
 
-            return Ok(_RideServices.GetByOwnerId(ownerId));
+            return Ok(this._rideServices.GetByOwnerId(ownerId));
         }
 
         [HttpPost]
@@ -94,7 +94,7 @@ namespace CarPoolWebApi.Controllers
             if (booking == null)
                 return BadRequest();
 
-            return Ok(_RideServices.GetOffers(booking));
+            return Ok(this._rideServices.GetOffers(booking));
         }
 
     }

@@ -33,35 +33,31 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
         }
     }
 
-    addViaPoints = () => {
+    AddNewViaPoint = () => {
         this.setState({ viaPoints: [...this.state.viaPoints, { city: '', longitude: 0, latitude:0 }] })
     }
 
-    editViaPoints = (e: any, index: number) => {
+    EditViaPointDetails = (e: any, index: number) => {
         this.state.viaPoints[index].city = e.target.value;
         this.state.viaPoints[index].longitude = index;
         this.state.viaPoints[index].latitude = index + 1;
         this.setState({ viaPoints:this.state.viaPoints });
     }
 
-    deleteViaPoints = (index:any) => {
+    DeleteViaPoint = (index:any) => {
         const list = [...this.state.viaPoints];
         list.splice(index, 1);
         this.setState({ viaPoints: list });
     };
 
-    changes = (event:any) => {
+    OnChanges = (event:any) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value
         });
     }
 
-    switchChanges = () => {
-        this.setState({ switch: !this.state.switch })
-    }
-
-    submit = (event:any) => {
+    OnSubmit = (event:any) => {
         event.preventDefault();
         RideService.AddRides(this.state);
         window.location.pathname = '/home';
@@ -74,7 +70,7 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
                     <div className='header'>
                         <div className='head'>
                             <h1>Add Via Points</h1>
-                            <ButtonBase onClick={this.switchChanges}>
+                            <ButtonBase onClick={() => { this.setState({ switch: !this.state.switch }) }}>
                                 {this.state.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }} />}
                             </ButtonBase>
                         </div>
@@ -84,16 +80,16 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
                         this.state.viaPoints.map((viapoint, index) => {
                             return (
                                 <div key={index} className='input-via-points'>
-                                    <TextField label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={viapoint.city} onChange={(event) => this.editViaPoints(event, index)} />
-                                    <ButtonBase className='icon' onClick={() => this.deleteViaPoints(index)}><DeleteIcon /></ButtonBase>
+                                    <TextField label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={viapoint.city} onChange={(event) => this.EditViaPointDetails(event, index)} />
+                                    <ButtonBase className='icon' onClick={() => this.DeleteViaPoint(index)}><DeleteIcon /></ButtonBase>
                                 </div>
                             )
                         })
-                    }            
-                    <ButtonBase className='icon' onClick={this.addViaPoints}><Icon>add_circle</Icon></ButtonBase><br />
-                    <TextField label='Available seat' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='availableSeats' value={this.state.availableSeats} onChange={this.changes} />
-                    <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.changes} />
-                    <button type='submit' className='submitButton' onClick={this.submit}><span>Submit </span></button>
+                    }
+                    <ButtonBase className='icon' onClick={this.AddNewViaPoint}><Icon>add_circle</Icon></ButtonBase><br />
+                    <TextField label='Available seat' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='availableSeats' value={this.state.availableSeats} onChange={this.OnChanges} />
+                    <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.OnChanges} />
+                    <button type='submit' className='submitButton' onClick={this.OnSubmit}><span>Submit </span></button>
                 </form>
             </Grid>
             )

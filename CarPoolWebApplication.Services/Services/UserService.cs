@@ -20,22 +20,22 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public UserService(CarPoolContext context, IOptions<AppSettings> appSettings,IMapper mapper)
         {
-            _db = context;
-            _appSettings = appSettings.Value;
-            _mapper = mapper;
+            this._db = context;
+            this._appSettings = appSettings.Value;
+            this._mapper = mapper;
         }
 
         public bool Create(Models.Client.User user)
         {
             user.Id = Extensions.GenerateId();
-            _db.Users.Add(_mapper.Map<Models.Data.User>(user));
-            return _db.SaveChanges() > 0;
+            this._db.Users.Add(this._mapper.Map<Models.Data.User>(user));
+            return this._db.SaveChanges() > 0;
         }
 
         public Models.Client.User Authenticate(Models.Client.LoginRequest credentials)
         {
-            var response = _db.Users.FirstOrDefault(a => (a.UserName.ToLower() == credentials.UserName.ToLower() || a.Email.ToLower() == credentials.UserName.ToLower()) && a.Password == credentials.Password);
-            var user = response!=null ? _mapper.Map<Models.Client.User>(response):null;
+            var response = this._db.Users.FirstOrDefault(a => (a.UserName.ToLower() == credentials.UserName.ToLower() || a.Email.ToLower() == credentials.UserName.ToLower()) && a.Password == credentials.Password);
+            var user = response!=null ? this._mapper.Map<Models.Client.User>(response):null;
 
             if (user == null)
                 return null;
@@ -43,7 +43,7 @@ namespace CarPoolingWebApiReact.Services.Services
             var role = user.Role== Models.Client.UserType.Admin?"Admin":"User";
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(this._appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -61,12 +61,12 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Delete(string id)
         {
-            var user = _db.Users.FirstOrDefault(a => a.Id == id);
+            var user = this._db.Users.FirstOrDefault(a => a.Id == id);
 
             if (user != null)
             {
-                _db.Users.Remove(user);
-                return _db.SaveChanges() > 0;
+                this._db.Users.Remove(user);
+                return this._db.SaveChanges() > 0;
             }
 
             return false;
@@ -74,14 +74,14 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Update(Models.Client.User updateUser)
         {
-            Models.Data.User user = _db.Users.FirstOrDefault(a => a.Id == updateUser.Id);
+            Models.Data.User user = this._db.Users.FirstOrDefault(a => a.Id == updateUser.Id);
             if (user != null)
             {
                 user.Name = updateUser.Name;
                 user.Address = updateUser.Address;
                 user.Mobile = updateUser.Mobile;
 
-                return _db.SaveChanges() > 0;
+                return this._db.SaveChanges() > 0;
             }
 
             return false;
@@ -89,17 +89,17 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public Models.Client.User GetById(string id)
         {
-            return _mapper.Map<Models.Client.User>(_db.Users.FirstOrDefault(a => a.Id == id));
+            return this._mapper.Map<Models.Client.User>(this._db.Users.FirstOrDefault(a => a.Id == id));
         }
 
         public bool HasUserName(string userName)
         {
-            return _db.Users.FirstOrDefault(a => a.UserName == userName) != null;
+            return this._db.Users.FirstOrDefault(a => a.UserName.ToLower() == userName.ToLower()) != null;
         }
 
         public bool HasEmail(string email)
         {
-            return _db.Users.FirstOrDefault(a => a.Email == email) != null;
+            return this._db.Users.FirstOrDefault(a => a.Email.ToLower() == email.ToLower()) != null;
         }
     }
 }

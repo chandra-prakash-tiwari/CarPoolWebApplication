@@ -10,11 +10,11 @@ namespace CarPoolWebApi.Controllers
     [Route("api/user/[action]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _UserService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
-            _UserService = userService;
+            this._userService = userService;
 
         }
 
@@ -22,10 +22,10 @@ namespace CarPoolWebApi.Controllers
         [ActionName("getbyid")]
         public IActionResult GetUser(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
                 return BadRequest();
 
-            User user = _UserService.GetById(id);
+            User user = this._userService.GetById(id);
             if (user == null)
                 return NotFound();
 
@@ -41,7 +41,7 @@ namespace CarPoolWebApi.Controllers
             {
                 return NoContent();
             }
-            else if (!_UserService.Create(user))
+            else if (!this._userService.Create(user))
             {
                 return Ok(user);
             }
@@ -54,7 +54,7 @@ namespace CarPoolWebApi.Controllers
         [ActionName("delete")]
         public IActionResult Delete(string id)
         {
-            if (!_UserService.Delete(id))
+            if (!this._userService.Delete(id))
             {
                 return NotFound();
             }
@@ -69,11 +69,11 @@ namespace CarPoolWebApi.Controllers
             if (user == null)
                 return BadRequest();
 
-            User old = _UserService.GetById(user.Id);
+            User old = this._userService.GetById(user.Id);
             if (old == null)
                 return NoContent();
 
-            else if (!_UserService.Update(user))
+            else if (!this._userService.Update(user))
             {
                 return NotFound();
             }
@@ -88,7 +88,7 @@ namespace CarPoolWebApi.Controllers
             if (login == null)
                 return BadRequest();
 
-            var user = _UserService.Authenticate(login);
+            var user = this._userService.Authenticate(login);
             if (user == null)
                 return NoContent();
 
@@ -107,7 +107,10 @@ namespace CarPoolWebApi.Controllers
         [ActionName("hasusername")]
         public bool HasUserName(string userName)
         {
-            return !(_UserService.HasUserName(userName));
+            if (string.IsNullOrEmpty(userName))
+                return true;
+
+            return !(this._userService.HasUserName(userName));
         }
 
         [AllowAnonymous]
@@ -115,7 +118,10 @@ namespace CarPoolWebApi.Controllers
         [ActionName("hasemail")]
         public bool HasEmail(string email)
         {
-            return !_UserService.HasEmail(email);
+            if (string.IsNullOrEmpty(email))
+                return true;
+
+            return !(this._userService.HasEmail(email));
         }
     }
 }

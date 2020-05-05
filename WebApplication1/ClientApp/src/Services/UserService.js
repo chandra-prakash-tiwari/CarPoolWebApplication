@@ -70,8 +70,8 @@ function ValidEmail(email) {
     return fetch(`/api/user/hasemail?email=${email}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
-    }).then(response => {
-        return response;
+    }).then(async response => {
+        return await response.json();
     })
 }
 
