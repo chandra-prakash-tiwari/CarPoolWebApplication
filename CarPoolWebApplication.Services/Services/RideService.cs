@@ -32,8 +32,7 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Ride> GetOffers(Models.Client.SearchRideRequest booking)
         {
-            var rides = this._db.Rides.Where(ride => ride.TravelDate == booking.TravelDate && (ride.To).Equals(booking.To, StringComparison.InvariantCultureIgnoreCase) &&
-                    (ride.From).Equals(booking.From, StringComparison.InvariantCultureIgnoreCase) && ride.AvailableSeats > 0).ToList();
+            var rides = this._db.Rides.Where(ride => ride.TravelDate == booking.TravelDate && ride.To.ToLower() == booking.To.ToLower() &&ride.From.ToLower() == booking.From.ToLower() && ride.AvailableSeats > 0).ToList();
 
             return this._mapper.Map<List<Models.Client.Ride>>(rides);
         }
