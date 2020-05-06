@@ -1,4 +1,4 @@
-﻿const getCurrentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+﻿const getCurrentUser = JSON.parse(localStorage.getItem('currentUser'));
 
 export const UserService = {
     GetUser,
@@ -18,21 +18,22 @@ function Login(loginDetails) {
     };
     return fetch('/api/user/authenticate', requestOptions)
         .then(async response => {
-            const data = await response.json();
-            if (!response.ok) {
-                alert("Wrong userid or password")
-                return Promise.reject();
+            if (response.status == 200) {
+                const data = await response.json();
+                localStorage.setItem('currentUser', JSON.stringify(data));
+                return Promise.resolve("ok");
             }
-            sessionStorage.setItem('currentUser', JSON.stringify(data));
-            return data;
-            
+            else if (response.status == 204) 
+                return Promise.reject("reject");
+       
+            return Promise.reject();
         }).catch(error => {
-            return console.log(error);
+            return error;
         })
 }
 
 function Logout() {
-    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser');
 }
 
 function AddNewUser(userData) {
@@ -41,17 +42,15 @@ function AddNewUser(userData) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
     };
-
     return fetch('/api/user/create', requestOptions)
         .then(async response => {
-            const data = await response.json();
-            if (!response.ok) {
-                alert(JSON.stringify(data.errors));
-                const error = (data && data.message) || response.status;
-                return Promise.reject(error);
+            if (response.status == 200) {
+                window.location.pathname = '/login';
+                return Promise.resolve('Ok');
             }
-            window.location.pathname = '/login';
-            return data;
+            else {
+                return Promise.reject('Reject');
+            }
         }).catch(error => {
             return console.log(error);
         })
@@ -84,14 +83,31 @@ function GetUser(id) {
             Authorization: `Bearer ${this.currentUser.userToken}`
         }
     }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
+        if (response.status == 200) {
+            const data = await response.json();
+            return Promise.resolve(data.name);
+        }
+        else {
             return Promise.reject();
         }
-        return Promise.resolve(data.name);
+        
     }).catch(error => {
         console.log(error);
     })
 }
+
+function checkExpiration() {
+    var values = JSON.parse(localStorage.getItem('storedData'));
+    if (values[1] < new Date()) {
+        localStorage.removeItem("storedData")
+    }
+}
+
+function myFunction() {
+    var myinterval = 15 * 60 * 1000; 
+    setInterval(function () { checkExpiration(); }, myinterval);
+}
+
+myFunction();
 
 export default UserService;

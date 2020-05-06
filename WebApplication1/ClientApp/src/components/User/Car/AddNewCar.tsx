@@ -5,20 +5,30 @@ import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import '../../../css/add-new-car.css'
 
-type CarDetails ={
-    carNumber?: string,
-    carModel?: string,
-    noofSeats: number,
-    switch: boolean,
-    carNumberError: string,
-    carModelError: string,
-    seatError:string
+export class CarDetails {
+    carNumber: string;
+    carModel: string;
+    noofSeats: number;
+    switch: boolean;
+    carNumberError: string;
+    carModelError: string;
+    seatError: string
+
+    constructor(value: any) {
+        this.carNumber = value.carNumber;
+        this.carModel = value.carModel;
+        this.noofSeats = value.noofSeats;
+        this.switch = value.switch;
+        this.carModelError = value.carModelError;
+        this.carNumberError = value.carNumberError;
+        this.seatError = value.seatError;
+    }
 }
 
 export default class AddNewCar extends React.Component<{}, CarDetails> {
     constructor(props: CarDetails) {
         super(props);
-        this.state = {
+        this.state = new CarDetails({
             carNumber: '',
             carModel: '',
             noofSeats: 0,
@@ -26,7 +36,7 @@ export default class AddNewCar extends React.Component<{}, CarDetails> {
             carNumberError: '',
             carModelError: '',
             seatError:''
-        }
+        })
     }
 
     OnChanges = (event: any) => {
@@ -62,8 +72,20 @@ export default class AddNewCar extends React.Component<{}, CarDetails> {
     OnSubmit = (event: any) => {
         event.preventDefault();
         if (!this.CarNumberValidator(this.state.carNumber) && !this.CarModelValidator(this.state.carModel) && !this.SeatValidator(this.state.noofSeats)) {
-            CarService.AddNewCar(this.state);
-            window.location.pathname = '/home';
+            var carDetails = {
+                number: this.state.carNumber,
+                model: this.state.carModel,
+                noofseat:this.state.noofSeats
+            }
+            CarService.AddNewCar(carDetails).then((response) => {
+                if (response == 'Ok') {
+                    alert("Car added successfully");
+                    window.location.pathname = '/home';
+                }
+                else if (response == 'Server error') {
+                    alert("Server can't do right now try again")
+                }
+            }) 
         }
     }
 

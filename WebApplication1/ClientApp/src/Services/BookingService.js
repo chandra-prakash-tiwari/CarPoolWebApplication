@@ -19,16 +19,19 @@ function SearchRide(BookingSearch) {
             Authorization: `Bearer ${UserService.currentUser.userToken}`,
         },
         body: JSON.stringify(data),
-    })
-        .then(async response => {
+    }).then(async response => {
+        if (response.status == 200) {
             const data = await response.json();
-            if (!response.ok) {
-                return Promise.reject();
-            }
             return Promise.resolve(data);
-        }).catch(error => {
-            alert("Your session has been expired please login again");
+        }
+        else if (response.status == 401) {
+            alert("Your session is expired please login again");
             sessionStorage.clear();
+            return Promise.reject();
+        }
+        else
+            return Promise.reject();
+        }).catch(error => {
             return console.log(error);
         })
 }
@@ -42,11 +45,17 @@ function MyBookings() {
             Authorization: `Bearer ${UserService.currentUser.userToken}`
         }
     }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
+        if (response.status == 200) {
+            const data = await response.json();
+            return Promise.resolve(data);
+        }
+        else if (response.status == 401) {
+            alert("Your session is expired please login again");
+            sessionStorage.clear();
             return Promise.reject();
         }
-        return Promise.resolve(data);
+        return Promise.reject();
+        
     }).catch(error => {
         console.log(error);
     })

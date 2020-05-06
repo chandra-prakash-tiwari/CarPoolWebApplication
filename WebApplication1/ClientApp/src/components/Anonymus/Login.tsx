@@ -32,7 +32,7 @@ export default class Login extends React.Component<{}, LoginProps> {
             password: '',
             userNameError: '',
             passwordError:'',
-            passwordType: true
+            passwordType: true,
         });
     }
 
@@ -61,10 +61,14 @@ export default class Login extends React.Component<{}, LoginProps> {
 
     onSubmit = (event:any) => {
         event.preventDefault();
-        console.log(this.state)
         if (!this.UserNameValidator(this.state.userName) && !this.PasswordValidator(this.state.password)) {
-            UserService.Login(this.state);
-            window.location.pathname = '/home';
+            UserService.Login(this.state).then((value) => {
+                console.log(value);
+                if (value == 'ok')
+                    window.location.pathname = '/home';
+                else
+                    alert("Wrong userid or password");  
+            });
         }
     }
 
@@ -95,8 +99,7 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <div className='footer-underline'></div>
                     </div>
                 </div>
-            </Grid>
+                </Grid>
         )
     }
 }
-

@@ -3,32 +3,39 @@ import { Card, ButtonBase } from '@material-ui/core';
 import '../../../css/car-selector.css';
 import CarService from '../../../Services/CarService'
 
-type AllCars = {
-    cars: [];
+export class UserCar {
+    cars: Array<any>;
+
+    constructor(value: any) {
+        this.cars = value.cars;
+    }
 }
 
-export default class CarSelector extends React.Component<{}, AllCars> {
-    constructor(props: AllCars) {
+export default class CarSelector extends React.Component<{}, UserCar> {
+    constructor(props: UserCar) {
         super(props);
-        this.state = {
+        this.state = new UserCar({
             cars: []
-        }
+        })
     }
 
     componentDidMount() {
-        var data = CarService.GetCars();
-        data.then((myCars) => this.setState({ cars: myCars }))
+        CarService.GetCars().then((response) => {
+            console.log(response)
+            if (response != undefined) {
+                this.setState({ cars: response })
+            }
+        })
     }
 
-    handleclick = (carRecord:any) => {
+    OnSubmit = (carRecord:any) => {
         localStorage.setItem('carDetails', JSON.stringify(carRecord));
         window.location.pathname = '/createride';
     }
 
     render() {
-
-        const carDetails = this.state.cars.map((carRecord:any, i) => (
-            <ButtonBase key={i} onClick={() => this.handleclick(carRecord)} >
+        const carDetails = this.state.cars.map((carRecord: any, i) => (
+            <ButtonBase key={i} onClick={() => this.OnSubmit(carRecord)} >
                 < Card className='car-cards'>
                      <p className='car-details'>Model : {carRecord.model}</p>
                      <p className='car-details'>Car Number : {carRecord.number}</p>

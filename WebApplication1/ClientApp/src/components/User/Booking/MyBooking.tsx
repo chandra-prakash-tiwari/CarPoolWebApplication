@@ -3,21 +3,26 @@ import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
 import BookingService from '../../../Services/BookingService';
 import '../../../css/my-bookings.css';
 
-type AllBookings = {
-    bookings:[]
+export class Bookings {
+    bookings: Array<any>;
+    constructor(value: any) {
+        this.bookings = value.bookings;
+    }
 }
 
-export default class MyBookings extends React.Component<{}, AllBookings> {
-    constructor(props: AllBookings) {
+export default class MyBookings extends React.Component<{}, Bookings> {
+    constructor(props: Bookings) {
         super(props);
-        this.state = {
+        this.state = new Bookings({
             bookings: []
-        }
+        })
     }
 
     componentDidMount() {
-        var data = BookingService.MyBookings();
-        data.then((myBookings) => this.setState({ bookings: myBookings }))
+        BookingService.MyBookings().then((myBookings) => {
+            if (myBookings != undefined)
+                this.setState({ bookings: myBookings })
+        })
     }
 
     render() {

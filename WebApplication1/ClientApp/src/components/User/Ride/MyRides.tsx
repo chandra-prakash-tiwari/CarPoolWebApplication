@@ -3,21 +3,28 @@ import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
 import '../../../css/my-rides.css';
 import RideService from '../../../Services/RideService'
 
-type AllRides = {
-    rides:[]
+export class Rides {
+    rides: Array<any>;
+
+    constructor(value: any) {
+        this.rides=value.rides
+    }
 }
 
-export default class MyRides extends React.Component<{}, AllRides> {
-    constructor(props: AllRides) {
+export default class MyRides extends React.Component<{}, Rides> {
+    constructor(props: Rides) {
         super(props);
-        this.state = {
+        this.state = new Rides({
             rides:[]
-        }
+        })
     }
 
     componentDidMount() {
-        var data = RideService.AllRides();
-        data.then((myRides) => this.setState({ rides: myRides }))
+        RideService.AllRides().then((response) => {
+            if (response != undefined) {
+                this.setState({ rides: response })   
+            }
+        })
     }
 
     render() {

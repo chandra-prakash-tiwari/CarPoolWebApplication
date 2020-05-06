@@ -7,21 +7,28 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
-type ViaPointsDetails = {
+export class ViaPointsDetails {
     viaPoints: {
         city: string,
         longitude: number,
         latitude: number
-    }[],
-    availableSeats: number,
-    ratePerKM: number,
-    switch: boolean
+    }[];
+    availableSeats: number;
+    ratePerKM: number;
+    switch: boolean;
+
+    constructor(value: any) {
+        this.viaPoints = value.viaPoints;
+        this.availableSeats = value.availableSeats;
+        this.ratePerKM = value.ratePerKM;
+        this.switch = value.switch;
+    }
 };
 
 export default class AddViaPointsView extends React.Component<{}, ViaPointsDetails> {
     constructor(props: ViaPointsDetails) {
         super(props)
-        this.state = {
+        this.state = new ViaPointsDetails({
             viaPoints: [{
                     city: '',
                     longitude: 0,
@@ -30,7 +37,7 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
             availableSeats: 0,
             ratePerKM: 0,
             switch:true
-        }
+        })
     }
 
     AddNewViaPoint = () => {
@@ -59,8 +66,12 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
 
     OnSubmit = (event:any) => {
         event.preventDefault();
-        RideService.AddRides(this.state);
-        window.location.pathname = '/home';
+        RideService.AddRides(this.state)?.then((response) => {
+            if (response === 'Ok') {
+                alert("Ride  is created");
+                window.location.pathname = '/home';      
+            }
+        })
     }
 
     render() {

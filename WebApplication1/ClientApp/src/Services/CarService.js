@@ -5,32 +5,32 @@ export const CarService = {
     GetCars,
 };
 
-function AddNewCar(CarDetails) {
-    var details = {
-        number: CarDetails.carNumber,
-        noofseat: parseInt(CarDetails.noofSeats),
-        model: CarDetails.carModel
-    }
-    fetch(`/api/car/create?ownerid=${UserService.currentUser.id}`, {
+function AddNewCar(carDetails) {
+    carDetails.noofseat = parseInt(carDetails.noofseat);
+    return fetch(`/api/car/create?ownerid=${UserService.currentUser.id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
             Authorization: `Bearer ${UserService.currentUser.userToken}`,
         },
-        body: JSON.stringify(details),
+        body: JSON.stringify(carDetails),
     }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
-            console.log(response);
-            const error = (data && data.message) || response.status;
-            return Promise.reject(error);
+        if (response.status === 200) {
+            return Promise.resolve('Ok')
         }
-
-        window.location.pathname = '/car'
-        return data;
+        else if (response === 401) {
+            alert("Your session is expired please login again");
+            sessionStorage.clear();
+            return Promise.reject();
+        }
+        else if (response.status === 404) {
+            return Promise.reject('Server error');
+        }
+        else
+            return Promise.reject();
     }).catch(error => {
-            return console.log(error);
+        return error;
     })
 }
 
@@ -43,15 +43,20 @@ function GetCars() {
             Authorization: `Bearer ${UserService.currentUser.userToken}`
         }
     }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
+        if (response.status === 200) {
+            const data = await response.json();
+            return Promise.resolve(data);
+        }
+        else if (response.status === 401) {
+            alert("Your session is expired please login again");
+            sessionStorage.clear();
             return Promise.reject();
         }
-        return Promise.resolve(data);
+
+        else
+            return Promise.reject();
     }).catch(error => {
-        alert("Your session has been expired please login again");
-        sessionStorage.clear();
-        window.location.pathname = '/login';
+        return error;
     })
 }
 

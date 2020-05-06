@@ -88,6 +88,14 @@ export default class SignUp extends React.Component<{}, CreateUser> {
         return !value.match(regex);
     }
 
+    async HasUserName(value: string) {
+        await UserService.ValidUserName(value).then((valid) => { return valid.json() });
+    }
+
+    HasEmail(value: string) {
+        return UserService.ValidEmail(value).then((valid) => { return valid })
+    }
+
     NameValidator(value: string) {
         let isEmpty = this.IsEmpty(value);
         let isValid = this.IsValid(value, /^[a-zA-Z ]*$/);
@@ -118,7 +126,10 @@ export default class SignUp extends React.Component<{}, CreateUser> {
 
     UserNameValidator(value: string) {
         let isEmpty = this.IsEmpty(value);
-        this.setState({ userNameError: isEmpty ? "Please enter username" : "" });
+        const isAvailable = this.HasUserName(value);
+        console.log(isAvailable)
+        this.setState({ userNameError: isEmpty ? "Please enter username" : (isAvailable?"taken by someone":"")
+    });
         return isEmpty;
     }
 
@@ -157,17 +168,14 @@ export default class SignUp extends React.Component<{}, CreateUser> {
                 address: this.state.address,
                 drivingLicence: this.state.drivingLicence
             }
-            UserService.AddNewUser(data);
-            window.location.pathname = '/login';
+            UserService.AddNewUser(data).then((response) => {
+                if (response == 'Ok')
+                    window.location.pathname = '/login';
+                else if (response == 'Reject')
+                    alert("Cannot added right now try once")
+            })
+            
         }
-    }
-
-    DuplicacyUserName(value: any) {
-        return UserService.ValidUserName(value).then((valid) => { return valid} )
-    }
-
-    DuplicacyEmail(value: any) {
-        return UserService.ValidEmail(value).then((valid) => { return valid })
     }
 
     render() {

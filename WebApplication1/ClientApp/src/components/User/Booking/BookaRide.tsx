@@ -99,7 +99,7 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
                     </div>
                     <TextField label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.from} onChange={(event) => { this.OnChanges(event); this.FromCityValidatity(event.target.value) }} name='from' className='input' helperText={this.state.fromError} />
                     <TextField label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.to} onChange={(event) => { this.OnChanges(event); this.ToCityValidatity(event.target.value) }} name='to' className='input ' helperText={this.state.toError} />
-                    <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={(event) => { this.OnChanges(event); this.DateValidatity(event.target.value }} name='date' className='input' helperText={this.state.dateError} />
+                    <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={(event) => { this.OnChanges(event); this.DateValidatity(event.target.value) }} name='date' className='input' helperText={this.state.dateError} />
                      <div className='chips'>
                          <div className='label'>
                              <span>Time</span>
@@ -110,7 +110,7 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
                         <Chip label="3pm - 6pm" clickable className='chip' />
                         <Chip label="6pm - 9pm" clickable className='chip' />
                     </div>
-                    <button type='submit' onClick={(event) => this.submit(event)} className='submitButton'><span>Submit</span></button>
+                    <button type='submit' onClick={(event) => this.OnSubmit(event)} className='submitButton'><span>Submit</span></button>
                  </form>
             </div> 
         )

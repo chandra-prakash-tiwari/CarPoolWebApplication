@@ -5,90 +5,86 @@ import '../../../css/create-ride.css';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
-type RideDetails = {
-    from: string,
-    to: string,
-    date: string,
-    time: string,
-    showComponent: boolean,
-    switch: boolean,
-    fromValidity: string,
-    toValidity: string,
-    dateValidity: string
+export class RideDetails {
+    from: string;
+    to: string;
+    date: string
+    time: string;
+    viaPointComponent: boolean;
+    switch: boolean;
+    fromError: string;
+    toError: string;
+    dateError: string
+
+    constructor(value: any) {
+        this.from = value.from;
+        this.to = value.to;
+        this.date = value.date;
+        this.time = value.time;
+        this.viaPointComponent = value.time;
+        this.switch = value.switch;
+        this.fromError = value.fromError;
+        this.toError = value.toError;
+        this.dateError = value.dateError;
+    }
 }
 
 export default class CreateRide extends React.Component<{}, RideDetails> {
     constructor(props: RideDetails) {
         super(props);
-        this.state = {
+        this.state = new RideDetails({
             from: '',
             to: '',
             date: '',
             time: '',
-            showComponent: false,
+            viaPointComponent: false,
             switch: true,
-            fromValidity: '',
-            toValidity: '',
-            dateValidity:''
-        }
+            fromError: '',
+            toError: '',
+            dateError:''
+        })
     }
 
-    changes = (event: any) => {
+    OnChanges = (event: any) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value
         });
-
-        this.validator(event.target.name, event.target.value)
     }
 
-    submit = (event:any) => {
+    OnSubmit = (event:any) => {
         event.preventDefault();
-        if (this.validator('from', this.state.from) && this.validator('to', this.state.to) && this.validator('date', this.state.date)) {
+        if (this.FromCityValidatity(this.state.from) && this.ToCityValidatity(this.state.to) && this.DateValidatity(this.state.date)) {
             var data = {
                 from: this.state.from,
                 to: this.state.to,
                 date: this.state.date
             }
             localStorage.setItem('rideDetails', JSON.stringify(data));
-            this.setState({ showComponent: true })
+            this.setState({ viaPointComponent: true })
         }
     }
 
-    switchChanges = () => {
-        this.setState({ switch: !this.state.switch })
+    IsEmpty(value: string) {
+        return !value || (value && value.trim().length === 0);
     }
 
-    validator(name: any, value: any) {
-        switch (name) {
-            case 'from':
-                if (value.length === 0 || value === null) {
-                    this.setState({ fromValidity: 'Please enter starting point' })
-                    return false;
-                }
-                else {
-                    this.setState({ fromValidity: '' })
-                    return true;
-                }
-            case 'to':
-                if (value.length === 0 || value === null) {
-                    this.setState({ toValidity: 'Please enter end point' });
-                    return false;
-                }
-                else {
-                    this.setState({ toValidity: '' });
-                    return true;
-                }
-            case 'date':
-                if (value.length === 0 || value === null) {
-                    this.setState({ dateValidity: 'Please enter date' })
-                    return false;
-                }
-                else {
-                    this.setState({ dateValidity: '' })
-                    return true;
-                }
-        }
+    FromCityValidatity(value: any) {
+        let isEmpty = this.IsEmpty(value);
+        this.setState({ from: isEmpty ? 'Please enter source city name' : '' })
+        return isEmpty;
+    }
+
+    ToCityValidatity(value: any) {
+        let isEmpty = this.IsEmpty(value);
+        this.setState({ fromError: isEmpty ? 'Please enter destination city name' : '' })
+        return isEmpty;
+    }
+
+    DateValidatity(value: any) {
+        let isEmpty = this.IsEmpty(value);
+        this.setState({ fromError: isEmpty ? 'Please enter date' : '' })
+        return isEmpty;
     }
 
     render() {
@@ -99,15 +95,15 @@ export default class CreateRide extends React.Component<{}, RideDetails> {
                         <div className='header'>
                             <div className='head'>
                                 <h1>Create Ride</h1>
-                                <ButtonBase onClick={this.switchChanges} style={{ marginLeft: '2rem' }}>
+                                <ButtonBase onClick={() => this.setState({ switch: !this.state.switch })} style={{ marginLeft: '2rem' }}>
                                     {this.state.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }} />}
                                 </ButtonBase>
                             </div>
                             <p>we get you the matches asap!</p>
                         </div>
-                        <TextField label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.from} onChange={this.changes} name='from' helperText={this.state.fromValidity} className='input' />
-                        <TextField label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.to} onChange={this.changes} name='to' helperText={this.state.toValidity} className='input'/>
-                        <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={this.changes} name='date' helperText={this.state.dateValidity} className='input'/>
+                        <TextField label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.from} onChange={this.OnChanges} name='from' helperText={this.state.fromError} className='input' />
+                        <TextField label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.to} onChange={this.OnChanges} name='to' helperText={this.state.toError} className='input' />
+                        <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={this.OnChanges} name='date' helperText={this.state.dateError} className='input' />
                         <div className='chips'>
                             <div className='label'>
                                 <span>Time</span>
@@ -119,12 +115,12 @@ export default class CreateRide extends React.Component<{}, RideDetails> {
                             <Chip label="6pm - 9pm" clickable className='chip' />
                         </div>
                         <div className='nextButton'>
-                            <ButtonBase onClick={this.submit}>Next>>></ButtonBase>
+                            <ButtonBase onClick={this.OnSubmit}>Next>>></ButtonBase>
                         </div>
 
                     </form>
                 </Grid>
-                {this.state.showComponent ?
+                {this.state.viaPointComponent ?
                     <AddViaPointsView /> :
                     null
                 }

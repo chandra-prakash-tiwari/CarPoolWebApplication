@@ -14,23 +14,28 @@ function AllRides() {
             Authorization: `Bearer ${UserService.currentUser.userToken}`
         }
     }).then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
+        if (response.status === 200) {
+            const data = await response.json();
+            return Promise.resolve(data);
+        }
+        else if (response.status === 401) {
+            alert("Your session is expired please login again");
+            sessionStorage.clear();
             return Promise.reject();
         }
-        return Promise.resolve(data);
+        else
+            return Promise.reject();
+        
     }).catch(error => {
         console.log(error);
     })
 }
 
 function AddRides(viaPoints) {
-    var carDetailsStr = localStorage.getItem('carDetails');
-    var rideDetailsStr = localStorage.getItem('rideDetails')
-    if (carDetailsStr === null || rideDetailsStr === null)
+    var carDetails = JSON.parse(localStorage.getItem('carDetails'));
+    var rideDetails = JSON.parse(localStorage.getItem('rideDetails'))
+    if (carDetails === null || rideDetails === null)
         return;
-    var RideDetails = JSON.parse(rideDetailsStr);
-    var cardetails = JSON.parse(carDetailsStr);
     return fetch('/api/ride/create', {
         method: 'POST',
         headers: {
@@ -39,25 +44,28 @@ function AddRides(viaPoints) {
             Authorization: `Bearer ${UserService.currentUser.userToken}`,
         },
         body: JSON.stringify({
-            From: RideDetails.from,
-            To: RideDetails.to,
-            TravelDate: RideDetails.date.toString(),
+            From: rideDetails.from,
+            To: rideDetails.to,
+            TravelDate: rideDetails.date.toString(),
             AvailableSeats: parseInt(viaPoints.availableSeats),
             RatePerKM: parseInt(viaPoints.ratePerKM),
             ViaPoints: (JSON.stringify(viaPoints.viaPoints)).toString(),
-            OwnerId: cardetails.ownerId,
-            CarId: cardetails.id,
+            OwnerId: carDetails.ownerId,
+            CarId: carDetails.id,
         }),
-    })
-        .then(async response => {
-            const data = await response.json();
-            if (!response.ok) {
-                return Promise.reject();
-            }
-
+    }).then(async response => {
+        if (response.status === 200) {
             localStorage.removeItem('carSetails');
             localStorage.removeItem('rideDetails');
-            return Promise.resolve(data);
+            return Promise.resolve("Ok");
+        }
+        else if (response === 401) {
+            alert("Your session is expired please login again");
+            sessionStorage.clear();
+            return Promise.reject();
+        }
+
+        return Promise.reject();
         }).catch(error => {
             return console.log(error);
         })
