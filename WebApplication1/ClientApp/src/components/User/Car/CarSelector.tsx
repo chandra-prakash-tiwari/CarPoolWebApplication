@@ -6,21 +6,19 @@ import CarService from '../../../Services/CarService'
 export class UserCar {
     cars: Array<any>;
 
-    constructor(value: any) {
-        this.cars = value.cars;
+    constructor() {
+        this.cars = [];
     }
 }
 
 export default class CarSelector extends React.Component<{}, UserCar> {
     constructor(props: UserCar) {
         super(props);
-        this.state = new UserCar({
-            cars: []
-        })
+        this.state = new UserCar()
     }
 
     componentDidMount() {
-        CarService.GetCars().then((response) => {
+        CarService.getCars().then((response) => {
             console.log(response)
             if (response != undefined) {
                 this.setState({ cars: response })
@@ -28,14 +26,14 @@ export default class CarSelector extends React.Component<{}, UserCar> {
         })
     }
 
-    OnSubmit = (carRecord:any) => {
-        localStorage.setItem('carDetails', JSON.stringify(carRecord));
+    onSubmit = (carRecord: any) => {
+        sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
         window.location.pathname = '/createride';
     }
 
     render() {
         const carDetails = this.state.cars.map((carRecord: any, i) => (
-            <ButtonBase key={i} onClick={() => this.OnSubmit(carRecord)} >
+            <ButtonBase key={i} onClick={() => this.onSubmit(carRecord)} >
                 < Card className='car-cards'>
                      <p className='car-details'>Model : {carRecord.model}</p>
                      <p className='car-details'>Car Number : {carRecord.number}</p>

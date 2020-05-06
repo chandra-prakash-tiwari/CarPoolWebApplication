@@ -1,11 +1,11 @@
 ﻿import UserService from './UserService';
 
 export const RideService = {
-    AllRides,
-    AddRides,
+    allRides,
+    addRides,
 }
 
-function AllRides() {
+function allRides() {
     return fetch(`/api/ride/getallrides?ownerId=${UserService.currentUser.id}`, {
         method: 'GET',
         headers: {
@@ -19,8 +19,7 @@ function AllRides() {
             return Promise.resolve(data);
         }
         else if (response.status === 401) {
-            alert("Your session is expired please login again");
-            sessionStorage.clear();
+            UserService.sessionExpired();
             return Promise.reject();
         }
         else
@@ -31,9 +30,9 @@ function AllRides() {
     })
 }
 
-function AddRides(viaPoints) {
-    var carDetails = JSON.parse(localStorage.getItem('carDetails'));
-    var rideDetails = JSON.parse(localStorage.getItem('rideDetails'))
+function addRides(viaPointProps) {
+    var carDetails = JSON.parse(sessionStorage.getItem('carDetails'));
+    var rideDetails = JSON.parse(sessionStorage.getItem('rideDetails'))
     if (carDetails === null || rideDetails === null)
         return;
     return fetch('/api/ride/create', {
@@ -47,9 +46,9 @@ function AddRides(viaPoints) {
             From: rideDetails.from,
             To: rideDetails.to,
             TravelDate: rideDetails.date.toString(),
-            AvailableSeats: parseInt(viaPoints.availableSeats),
-            RatePerKM: parseInt(viaPoints.ratePerKM),
-            ViaPoints: (JSON.stringify(viaPoints.viaPoints)).toString(),
+            AvailableSeats: parseInt(viaPointProps.availableSeats),
+            RatePerKM: parseInt(viaPointProps.ratePerKM),
+            ViaPoints: (JSON.stringify(viaPointProps.cities)).toString(),
             OwnerId: carDetails.ownerId,
             CarId: carDetails.id,
         }),
@@ -60,8 +59,7 @@ function AddRides(viaPoints) {
             return Promise.resolve("Ok");
         }
         else if (response === 401) {
-            alert("Your session is expired please login again");
-            sessionStorage.clear();
+            UserService.sessionExpired();
             return Promise.reject();
         }
 

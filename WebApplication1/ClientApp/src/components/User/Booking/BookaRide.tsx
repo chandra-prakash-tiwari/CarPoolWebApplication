@@ -14,65 +14,56 @@ export class JourneyDetails {
     toError: string;
     dateError: string;
 
-    constructor(value: any) {
-        this.from= value.from;
-        this.to= value.to;
-        this.date = value.date;
-        this.time = value.time;
-        this.switch = value.switch;
-        this.fromError = value.fromError;
-        this.toError = value.toError;
-        this.dateError = value.dateError;
+    constructor() {
+        this.from= '';
+        this.to= '';
+        this.date = '';
+        this.time = '';
+        this.switch = true;
+        this.fromError = '';
+        this.toError = '';
+        this.dateError = '';
     }
 }
 
 export default class BookaRide extends React.Component<{}, JourneyDetails> {
     constructor(props: JourneyDetails) {
         super(props);
-        this.state = {
-            from: '',
-            to: '',
-            date: '',
-            time: '',
-            switch: true,
-            fromError: '',
-            toError: '',
-            dateError:''
-        }
+        this.state = new JourneyDetails()
     } 
 
-    OnChanges = (event: any) => {
+    onChanges = (event: any) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value
         });
     }
 
-    IsEmpty(value: string) {
+    isEmpty(value: string) {
         return !value || (value && value.trim().length === 0);
     }
 
-    FromCityValidatity(value: any) {
-        let isEmpty = this.IsEmpty(value);
-        this.setState({ fromError: isEmpty ? 'Please enter source city name' : '' })
-        return isEmpty;
+    isValidFromCityName(value: any) {
+        let emptyStatus = this.isEmpty(value);
+        this.setState({ fromError: emptyStatus ? 'Please enter source city name' : '' })
+        return emptyStatus;
     }
 
-    ToCityValidatity(value: any) {
-        let isEmpty = this.IsEmpty(value);
-        this.setState({ fromError: isEmpty ? 'Please enter destination city name' : '' })
-        return isEmpty;
+    isValidToCityName(value: any) {
+        let emptyStatus = this.isEmpty(value);
+        this.setState({ fromError: emptyStatus ? 'Please enter destination city name' : '' })
+        return emptyStatus;
     }
 
-    DateValidatity(value: any) {
-        let isEmpty = this.IsEmpty(value);
-        this.setState({ fromError: isEmpty ? 'Please enter date' : '' })
-        return isEmpty;
+    isValidDate(value: any) {
+        let emptyStatus = this.isEmpty(value);
+        this.setState({ fromError: emptyStatus ? 'Please enter date' : '' })
+        return emptyStatus;
     }
 
-    OnSubmit = (event:any) => {
+    onSubmit = (event:any) => {
         event.preventDefault();
-        if (!this.FromCityValidatity(this.state.from) && !this.ToCityValidatity(this.state.to) && !this.DateValidatity(this.state.date)) {
+        if (!this.isValidFromCityName(this.state.from) && !this.isValidToCityName(this.state.to) && !this.isValidDate(this.state.date)) {
             var data = {
                 from: this.state.from,
                 to: this.state.to,
@@ -97,9 +88,9 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
                          <p>we get you the matches asap!</p>
                          
                     </div>
-                    <TextField label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.from} onChange={(event) => { this.OnChanges(event); this.FromCityValidatity(event.target.value) }} name='from' className='input' helperText={this.state.fromError} />
-                    <TextField label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.to} onChange={(event) => { this.OnChanges(event); this.ToCityValidatity(event.target.value) }} name='to' className='input ' helperText={this.state.toError} />
-                    <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={(event) => { this.OnChanges(event); this.DateValidatity(event.target.value) }} name='date' className='input' helperText={this.state.dateError} />
+                    <TextField label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.from} onChange={(event) => { this.onChanges(event); this.isValidFromCityName(event.target.value) }} name='from' className='input' helperText={this.state.fromError} />
+                    <TextField label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.to} onChange={(event) => { this.onChanges(event); this.isValidToCityName(event.target.value) }} name='to' className='input ' helperText={this.state.toError} />
+                    <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={(event) => { this.onChanges(event); this.isValidDate(event.target.value) }} name='date' className='input' helperText={this.state.dateError} />
                      <div className='chips'>
                          <div className='label'>
                              <span>Time</span>
@@ -110,7 +101,7 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
                         <Chip label="3pm - 6pm" clickable className='chip' />
                         <Chip label="6pm - 9pm" clickable className='chip' />
                     </div>
-                    <button type='submit' onClick={(event) => this.OnSubmit(event)} className='submitButton'><span>Submit</span></button>
+                    <button type='submit' onClick={(event) => this.onSubmit(event)} className='submitButton'><span>Submit</span></button>
                  </form>
             </div> 
         )

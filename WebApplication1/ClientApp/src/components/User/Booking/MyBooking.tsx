@@ -5,21 +5,19 @@ import '../../../css/my-bookings.css';
 
 export class Bookings {
     bookings: Array<any>;
-    constructor(value: any) {
-        this.bookings = value.bookings;
+    constructor() {
+        this.bookings = [];
     }
 }
 
 export default class MyBookings extends React.Component<{}, Bookings> {
     constructor(props: Bookings) {
         super(props);
-        this.state = new Bookings({
-            bookings: []
-        })
+        this.state = new Bookings()
     }
 
     componentDidMount() {
-        BookingService.MyBookings().then((myBookings) => {
+        BookingService.myBookings().then((myBookings) => {
             if (myBookings != undefined)
                 this.setState({ bookings: myBookings })
         })

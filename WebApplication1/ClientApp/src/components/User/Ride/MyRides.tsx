@@ -6,21 +6,19 @@ import RideService from '../../../Services/RideService'
 export class Rides {
     rides: Array<any>;
 
-    constructor(value: any) {
-        this.rides=value.rides
+    constructor() {
+        this.rides=[]
     }
 }
 
 export default class MyRides extends React.Component<{}, Rides> {
     constructor(props: Rides) {
         super(props);
-        this.state = new Rides({
-            rides:[]
-        })
+        this.state = new Rides()
     }
 
     componentDidMount() {
-        RideService.AllRides().then((response) => {
+        RideService.allRides().then((response) => {
             if (response != undefined) {
                 this.setState({ rides: response })   
             }

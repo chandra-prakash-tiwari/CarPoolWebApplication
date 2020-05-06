@@ -15,25 +15,20 @@ export class LoginProps{
     userNameError: string;
     passwordError: string;
     passwordType: boolean;
-    constructor(value: any) {
-        this.userName = value.userName;
-        this.password = value.password;
-        this.userNameError = value.userNameError;
-        this.passwordError = value.passwordError;
-        this.passwordType = value.passwordType;
+
+    constructor() {
+        this.userName = '';
+        this.password = '';
+        this.userNameError = '';
+        this.passwordError = '' ;
+        this.passwordType = true;
     }
 } 
 
 export default class Login extends React.Component<{}, LoginProps> {
     constructor(props: LoginProps) {
         super(props);
-        this.state = new LoginProps({
-            userName: '',
-            password: '',
-            userNameError: '',
-            passwordError:'',
-            passwordType: true,
-        });
+        this.state = new LoginProps();
     }
 
     onChanges = (event: any) => {
@@ -43,31 +38,31 @@ export default class Login extends React.Component<{}, LoginProps> {
         });
     }
 
-    IsEmpty(value: string) {
+    isEmpty(value: string) {
         return !value || (value && value.trim().length === 0);
     }
 
-    UserNameValidator(value: string) {
-        let inValid = this.IsEmpty(value);
-        this.setState({ userNameError: inValid ? "Please enter username or email address" : "" });
-        return inValid;
+    isValidUserName(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        this.setState({ userNameError: emptyStatus ? "Please enter username or email address" : "" });
+        return emptyStatus;
     }
 
-    PasswordValidator(value: string) {
-        let inValid = this.IsEmpty(value);
-        this.setState({ passwordError: inValid ? "Please enter password" : "" })
-        return inValid;
+    isValidPassword(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        this.setState({ passwordError: emptyStatus ? "Please enter password" : "" })
+        return emptyStatus;
     }
 
     onSubmit = (event:any) => {
         event.preventDefault();
-        if (!this.UserNameValidator(this.state.userName) && !this.PasswordValidator(this.state.password)) {
-            UserService.Login(this.state).then((value) => {
+        if (!this.isValidUserName(this.state.userName) && !this.isValidPassword(this.state.password)) {
+            UserService.login(this.state).then((value) => {
                 console.log(value);
                 if (value == 'ok')
                     window.location.pathname = '/home';
                 else
-                    alert("Wrong userid or password");  
+                    alert("Wrong userid or password");
             });
         }
     }
@@ -81,8 +76,8 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <div className='header-underline'></div>
                     </div>
                     <form className='form'>
-                        <TextField variant="filled" className='input' value={this.state.userName} onChange={(event) => { this.onChanges(event); this.UserNameValidator(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id " helperText={this.state.userNameError} autoFocus />
-                        <TextField variant="filled" className='input' value={this.state.password} onChange={(event) => { this.onChanges(event); this.PasswordValidator(event.target.value) }} name="password" type={this.state.passwordType ? 'password' : 'text'} label="Enter Password" helperText={this.state.passwordError}
+                        <TextField variant="filled" className='input' value={this.state.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id " helperText={this.state.userNameError} autoFocus />
+                        <TextField variant="filled" className='input' value={this.state.password} onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} name="password" type={this.state.passwordType ? 'password' : 'text'} label="Enter Password" helperText={this.state.passwordError}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position='end' onClick={() => (this.setState({ passwordType: !this.state.passwordType }))} >
@@ -99,7 +94,7 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <div className='footer-underline'></div>
                     </div>
                 </div>
-                </Grid>
+            </Grid>
         )
     }
 }

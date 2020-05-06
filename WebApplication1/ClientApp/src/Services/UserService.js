@@ -1,16 +1,17 @@
 ﻿const getCurrentUser = JSON.parse(localStorage.getItem('currentUser'));
 
 export const UserService = {
-    GetUser,
-    Login,
-    Logout,
-    AddNewUser,
-    ValidEmail,
-    ValidUserName,
+    getUser,
+    login,
+    logout,
+    sessionExpired,
+    addNewUser,
+    validEmail,
+    validUserName,
     currentUser: getCurrentUser
 }
 
-function Login(loginDetails) {
+function login(loginDetails) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -32,11 +33,11 @@ function Login(loginDetails) {
         })
 }
 
-function Logout() {
+function logout() {
     localStorage.removeItem('currentUser');
 }
 
-function AddNewUser(userData) {
+function addNewUser(userData) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,7 +57,7 @@ function AddNewUser(userData) {
         })
 }
 
-function ValidUserName(userName) {
+function validUserName(userName) {
     return fetch(`/api/user/hasusername?userName=${userName}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -65,7 +66,7 @@ function ValidUserName(userName) {
     })
 }
 
-function ValidEmail(email) {
+function validEmail(email) {
     return fetch(`/api/user/hasemail?email=${email}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -74,7 +75,13 @@ function ValidEmail(email) {
     })
 }
 
-function GetUser(id) {
+function sessionExpired() {
+    alert("Your session is expired please login again");
+    window.location.pathname = '/home';
+    localStorage.clear();
+}
+
+function getUser(id) {
     return fetch(`/api/user/getbyid?id=${id}`, {
         method: 'GET',
         headers: {
@@ -95,19 +102,5 @@ function GetUser(id) {
         console.log(error);
     })
 }
-
-function checkExpiration() {
-    var values = JSON.parse(localStorage.getItem('storedData'));
-    if (values[1] < new Date()) {
-        localStorage.removeItem("storedData")
-    }
-}
-
-function myFunction() {
-    var myinterval = 15 * 60 * 1000; 
-    setInterval(function () { checkExpiration(); }, myinterval);
-}
-
-myFunction();
 
 export default UserService;

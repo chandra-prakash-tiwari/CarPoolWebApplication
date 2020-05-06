@@ -1,11 +1,11 @@
 ﻿import UserService from './UserService'
 
 export const CarService = {
-    AddNewCar,
-    GetCars,
+    addNewCar,
+    getCars,
 };
 
-function AddNewCar(carDetails) {
+function addNewCar(carDetails) {
     carDetails.noofseat = parseInt(carDetails.noofseat);
     return fetch(`/api/car/create?ownerid=${UserService.currentUser.id}`, {
         method: 'POST',
@@ -20,8 +20,7 @@ function AddNewCar(carDetails) {
             return Promise.resolve('Ok')
         }
         else if (response === 401) {
-            alert("Your session is expired please login again");
-            sessionStorage.clear();
+            UserService.sessionExpired();
             return Promise.reject();
         }
         else if (response.status === 404) {
@@ -34,7 +33,7 @@ function AddNewCar(carDetails) {
     })
 }
 
-function GetCars() {
+function getCars() {
     return fetch(`/api/car/getbyownerid?ownerId=${UserService.currentUser.id}`, {
         method: 'GET',
         headers: {
@@ -48,8 +47,7 @@ function GetCars() {
             return Promise.resolve(data);
         }
         else if (response.status === 401) {
-            alert("Your session is expired please login again");
-            sessionStorage.clear();
+            UserService.sessionExpired();
             return Promise.reject();
         }
 

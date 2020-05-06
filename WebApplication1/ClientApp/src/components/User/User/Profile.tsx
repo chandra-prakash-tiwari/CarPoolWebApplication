@@ -9,7 +9,7 @@ import { Avatar, ButtonBase, SvgIcon } from '@material-ui/core';
 export default function Profile() {
     const [close, open] = React.useState(null);
 
-    const OnClicked = (event: any) => {
+    const onClicked = (event: any) => {
         open(event.currentTarget);
     };
 
@@ -18,7 +18,7 @@ export default function Profile() {
     }
 
     const logout = () => {
-        UserService.Logout();
+        UserService.logout();
         window.location.pathname = '/login';
     }
 
@@ -28,7 +28,7 @@ export default function Profile() {
 
     return (
         <div className='Avatar'>
-            <Button aria-controls="menu" onClick={OnClicked} style={{ margin: "0px 4px" }}>
+            <Button aria-controls="menu" onClick={onClicked} style={{ margin: "0px 4px" }}>
                 <p style={{ margin: '5px', fontFamily: 'Roboto', fontSize: '1.2rem', textTransform: "capitalize" }}>{UserService.currentUser.name}</p>
                 <Avatar/>
             </Button>

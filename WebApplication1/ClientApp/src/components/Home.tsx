@@ -10,7 +10,6 @@ export default function Home() {
             <div className='welcome'>
                 <p>Hey {UserService.currentUser.name.split(' ')[0]}!</p>
             </div>
-
             <div className='cards' >
                 <ButtonBase href='/booking' >
                     < Card className='ride'>            

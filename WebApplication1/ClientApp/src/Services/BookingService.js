@@ -1,15 +1,15 @@
 ﻿import UserService from './UserService'
 
 export const BookingService = {
-    SearchRide,
-    MyBookings
+    searchRide,
+    myBookings
 };
 
-function SearchRide(BookingSearch) {
+function searchRide(bookingSearch) {
     var data = {
-        From: BookingSearch.from,
-        To: BookingSearch.to,
-        TravelDate: BookingSearch.date
+        From: bookingSearch.from,
+        To: bookingSearch.to,
+        TravelDate: bookingSearch.date
     }
     return fetch('/api/ride/offers', {
         method: 'POST',
@@ -25,8 +25,7 @@ function SearchRide(BookingSearch) {
             return Promise.resolve(data);
         }
         else if (response.status == 401) {
-            alert("Your session is expired please login again");
-            sessionStorage.clear();
+            UserService.sessionExpired();
             return Promise.reject();
         }
         else
@@ -36,7 +35,7 @@ function SearchRide(BookingSearch) {
         })
 }
 
-function MyBookings() {
+function myBookings() {
     return fetch(`/api/booking/getbyuserid?userid=${UserService.currentUser.id}`, {
         method: 'GET',
         headers: {
@@ -50,8 +49,7 @@ function MyBookings() {
             return Promise.resolve(data);
         }
         else if (response.status == 401) {
-            alert("Your session is expired please login again");
-            sessionStorage.clear();
+            UserService.sessionExpired();
             return Promise.reject();
         }
         return Promise.reject();

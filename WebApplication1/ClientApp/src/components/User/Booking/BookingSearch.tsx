@@ -6,31 +6,30 @@ import '../../../css/booking-search.css';
 
 export class Bookings {
     bookings: Array<any>;
-    constructor(value: any) {
-        this.bookings = value.bookings;
+
+    constructor() {
+        this.bookings =[];
     }
 }
 
 export default class BookingSearch extends React.Component<{}, Bookings> {
     constructor(props: Bookings) {
         super(props);
-        this.state = new Bookings({
-            bookings: [],
-        })
+        this.state = new Bookings()
     }
 
     componentDidMount() {
-        var BookingSearchStr = localStorage.getItem('bookingSearch');
-        if (BookingSearchStr === null)
+        var bookingSearch = localStorage.getItem('bookingSearch');
+        if (bookingSearch === null)
             return;
-        BookingService.SearchRide(JSON.parse(BookingSearchStr)).then((searchBooking) => {
+        BookingService.searchRide(JSON.parse(bookingSearch)).then((searchBooking) => {
             if (searchBooking != undefined)
                 this.setState({ bookings: searchBooking })
         });
     }
 
-    user(id: any) {
-        return UserService.GetUser(id).then((user) => { return user });
+    userDetails(id: any) {
+        return UserService.getUser(id).then((user) => { return user });
     }
 
     render() {

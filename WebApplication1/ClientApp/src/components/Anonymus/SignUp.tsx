@@ -28,49 +28,31 @@ export class CreateUser {
     passwordMatchError: string;
     passwordType: boolean;
 
-    constructor(value: any) {
-        this.name = value.name;
-        this.mobile = value.mobile;
-        this.userName = value.userName;
-        this.address = value.address;
-        this.drivingLicence = value.drivingLicence;
-        this.email = value.email;
-        this.password = value.pasword;
-        this.nameError = value.nameError;
-        this.mobileError = value.mobileError;
-        this.userNameError = value.userNameError;
-        this.addressError = value.addressError;
-        this.confirmPassword = value.confirmPassword;
-        this.drivingLicenceError = value.drivingLicenceError;
-        this.emailError = value.emailError;
-        this.passwordError= value.passwordError;
-        this.passwordMatchError = value.passwordMatchError;
-        this.passwordType = value.passwordType;
+    constructor() {
+        this.name = '';
+        this.mobile = '';
+        this.userName = '';
+        this.address = '';
+        this.drivingLicence = '';
+        this.email = '';
+        this.password = '';
+        this.nameError = '';
+        this.mobileError = '';
+        this.userNameError = '';
+        this.addressError = '';
+        this.confirmPassword = '';
+        this.drivingLicenceError = '';
+        this.emailError = '';
+        this.passwordError= '';
+        this.passwordMatchError = '';
+        this.passwordType = true;
     }
 }
 
 export default class SignUp extends React.Component<{}, CreateUser> {
     constructor(props: CreateUser) {
         super(props);
-        this.state = new CreateUser({
-            name: '',
-            mobile: '',
-            userName: '',
-            address: '',
-            drivingLicence: '',
-            email: '',
-            password: '',
-            confirmPassword:'',
-            nameError: '',
-            mobileError: '',
-            userNameError: '',
-            addressError: '',
-            drivingLicenceError: '',
-            emailError: '',
-            passwordError: '',
-            passwordMatchError: '',
-            passwordType:true
-        })
+        this.state = new CreateUser();
     }
 
     onChanges = (event:any) => {
@@ -80,85 +62,85 @@ export default class SignUp extends React.Component<{}, CreateUser> {
         });
     }
 
-    IsEmpty(value: string) {
+    isEmpty(value: string) {
         return !value || (value && value.trim().length===0)
     }
 
-    IsValid(value: string, regex: RegExp) {
+    isValid(value: string, regex: RegExp) {
         return !value.match(regex);
     }
 
-    async HasUserName(value: string) {
-        await UserService.ValidUserName(value).then((valid) => { return valid.json() });
+    hasUserName(value: string) {
+        return UserService.validUserName(value).then((valid) => { return valid });
     }
 
-    HasEmail(value: string) {
-        return UserService.ValidEmail(value).then((valid) => { return valid })
+    hasEmail(value: string) {
+        return UserService.validEmail(value).then((valid) => { return valid })
     }
 
-    NameValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        let isValid = this.IsValid(value, /^[a-zA-Z ]*$/);
-        this.setState({ nameError: isEmpty ? "Please enter name" : (isValid ? "Please enter correct name" : "")})
-        return isEmpty && isValid;
+    isValidName(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        let isValid = this.isValid(value, /^[a-zA-Z ]*$/);
+        this.setState({ nameError: emptyStatus ? "Please enter name" : (isValid ? "Please enter correct name" : "")})
+        return emptyStatus && isValid;
     }
 
-    EmailValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        let isValid = this.IsValid(value, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-        this.setState({ emailError : isEmpty ? "Please enter email" : (isValid ? "Please enter correct email" : "")})
-        return isEmpty && isValid;
+    isValidEmail(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        let isValid = this.isValid(value, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+        this.setState({ emailError: emptyStatus ? "Please enter email" : (isValid ? "Please enter correct email" : "")})
+        return emptyStatus && isValid;
     }
 
-    MobileNumberValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        let isValid = this.IsValid(value, /^[789]\d{9}$/);
-        this.setState({ mobileError : isEmpty ? "Please enter mobile number" : (isValid ? "Enter correct mobile number" : "")})
-        return isEmpty && isValid;
+    isValidMobileNumber(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        let validStatus = this.isValid(value, /^[789]\d{9}$/);
+        this.setState({ mobileError: emptyStatus ? "Please enter mobile number" : (validStatus ? "Enter correct mobile number" : "")})
+        return emptyStatus && validStatus;
     }
 
-    PasswordValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        let isValid = this.IsValid(value, /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/);
-        this.setState({ passwordError: isEmpty ? "Please enter password" : (isValid ? "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" : "") });
-        return isEmpty && isValid;
+    isValidPassword(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        let validStatus = this.isValid(value, /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/);
+        this.setState({ passwordError: validStatus ? "Please enter password" : (validStatus ? "Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character" : "") });
+        return emptyStatus && validStatus;
     }
 
-    UserNameValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        const isAvailable = this.HasUserName(value);
+    isValidUserName(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        const isAvailable = this.hasUserName(value);
         console.log(isAvailable)
-        this.setState({ userNameError: isEmpty ? "Please enter username" : (isAvailable?"taken by someone":"")
+        this.setState({ userNameError: emptyStatus ? "Please enter username" : (isAvailable?"taken by someone":"")
     });
-        return isEmpty;
+        return emptyStatus;
     }
 
-    RePasswordValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        let isEqual = (value == this.state.password);
-        this.setState({ passwordError: isEmpty ? "Please re enter your password" : (isEqual ? "password can not matched" : "") });
-        return isEmpty && isEqual;
+    isEqualPassword(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        let validStatus = (value == this.state.password);
+        this.setState({ passwordError: emptyStatus ? "Please re enter your password" : (validStatus ? "password can not matched" : "") });
+        return emptyStatus && validStatus;
     }
 
-    DrivingLicenecValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        let isValid = this.IsValid(value, /^[0-9a-zA-Z]{4,9}$/);
-        this.setState({drivingLicenceError: isEmpty ? "Please enter driving licence" : (isValid ? "Driving licence is not correct" : "")})
-        return isEmpty && isValid;
+    isValidDrivingLicence(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        let validStatus = this.isValid(value, /^[0-9a-zA-Z]{4,9}$/);
+        this.setState({ drivingLicenceError: emptyStatus ? "Please enter driving licence" : (validStatus ? "Driving licence is not correct" : "")})
+        return emptyStatus && validStatus;
     }
 
-    AddressValidator(value: string) {
-        let isEmpty = this.IsEmpty(value);
-        this.setState({ addressError: isEmpty ? "Please enter address" : "" });
-        return isEmpty;
+    isValidAddress(value: string) {
+        let emptyStatus = this.isEmpty(value);
+        this.setState({ addressError: emptyStatus ? "Please enter address" : "" });
+        return emptyStatus;
     }
 
 
     onSubmit = (event: any) => {
         event.preventDefault();
-        if (!this.NameValidator(this.state.name) && !this.MobileNumberValidator(this.state.mobile) && !this.UserNameValidator(this.state.userName) &&
-            !this.PasswordValidator(this.state.password) && !this.RePasswordValidator(this.state.password) && !this.EmailValidator(this.state.email) &&
-            !this.DrivingLicenecValidator(this.state.drivingLicence) && !this.AddressValidator(this.state.address)) {
+        if (!this.isValidName(this.state.name) && !this.isValidMobileNumber(this.state.mobile) && !this.isValidUserName(this.state.userName) &&
+            !this.isValidPassword(this.state.password) && !this.isEqualPassword(this.state.password) && !this.isValidEmail(this.state.email) &&
+            !this.isValidDrivingLicence(this.state.drivingLicence) && !this.isValidAddress(this.state.address)) {
             var data = {
                 userName: this.state.userName,
                 password: this.state.password,
@@ -168,7 +150,7 @@ export default class SignUp extends React.Component<{}, CreateUser> {
                 address: this.state.address,
                 drivingLicence: this.state.drivingLicence
             }
-            UserService.AddNewUser(data).then((response) => {
+            UserService.addNewUser(data).then((response) => {
                 if (response == 'Ok')
                     window.location.pathname = '/login';
                 else if (response == 'Reject')
@@ -187,13 +169,13 @@ export default class SignUp extends React.Component<{}, CreateUser> {
                         <div className='header-underline'></div>
                     </div>
                     <form className="form">
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.NameValidator(event.target.value) }} value={this.state.name} label="Name" name="name" helperText={this.state.nameError} autoFocus />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.MobileNumberValidator(event.target.value) }} value={this.state.mobile} label="Mobile" name="mobile" helperText={this.state.mobileError} />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.UserNameValidator(event.target.value) }} value={this.state.userName} label="UserName" name="userName" helperText={this.state.userNameError} />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.AddressValidator(event.target.value) }} value={this.state.address} label="Address" name="address" helperText={this.state.addressError} />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.DrivingLicenecValidator(event.target.value) }} value={this.state.drivingLicence} label="Driving Licenece" name="drivingLicence" helperText={this.state.drivingLicenceError} />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.EmailValidator(event.target.value) }} value={this.state.email} label="Email Address" name="email" type='email' helperText={this.state.emailError} />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.PasswordValidator(event.target.value) }} value={this.state.password} name="password" label="Password" type={this.state.passwordType ? 'password' : 'text'} helperText={this.state.passwordError}
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidName(event.target.value) }} value={this.state.name} label="Name" name="name" helperText={this.state.nameError} autoFocus />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidMobileNumber(event.target.value) }} value={this.state.mobile} label="Mobile" name="mobile" helperText={this.state.mobileError} />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} value={this.state.userName} label="UserName" name="userName" helperText={this.state.userNameError} />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidAddress(event.target.value) }} value={this.state.address} label="Address" name="address" helperText={this.state.addressError} />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidDrivingLicence(event.target.value) }} value={this.state.drivingLicence} label="Driving Licenece" name="drivingLicence" helperText={this.state.drivingLicenceError} />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidEmail(event.target.value) }} value={this.state.email} label="Email Address" name="email" type='email' helperText={this.state.emailError} />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} value={this.state.password} name="password" label="Password" type={this.state.passwordType ? 'password' : 'text'} helperText={this.state.passwordError}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position='end' onClick={() => { this.setState({ passwordType: !this.state.password }) }} >
@@ -201,7 +183,7 @@ export default class SignUp extends React.Component<{}, CreateUser> {
                                     </InputAdornment>
                                 )
                             }} />
-                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.RePasswordValidator(event.target.value) }} value={this.state.confirmPassword} name="confirmPassword" label="Confirm Password" type="text" id="confirm-password" helperText={this.state.passwordMatchError} />
+                        <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isEqualPassword(event.target.value) }} value={this.state.confirmPassword} name="confirmPassword" label="Confirm Password" type="text" id="confirm-password" helperText={this.state.passwordMatchError} />
                         <div className='submit'>
                             <button type='submit' onClick={this.onSubmit}><span>Submit</span></button>
                         </div>
