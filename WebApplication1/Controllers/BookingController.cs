@@ -19,12 +19,12 @@ namespace CarPoolWebApi.Controllers
 
         [HttpPost]
         [ActionName("create")]
-        public IActionResult Create([FromBody]Booking booking, string rideId)
+        public IActionResult Create([FromBody]Booking booking, string bookerId)
         {
-            if (string.IsNullOrEmpty(rideId) || booking == null)
+            if (string.IsNullOrEmpty(bookerId) || booking == null)
                 return BadRequest();
 
-            booking.Id = rideId;
+            booking.BookerId = bookerId;
             if (!this._BookingService.Create(booking))
                 return Ok();
 

@@ -1,4 +1,6 @@
 ﻿import UserService from './UserService';
+import { CityService } from './CityService';
+import { City } from '../components/User/Ride/AddViaPointsView';
 
 export const RideService = {
     allRides,
@@ -35,6 +37,21 @@ function addRides(viaPointProps) {
     var rideDetails = JSON.parse(sessionStorage.getItem('rideDetails'))
     if (carDetails === null || rideDetails === null)
         return;
+    var ViaPoints = [];
+    for (var i = 0; i < viaPointProps.cities.length + 2; i++) {
+        if (i === 0) {
+            ViaPoints.push(CityService.getCityDetails(rideDetails.from))
+        }
+
+        else if (i === viaPointProps.cities.length + 1) {
+            ViaPoints.push(CityService.getCityDetails(rideDetails.to))
+        }
+
+        else {
+            ViaPoints.push(CityService.getCityDetails(viaPointProps.cities[i-1].city))
+        }
+    }
+
     return fetch('/api/ride/create', {
         method: 'POST',
         headers: {
@@ -48,9 +65,10 @@ function addRides(viaPointProps) {
             TravelDate: rideDetails.date.toString(),
             AvailableSeats: parseInt(viaPointProps.availableSeats),
             RatePerKM: parseInt(viaPointProps.ratePerKM),
-            ViaPoints: (JSON.stringify(viaPointProps.cities)).toString(),
+            ViaPoints: JSON.stringify(ViaPoints).toString(),
             OwnerId: carDetails.ownerId,
             CarId: carDetails.id,
+            time: rideDetails.time
         }),
     }).then(async response => {
         if (response.status === 200) {

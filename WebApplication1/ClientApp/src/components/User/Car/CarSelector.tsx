@@ -1,6 +1,7 @@
 ﻿import * as React from 'react'
 import { Card, ButtonBase } from '@material-ui/core';
 import '../../../css/car-selector.css';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CarService from '../../../Services/CarService'
 
 export class UserCar {
@@ -26,6 +27,10 @@ export default class CarSelector extends React.Component<{}, UserCar> {
         })
     }
 
+    onDelete(id:any) {
+        console.log(id)
+    }
+
     onSubmit = (carRecord: any) => {
         sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
         window.location.pathname = '/createride';
@@ -34,7 +39,8 @@ export default class CarSelector extends React.Component<{}, UserCar> {
     render() {
         const carDetails = this.state.cars.map((carRecord: any, i) => (
             <ButtonBase key={i} onClick={() => this.onSubmit(carRecord)} >
-                < Card className='car-cards'>
+                <Card className='car-cards'>
+                    <div className='delete' onClick={() => this.onDelete(carRecord.id)}><DeleteIcon style={{ color: 'white', fontSize: '1.4rem' }} /></div>
                      <p className='car-details'>Model : {carRecord.model}</p>
                      <p className='car-details'>Car Number : {carRecord.number}</p>
                      <p className='car-details'>MAX NUMBER OF SEAT: {carRecord.noofSeat}</p>

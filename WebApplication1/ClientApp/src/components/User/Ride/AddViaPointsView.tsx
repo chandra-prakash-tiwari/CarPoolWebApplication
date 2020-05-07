@@ -5,31 +5,43 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import RideService from '../../../Services/RideService';
 import Icon from '@material-ui/core/Icon';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Pagination from '@material-ui/lab/Pagination';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import { CityService } from '../../../Services/CityService';
 
 export class ViaPointsDetails {
-    cities: Array<City>;
+    cities: ViaCity[];
     availableSeats: number;
     ratePerKM: number;
-    switch: boolean;
+    carCapacity: number;
+    meta: ViaCityMeta;
 
     constructor() {
-        this.cities = [new City()];
+        this.cities = [new ViaCity()];
         this.availableSeats = 0;
         this.ratePerKM = 0;
-        this.switch = true;
+        this.meta = new ViaCityMeta();
+        this.carCapacity = 0;
     }
 };
 
-export class City {
+export class ViaCity {
     city: string;
-    cityError: string;
 
     constructor() {
         this.city = '';
-        this.cityError=''
+        
+    }
+}
+
+export class ViaCityMeta {
+    cityError: string
+    switch: boolean;
+
+    constructor() {
+        this.cityError = '';
+        this.switch = true;
     }
 }
 
@@ -39,8 +51,19 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
         this.state = new ViaPointsDetails()
     }
 
+    componentDidMount() {
+        const list = [...this.state.cities];
+        list.splice(0, 1);
+        this.setState({ cities: list });
+        var carDetailsStr = sessionStorage.getItem('carDetails')
+        if (carDetailsStr != null)
+            var carDetails = JSON.parse(carDetailsStr);
+        
+        this.setState({ carCapacity: carDetails.noofSeats });
+    }
+
     addViaCities = () => {
-        this.setState({ cities: [...this.state.cities, { city: '', cityError:'' }] })
+        this.setState({ cities: [...this.state.cities, { city: '' }] })
     }
 
     editViaCities = (value: any, index: number) => {
@@ -54,6 +77,10 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
         this.setState({ cities: list });
     };
 
+    editNoofSeats = (number: number) => {
+        this.setState({ availableSeats:number })
+    }
+
     isEmpty(value: string) {
         return !value || (value && value.trim().length === 0);
     }
@@ -66,8 +93,7 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
     isValidCityResponse(value: any,index:number) {
         let isEmpty = this.isEmpty(value);
         let isValid = this.isValidCity(value);
-        this.state.cities[index].cityError = isEmpty ? 'Please enter source city name' : (isValid ? 'Please enter valid city name' : '');
-        this.setState({ cities: this.state.cities })
+        this.setState({ meta: { ...this.state.meta, cityError: isEmpty ? 'Please enter source city name' : (isValid ? 'Please enter valid city name' : '')} })
         return isEmpty && !isValid;
     }
 
@@ -80,6 +106,8 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
 
     onSubmit = (event:any) => {
         event.preventDefault();
+        console.log(this.state);
+        RideService.addRides(this.state);
         RideService.addRides(this.state)?.then((response) => {
             if (response === 'Ok') {
                 alert("Ride  is created");
@@ -95,8 +123,8 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
                     <div className='header'>
                         <div className='head'>
                             <h1>Add Via Points</h1>
-                            <ButtonBase onClick={() => { this.setState({ switch: !this.state.switch }) }}>
-                                {this.state.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }} />}
+                            <ButtonBase onClick={() => { this.setState({ meta: { ...this.state.meta, switch: !this.state.meta.switch } }) }}>
+                                {this.state.meta.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }} />}
                             </ButtonBase>
                         </div>
                         <p>add all new via points</p>
@@ -114,9 +142,12 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
                         })
                     }
                     <ButtonBase className='icon' onClick={this.addViaCities}><Icon>add_circle</Icon></ButtonBase><br />
-                    <TextField label='Available seat' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='availableSeats' value={this.state.availableSeats} onChange={this.onChanges} />
+                    <div>
+                        <span>Available seats</span>
+                        <Pagination count={this.state.carCapacity} hideNextButton hidePrevButton onChange={(event, number) => console.log(number)} />
+                    </div>
                     <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.onChanges} />
-                    <button type='submit' className='submitButton' onClick={this.onSubmit}><span>Submit </span></button>
+                    <button type='submit' className='submitButton' onClick={this.onSubmit}><span>Submit </span></button>                 
                 </form>
             </Grid>
             )

@@ -51,3 +51,7 @@
 .add-viaPoints .form .header .head .switch {
     font-size: 4rem;
 }
+
+.MuiAutocomplete-root {
+    display: contents;
+}

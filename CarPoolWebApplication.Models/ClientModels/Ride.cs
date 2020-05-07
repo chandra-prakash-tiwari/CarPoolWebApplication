@@ -23,6 +23,8 @@ namespace CarPoolingWebApiReact.Models.Client
 
         public DateTime RideDate { get; set; }
 
+        public int Time { get; set; }
+
         [Required(ErrorMessage = "Please enter ride rate")]
         public float RatePerKM { get; set; }
 

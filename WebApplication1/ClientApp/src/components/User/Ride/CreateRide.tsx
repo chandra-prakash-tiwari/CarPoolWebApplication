@@ -45,6 +45,12 @@ export default class CreateRide extends React.Component<{}, RideDetails> {
         })
     }
 
+    editTime = (number: number) => {
+        this.setState({
+            data: { ...this.state.data, time:number }
+        })
+    }
+
     onSubmit = (event:any) => {
         event.preventDefault();
         if (!this.isValidFrom(this.state.data.from) && !this.isValidTo(this.state.data.to) && !this.isValidDate(this.state.data.date)) {
@@ -113,11 +119,11 @@ export default class CreateRide extends React.Component<{}, RideDetails> {
                             <div className='label'>
                                 <span>Time</span>
                             </div>
-                            <Chip label="5am - 9am" clickable className='chip' />
-                            <Chip label="9am - 12am" clickable className='chip' />
-                            <Chip label="12pm - 3pm" clickable className='chip' />
-                            <Chip label="3pm - 6pm" clickable className='chip' />
-                            <Chip label="6pm - 9pm" clickable className='chip' />
+                            <Chip label="5am - 9am" clickable className='chip' onClick={() => this.editTime(1)} />
+                            <Chip label="9am - 12am" clickable className='chip' onClick={() => this.editTime(2)}/>
+                            <Chip label="12pm - 3pm" clickable className='chip' onClick={() => this.editTime(3)}/>
+                            <Chip label="3pm - 6pm" clickable className='chip' onClick={() => this.editTime(4)}/>
+                            <Chip label="6pm - 9pm" clickable className='chip' onClick={() => this.editTime(5)}/>
                         </div>
                         <div className='nextButton'>
                             <ButtonBase onClick={this.onSubmit}>Next>>></ButtonBase>

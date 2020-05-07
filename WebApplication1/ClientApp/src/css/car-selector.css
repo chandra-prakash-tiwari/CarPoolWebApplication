@@ -3,7 +3,7 @@
     height: 10rem;
     text-align-last: center;
     margin: 2% 4%;
-    padding: 7% 4%;
+    padding: 2% 4%;
     background-color: #ffac19;
     color: white;
 }
@@ -27,3 +27,13 @@
 .user-cars .user-cars .car-cards .car-details {
     font-family: 'Noto Sans TC', sans-serif;
 }
+
+.car-cards .delete {
+    height: 1.4rem;
+    text-align-last: end;
+}
+
+    .car-cards .delete .button {
+        width: 1.4rem;
+        height: 1.4rem;
+    }

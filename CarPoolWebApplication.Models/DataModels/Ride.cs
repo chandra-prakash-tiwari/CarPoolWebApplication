@@ -23,6 +23,8 @@ namespace CarPoolingWebApiReact.Models.Data
 
         public float RatePerKM { get; set; }
 
+        public int Time { get; set; }
+
         public string ViaPoints { get; set; }
 
         public RideStatus Status { get; set; }

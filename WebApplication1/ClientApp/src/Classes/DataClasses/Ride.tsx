@@ -2,12 +2,12 @@
     from: '';
     to: '';
     date: string
-    time: string;
+    time: number
 
     constructor() {
         this.from = '';
         this.to = '';
         this.date = '';
-        this.time = '';
+        this.time = 1
     }
 }

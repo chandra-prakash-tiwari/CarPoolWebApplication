@@ -2,8 +2,37 @@
 
 export const BookingService = {
     searchRide,
-    myBookings
+    myBookings,
+    addBookings
 };
+
+function addBookings(booking) {
+    var data = {
+        rideId: booking.id,
+        from: booking.from,
+        to: booking.to,
+        travelDate: booking.travelDate,
+        bookingDate: booking.travelDate,
+        status:3
+    }
+    console.log(data);
+    return fetch(`/api/booking/create?bookerId=${UserService.currentUser.id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${UserService.currentUser.userToken}`,
+        },
+        body: JSON.stringify(data),
+    }).then(async response => {
+        console.log(response)
+        if (response.status === 204) {
+            return Promise.resolve("Ok");
+        }
+    }).catch(error => {
+        return error;
+    })
+}
 
 function searchRide(bookingSearch) {
     var data = {
@@ -20,6 +49,7 @@ function searchRide(bookingSearch) {
         },
         body: JSON.stringify(data),
     }).then(async response => {
+
         if (response.status == 200) {
             const data = await response.json();
             return Promise.resolve(data);
