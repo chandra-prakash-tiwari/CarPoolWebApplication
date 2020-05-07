@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
 import { TextField,  Grid, ButtonBase } from '@material-ui/core';
 import '../../../css/add-via-points.css';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import RideService from '../../../Services/RideService';
 import Icon from '@material-ui/core/Icon';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -42,8 +43,8 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
         this.setState({ cities: [...this.state.cities, { city: '', cityError:'' }] })
     }
 
-    editViaCities = (e: any, index: number) => {
-        this.state.cities[index].city = e.target.value;
+    editViaCities = (value: any, index: number) => {
+        this.state.cities[index].city = value;
         this.setState({ cities: this.state.cities });
     }
 
@@ -104,7 +105,9 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
                         this.state.cities.map((city, index) => {
                             return (
                                 <div key={index} className='input-via-points'>
-                                    <TextField label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={city.city} onChange={(event) => this.editViaCities(event, index)} />
+                                    <Autocomplete freeSolo options={CityService.getValidCity(city.city).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.editViaCities(newInputvalue, index); }} renderInput={(param) => (
+                                        <TextField {...param} label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text'  />
+                                    )} />
                                     <ButtonBase className='icon' onClick={() => this.deleteViaCity(index)}><DeleteIcon /></ButtonBase>
                                 </div>
                             )

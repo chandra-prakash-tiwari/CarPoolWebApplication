@@ -1,42 +1,40 @@
 import * as React from 'react';
-import { TextField, Chip, ButtonBase } from '@material-ui/core';
+import { TextField, Chip, ButtonBase, Tooltip } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import '../../../css/book-a-ride.css';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
+import { Booking } from '../../../Classes/DataClasses/Booking';
+import { BookARideMeta } from '../../../Classes/MetaClasses/Booking';
+import { CityService } from '../../../Services/CityService';
 
-export class JourneyDetails {
-    from: string;
-    to: string;
-    date: string;
-    time: string;
-    switch: boolean;
-    fromError: string;
-    toError: string;
-    dateError: string;
+export class BookARideProps {
+    data: Booking;
+    meta: BookARideMeta;
 
     constructor() {
-        this.from= '';
-        this.to= '';
-        this.date = '';
-        this.time = '';
-        this.switch = true;
-        this.fromError = '';
-        this.toError = '';
-        this.dateError = '';
+        this.data = new Booking();
+        this.meta = new BookARideMeta()
     }
 }
 
-export default class BookaRide extends React.Component<{}, JourneyDetails> {
-    constructor(props: JourneyDetails) {
+export default class BookaRide extends React.Component<{}, BookARideProps> {
+    constructor(props: BookARideProps) {
         super(props);
-        this.state = new JourneyDetails()
+        this.state = new BookARideProps()
     } 
 
     onChanges = (event: any) => {
         this.setState({
             ...this.state,
-            [event.target.name]: event.target.value
+            data: { ...this.state.data, [event.target.name]: event.target.value}
         });
+    }
+
+    onSelect = (value: any, name: string) => {
+        this.setState({
+            data: { ...this.state.data, [name]: value }
+        })
     }
 
     isEmpty(value: string) {
@@ -45,31 +43,27 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
 
     isValidFromCityName(value: any) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ fromError: emptyStatus ? 'Please enter source city name' : '' })
+        this.setState({ meta: { ...this.state.meta, fromError: emptyStatus ? 'Please enter source city name' : '' } })
         return emptyStatus;
     }
 
     isValidToCityName(value: any) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ fromError: emptyStatus ? 'Please enter destination city name' : '' })
+        this.setState({ meta: { ...this.state.meta, fromError: emptyStatus ? 'Please enter destination city name' : '' } })
         return emptyStatus;
     }
 
     isValidDate(value: any) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ fromError: emptyStatus ? 'Please enter date' : '' })
+        this.setState({ meta: { ...this.state.meta, fromError: emptyStatus ? 'Please enter date' : '' } })
         return emptyStatus;
     }
 
     onSubmit = (event:any) => {
         event.preventDefault();
-        if (!this.isValidFromCityName(this.state.from) && !this.isValidToCityName(this.state.to) && !this.isValidDate(this.state.date)) {
-            var data = {
-                from: this.state.from,
-                to: this.state.to,
-                date: this.state.date
-            }
-            localStorage.setItem('bookingSearch', JSON.stringify(data));
+        if (!this.isValidFromCityName(this.state.data.from) && !this.isValidToCityName(this.state.data.to) && !this.isValidDate(this.state.data.date)) {
+            console.log(this.state.data);
+            localStorage.setItem('bookingSearch', JSON.stringify(this.state.data));
             window.location.pathname = '/booking/search';
         }
     }
@@ -81,16 +75,26 @@ export default class BookaRide extends React.Component<{}, JourneyDetails> {
                      <div className='header'>
                          <div className='head'>
                             <h1>Book a Ride</h1>
-                            <ButtonBase onClick={() => this.setState({ switch: !this.state.switch })} style={{ marginLeft: '5rem' }}>
-                                {this.state.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }}/>}                              
+                            <ButtonBase onClick={() => this.setState({ meta: { ...this.state.meta, switch: !this.state.meta.switch } })} style={{ marginLeft: '5rem' }}>
+                                {this.state.meta.switch ? <ToggleOnIcon className='switch' style={{ color: '#ac4fff' }} /> : <ToggleOffIcon className='switch' style={{ color: '#ffac19' }}/>}                              
                             </ButtonBase>
                          </div>
                          <p>we get you the matches asap!</p>
                          
                     </div>
-                    <TextField label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.from} onChange={(event) => { this.onChanges(event); this.isValidFromCityName(event.target.value) }} name='from' className='input' helperText={this.state.fromError} />
-                    <TextField label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.to} onChange={(event) => { this.onChanges(event); this.isValidToCityName(event.target.value) }} name='to' className='input ' helperText={this.state.toError} />
-                    <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.date} onChange={(event) => { this.onChanges(event); this.isValidDate(event.target.value) }} name='date' className='input' helperText={this.state.dateError} />
+                    <Tooltip title={this.state.meta.fromError} placement='right'>
+                        <Autocomplete options={CityService.getValidCity(this.state.data.from).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'from') }} renderInput={(param) => (
+                            <TextField {...param} label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.data.from} onChange={(event) => { this.onChanges(event); this.isValidFromCityName(event.target.value) }} name='from' className='input' />
+                        )}
+                        />
+                    </Tooltip>
+                    <Tooltip title={this.state.meta.toError} placement='right'>
+                        <Autocomplete freeSolo options={CityService.getValidCity(this.state.data.to).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'to') }} renderInput={(param) => (
+                            <TextField {...param} label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.data.to} onChange={(event) => { this.onChanges(event); this.isValidToCityName(event.target.value) }} name='to' className='input ' helperText={this.state.meta.toError} />
+                        )}
+                        />
+                    </Tooltip>
+                    <TextField label="Date" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='date' value={this.state.data.date} onChange={(event) => { this.onChanges(event); this.isValidDate(event.target.value) }} name='date' className='input' helperText={this.state.meta.dateError} />
                      <div className='chips'>
                          <div className='label'>
                              <span>Time</span>

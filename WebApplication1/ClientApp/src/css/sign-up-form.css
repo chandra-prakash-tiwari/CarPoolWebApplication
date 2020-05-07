@@ -1,4 +1,5 @@
 ﻿.signup {
+    margin:auto;
     height: 100%;
     background-color: #ffac19;
     background-repeat: no-repeat;
@@ -9,27 +10,31 @@
 .signup .header {
     color: white;
     text-align-last: center;
-    padding: 4%;
 }
 
-    .signup .header .head {
-        font-size: 2.5rem;
-        font-family: 'Noto Sans TC', sans-serif;
-    }
+.signup .header .head {
+    font-size: 1.9rem;
+    font-weight: bold;
+    font-family: 'Noto Sans TC', sans-serif;
+}
 
-    .signup .header .header-underline {
-        background-color: white;
-        width: 5.5rem;
-        height: 2.5px;
-        margin: 0.5rem auto;
-    }
+.signup .header .header-underline {
+    background-color: white;
+    width: 4rem;
+    height: 2.5px;
+    margin: 0.7rem auto;
+}
 
-    .signup form {
-        width: 80%;
-        margin: 1% 12% auto;
-        overflow: hidden;
-        font-family: 'Open Sans', sans-serif;
-    }
+.signup .form {
+    width: 80%;
+    margin: 2% 12% auto;
+    overflow: hidden;
+}
+
+.signup .form input {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
 
 .signup .form .input {
     margin: 5px;
@@ -38,77 +43,86 @@
 
 .signup .form .input div {
     background-color: white;
+    height: 3.5rem;
+    border-radius: 0.4rem;
 }
 
-    .signup .form .input div div {
-        color: #dcd7db;
-    }
-
-    .signup .form label {
-        font-weight: 100;
-        color: #dcd7db;
-    }
-
-.signup .form input {
-    background-color: white;
-    border-radius: 5px;
+.signup .form .input div::before {
+    content: none;
 }
 
-    .signup .form .submit {
-        display: flex;
-        margin-top:6px;
+.signup .form .input div::after {
+    content: none;
+}
+
+.signup .form .input div div {
+    color: #dcd7db;
+}
+
+.signup .form label {
+    color: #dcd7db;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    margin: auto;
+}
+
+.signup .form .submit {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.signup .form .submit span {
+    font-weight: 700;
+    color: white;
+    font-size: 1rem;
+}
+
+    .signup .form .submit button {
+        border-radius: 2rem;
+        margin: auto;
+        background-color: #9319ff;
+        width: 9rem;
+        height: 3rem;
+        border: 0;
     }
-
-        .signup .form .submit span {
-            font-weight: 600;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .signup .form .submit button {
-            border-radius: 2rem;
-            margin: auto;
-            background-color: #9319ff;
-            width:9rem;
-            height:3rem;
-            border:0;
-        }
 
     .signup .footer {
         display: flex;
+        margin: auto 24%
     }
 
         .signup .footer .footer-underline {
             height: 2.5px;
-            width: 3rem;
-            background-color: white;
-            margin: auto 77%;
+            width: 3.4rem;
+            margin: 2% 10%;
+            background: white;
+            margin-left: 10%;
+        }
+
+        .signup .footer .link {
+            margin-left: 0.5rem;
         }
 
     .signup a {
         font-family: 'Open Sans', sans-serif;
         color: white;
         font-size: larger;
-        margin: auto;
         font-weight: 600;
     }
 
-    .signup .footer .login{
-        display:contents;
-    }
+        .signup a:hover {
+            text-decoration: none;
+        }
 
-    .signup a:hover{
-        text-decoration :none;
-    }
-
-    .signup .form .input p{
-        color:red;
-        font-size:1rem;
-    }
-
-    .signup h5 {
+    .signup .footer p {
         color: white;
         font-size: larger;
-        margin: auto;
+        font-weight: 200;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .signup .form .input p {
+        color: red;
+        font-size: 1rem;
         font-family: 'Open Sans', sans-serif;
     }
