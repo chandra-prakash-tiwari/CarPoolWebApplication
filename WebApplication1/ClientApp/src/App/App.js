@@ -25,13 +25,13 @@ export default class App extends Component {
                         <Grid className='cointainer'>
                             <Profile/>
                             <Switch>
-                                <Route exact path='/home'>
-                                        <Home />
-                                </Route>
+                                <Route exact path='/home' component={Home} />
                                 <Route exact path='/booking'>
+                                    <Grid container className='booking'>
                                         <Grid item md={4}>
                                             <BookaRide />
                                         </Grid>
+                                    </Grid>
                                 </Route>
                                 <Route exact path='/booking/search'>
                                     <Grid container className='booking'>
@@ -43,19 +43,9 @@ export default class App extends Component {
                                         </Grid>
                                     </Grid>
                                 </Route>
-                                <Route exact path='/car' >
-                                    <CarSelector />
-                                </Route>
-                                <Route exact path='/car/addnewcar'>
-                                    <Grid item md={4}>
-                                        <AddNewCar />
-                                    </Grid>
-                                </Route>
-                                <Route exact path='/createride'>
-                                    <Grid item md={12}>
-                                        <CreateRide />
-                                    </Grid>
-                                </Route>
+                                <Route exact path='/car' component={CarSelector}/ >
+                                <Route exact path='/car/addnewcar' component={AddNewCar} />
+                                <Route exact path='/createride' component={CreateRide}/>
                                 <Route exact path='/myride'>
                                     <Grid container className='rides'>
                                         <Grid item md={4}>

@@ -4,6 +4,9 @@ import CarService from '../../../Services/CarService'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import '../../../css/add-new-car.css'
+import { Car } from '../../../Classes/DataClasses/Car';
+import { AddNewCarMeta } from '../../../Classes/MetaClasses/Car';
+import { ServerError } from '../Response';
 
 export class AddNewCarProps {
     data: Car;
@@ -12,31 +15,6 @@ export class AddNewCarProps {
     constructor() {
         this.data = new Car();
         this.meta = new AddNewCarMeta();
-    }
-}
-
-export class Car {
-    carNumber: string;
-    carModel: string;
-    noofSeats: number;
-    constructor() {
-        this.carNumber = '';
-        this.carModel = '';
-        this.noofSeats = 0;
-    }
-}
-
-export class AddNewCarMeta {
-    switch: boolean;
-    carNumberError: string;
-    carModelError: string;
-    seatError: string
-
-    constructor() {
-        this.switch = true;
-        this.carNumberError = '';
-        this.carModelError = '';
-        this.seatError = '';
     }
 }
 
@@ -78,21 +56,20 @@ export default class AddNewCar extends React.Component<{}, AddNewCarProps> {
 
     onSubmit = (event: any) => {
         event.preventDefault();
-        if (!this.isValidCarNumber(this.state.data.carNumber) && !this.isValiCarModel(this.state.data.carModel) && !this.isValidSeat(this.state.data.noofSeats)) {
+        if (!this.isValidCarNumber(this.state.data.number) && !this.isValiCarModel(this.state.data.model) && !this.isValidSeat(this.state.data.noofSeats)) {
             CarService.addNewCar(this.state.data).then((response) => {
                 if (response == 'Ok') {
-                    alert("Car added successfully");
-                    window.location.pathname = '/home';
+                    window.location.pathname = '/car';
                 }
                 else if (response == 'Server error') {
-                    alert("Server can't do right now try again")
+                    this.setState({ meta: { ...this.state.meta, serverError: true } })
                 }
             }) 
         }
     }
 
     render() {
-        return (
+        return (!this.state.meta.serverError?
             <Grid item md={4} className='add-new-car'>
                 <form className='car-details'>
                     <div className='header'>
@@ -104,14 +81,14 @@ export default class AddNewCar extends React.Component<{}, AddNewCarProps> {
                         </div>
                         <p>we get you the matches asap!</p>
                     </div>
-                    <TextField className='input' label="CarNumber" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.carNumber} onChange={(event) => { this.onChanges(event); this.isValidCarNumber(event.target.value) }} name='carNumber' helperText={this.state.meta.carNumberError} />
-                    <TextField className='input' label="Model" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.carModel} onChange={(event) => { this.onChanges(event); this.isValiCarModel(event.target.value) }} name='carModel' helperText={this.state.meta.carModelError} />
+                    <TextField className='input' label="CarNumber" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.number} onChange={(event) => { this.onChanges(event); this.isValidCarNumber(event.target.value) }} name='number' helperText={this.state.meta.carNumberError} />
+                    <TextField className='input' label="Model" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.model} onChange={(event) => { this.onChanges(event); this.isValiCarModel(event.target.value) }} name='model' helperText={this.state.meta.carModelError} />
                     <TextField className='input' label="Max Number Of Seat" InputLabelProps={{ shrink: true }} type='number' value={this.state.data.noofSeats} onChange={(event) => { this.onChanges(event); this.isValidSeat(event.target.value) }} name='noofSeats' helperText={this.state.meta.seatError} />  
                     <div>
                         <button type='submit' className='submitButton' onClick={this.onSubmit}>Submit</button>
                     </div>
                 </form>
-            </Grid>
+            </Grid> : <ServerError/>
         )
     }
 }

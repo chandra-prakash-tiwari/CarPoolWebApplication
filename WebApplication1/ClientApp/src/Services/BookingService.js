@@ -15,7 +15,6 @@ function addBookings(booking) {
         bookingDate: booking.travelDate,
         status:3
     }
-    console.log(data);
     return fetch(`/api/booking/create?bookerId=${UserService.currentUser.id}`, {
         method: 'POST',
         headers: {
@@ -25,13 +24,11 @@ function addBookings(booking) {
         },
         body: JSON.stringify(data),
     }).then(async response => {
-        console.log(response)
         if (response.status === 204) {
             return Promise.resolve("Ok");
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject("serverError");
         }
     }).catch(error => {
         return error;
@@ -63,13 +60,12 @@ function searchRide(bookingSearch) {
             return Promise.reject();
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject('serverError');
         }
         else
             return Promise.reject();
         }).catch(error => {
-            return console.log(error);
+            return error;
         })
 }
 
@@ -91,13 +87,12 @@ function myBookings() {
             return Promise.reject();
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject('serverError');
         }
         return Promise.reject();
         
     }).catch(error => {
-        console.log(error);
+        return error;
     })
 }
 

@@ -2,13 +2,26 @@
 import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
 import '../../../css/my-rides.css';
 import RideService from '../../../Services/RideService'
+import { ServerError } from '../Response';
 
 export class Rides {
     rides: Array<any>;
+    noofSeat: number;
+    serverError: boolean;
 
     constructor() {
-        this.rides=[]
+        this.rides = [];
+        this.noofSeat = 0;
+        this.serverError = false;
     }
+}
+
+export enum Time {
+    '5am - 9am' = 1,
+    '9am - 12pm',
+    '12pm - 3pm',
+    '3pm - 6pm',
+    '6pm - 9pm'
 }
 
 export default class MyRides extends React.Component<{}, Rides> {
@@ -17,15 +30,21 @@ export default class MyRides extends React.Component<{}, Rides> {
         this.state = new Rides()
     }
 
+    timeEnum = { 1:'5am - 9am', 2:'9am - 12pm', 3:'12pm - 3pm', 4:'3pm - 6pm', 5:'6pm - 9pm' };
+
     componentDidMount() {
         RideService.allRides().then((response) => {
-            if (response != undefined) {
-                this.setState({ rides: response })   
+            if (response !== undefined && response !== 'serverError') {
+                this.setState({ rides: response })
+            }
+            else if (response === 'serverError') {
+                this.setState({ serverError:true })
             }
         })
     }
 
     render() {
+
         const RidesDetails =this.state.rides.length>0?(
             this.state.rides.map((ride: any, i) => (
             <ButtonBase key={i} style={{ margin:'1rem 4rem' }}>
@@ -53,14 +72,14 @@ export default class MyRides extends React.Component<{}, Rides> {
                             <span className='label'>Date</span><br />
                             <span>{ride.travelDate.split('T')[0]}</span>
                         </div>
-                        <div className='right'>
-                            <span className='label'>Time</span><br/>
-                            <span>{ride.travelDate.split('T')[1]}</span>
+                            <div className='right'>
+                                <span className='label'>Time</span><br />
+                                <span>{ride.time}</span>
                         </div>
-                    </div>
+                      </div>
                     <div className='ride-line'>
                         <div className='left'>
-                            <span className='label'>Price</span><br />
+                            <span className='label'>Price(Per KM)</span><br />
                             <span>{ride.ratePerKM}</span>
                         </div>
                         <div className='right'>
@@ -71,13 +90,13 @@ export default class MyRides extends React.Component<{}, Rides> {
                 </Card>
                 </ButtonBase>
             ))) : (<p className='no-bookings'>you have not created any ride offer</p>)
-        return (
+        return (!this.state.serverError?
             <div className='my-ride'>
                 <ButtonBase className='head-card'>
                     <Card className='header'>Offered rides</Card>
                 </ButtonBase>
                 <div className='rides-cards'>{RidesDetails}</div>
-            </div>
+            </div> : <ServerError />
             )
     }
 }

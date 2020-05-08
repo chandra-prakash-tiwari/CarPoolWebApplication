@@ -1,10 +1,10 @@
 ﻿export class Car {
-    carNumber: string;
-    carModel: string;
+    number: string;
+    model: string;
     noofSeats: number;
     constructor() {
-        this.carNumber = '';
-        this.carModel = '';
+        this.number = '';
+        this.model = '';
         this.noofSeats = 0;
     }
 }

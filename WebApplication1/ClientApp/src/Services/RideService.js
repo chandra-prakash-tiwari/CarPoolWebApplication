@@ -1,6 +1,5 @@
 ﻿import UserService from './UserService';
 import { CityService } from './CityService';
-import { City } from '../components/User/Ride/AddViaPointsView';
 
 export const RideService = {
     allRides,
@@ -25,8 +24,7 @@ function allRides() {
             return Promise.reject();
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject('serverError');
         }
         else
             return Promise.reject();
@@ -86,13 +84,12 @@ function addRides(viaPointProps) {
             return Promise.reject();
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject('serverError');
         }
 
         return Promise.reject();
         }).catch(error => {
-            return console.log(error);
+            return error;
         })
 }
 

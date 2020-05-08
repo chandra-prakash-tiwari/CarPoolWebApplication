@@ -3,12 +3,15 @@ import { Card, ButtonBase } from '@material-ui/core';
 import '../../../css/car-selector.css';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CarService from '../../../Services/CarService'
+import { ServerError } from '../Response';
 
 export class UserCar {
     cars: Array<any>;
+    serverError: boolean;
 
     constructor() {
         this.cars = [];
+        this.serverError = true;
     }
 }
 
@@ -21,7 +24,10 @@ export default class CarSelector extends React.Component<{}, UserCar> {
     componentDidMount() {
         CarService.getCars().then((response) => {
             console.log(response)
-            if (response != undefined) {
+            if (response !== undefined && response === 'serverError') {
+                this.setState({ serverError:false })
+            }
+            else if (response !== undefined) {
                 this.setState({ cars: response })
             }
         })
@@ -48,7 +54,7 @@ export default class CarSelector extends React.Component<{}, UserCar> {
             </ButtonBase>
         ))
 
-        return (
+        return (this.state.serverError?
             <div className='car-selectors'>
                 <div className='header'>
                     <p className='head'>Select a car for a ride or add new car</p>
@@ -59,7 +65,7 @@ export default class CarSelector extends React.Component<{}, UserCar> {
                         <div className='add-car'>+</div>
                     </Card>
                 </ButtonBase>
-            </div>
+            </div> : <ServerError/>
         )
     }
 }

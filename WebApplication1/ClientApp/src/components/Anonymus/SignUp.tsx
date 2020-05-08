@@ -50,6 +50,10 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         return UserService.validEmail(value).then((valid) => { return valid })
     }
 
+    onSpanChanges = () => {
+        this.setState({ meta: { ...this.state.meta, spanDisplay: '' } });
+    }
+
     isValidName(value: string) {
         let emptyStatus = this.isEmpty(value);
         let isValid = this.isValid(value, /^[a-zA-Z ]*$/);
@@ -101,23 +105,29 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
 
     isValidAddress(value: string) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ meta: { ...this.state.meta,addressError: emptyStatus? "Please enter address": "" }});
+        this.setState({ ...this.setState, meta: { ...this.state.meta,addressError: emptyStatus? "Please enter address": "" }});
         return emptyStatus;
     }
 
-
     onSubmit = (event: any) => {
         event.preventDefault();
-        if (!this.isValidName(this.state.user.name) && !this.isValidMobileNumber(this.state.user.mobile) && !this.isValidUserName(this.state.user.userName) &&
-            !this.isValidPassword(this.state.user.password) && !this.isEqualPassword(this.state.user.password) && !this.isValidEmail(this.state.user.email) &&
-            !this.isValidDrivingLicence(this.state.user.drivingLicence) && !this.isValidAddress(this.state.user.address)) {
+        this.setState({ meta: { ...this.state.meta, spanDisplay:'' } })
+        let isValid = this.isValidName(this.state.user.name);
+        isValid = isValid && this.isValidMobileNumber(this.state.user.mobile);
+        isValid = isValid && this.isValidUserName(this.state.user.userName);
+        isValid = isValid && this.isValidPassword(this.state.user.password);
+        isValid = isValid && this.isEqualPassword(this.state.user.password);
+        isValid = isValid && this.isValidEmail(this.state.user.email);
+        isValid = isValid && this.isValidDrivingLicence(this.state.user.drivingLicence);
+        isValid = isValid && this.isValidAddress(this.state.user.address);
+        if (!isValid) {
             UserService.addNewUser(this.state.user).then((response) => {
                 if (response == 'Ok')
                     window.location.pathname = '/login';
-                else if (response == 'Reject')
-                    alert("Cannot added right now try once")
+                else if (response == 'Reject') {
+
+                }
             })
-            
         }
     }
 
@@ -130,25 +140,31 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
                         <div className='header-underline'></div>
                     </div>
                     <form className="form">
-                        <Tooltip title={this.state.meta.nameError} placement='left' >
+                        <Tooltip title={this.state.meta.nameError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidName(event.target.value) }} value={this.state.user.name} label="Name" name="name" autoFocus />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.mobileError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.nameError}</span>
+                        <Tooltip title={this.state.meta.mobileError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidMobileNumber(event.target.value) }} value={this.state.user.mobile} label="Mobile" name="mobile" />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.userNameError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.mobileError}</span>
+                        <Tooltip title={this.state.meta.userNameError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} value={this.state.user.userName} label="UserName" name="userName" />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.addressError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.userNameError}</span>
+                        <Tooltip title={this.state.meta.addressError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidAddress(event.target.value) }} value={this.state.user.address} label="Address" name="address" />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.drivingLicenceError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.addressError}</span>
+                        <Tooltip title={this.state.meta.drivingLicenceError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidDrivingLicence(event.target.value) }} value={this.state.user.drivingLicence} label="Driving Licenece" name="drivingLicence" />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.emailError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.drivingLicenceError}</span>
+                        <Tooltip title={this.state.meta.emailError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidEmail(event.target.value) }} value={this.state.user.email} label="Email Address" name="email" type='email' />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.passwordError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.emailError}</span>
+                        <Tooltip title={this.state.meta.passwordError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} value={this.state.user.password} name="password" label="Password" type={this.state.meta.passwordType ? 'password' : 'text'}
                                 InputProps={{
                                     endAdornment: (
@@ -158,9 +174,11 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
                                     )
                                     }} />
                         </Tooltip>
-                        <Tooltip title={this.state.meta.passwordMatchError} placement='left' >
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.passwordError}</span>
+                        <Tooltip title={this.state.meta.passwordMatchError} placement='bottom' >
                             <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isEqualPassword(event.target.value) }} value={this.state.user.confirmPassword} name="confirmPassword" label="Confirm Password" type="text" />
                         </Tooltip>
+                        <span style={{ display: this.state.meta.spanDisplay }}>{this.state.meta.passwordError}</span>
                         <div className='submit'>
                             <button type='submit' onClick={this.onSubmit}><span>Submit</span></button>
                         </div>

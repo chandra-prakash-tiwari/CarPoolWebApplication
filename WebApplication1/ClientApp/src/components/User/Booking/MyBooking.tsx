@@ -2,11 +2,15 @@
 import { ButtonBase, Card, Avatar, Grid } from '@material-ui/core';
 import BookingService from '../../../Services/BookingService';
 import '../../../css/my-bookings.css';
+import { ServerError } from '../Response';
 
 export class Bookings {
     bookings: Array<any>;
+    serverError: boolean;
+
     constructor() {
         this.bookings = [];
+        this.serverError = false;
     }
 }
 
@@ -17,9 +21,13 @@ export default class MyBookings extends React.Component<{}, Bookings> {
     }
 
     componentDidMount() {
-        BookingService.myBookings().then((myBookings) => {
-            if (myBookings != undefined)
-                this.setState({ bookings: myBookings })
+        BookingService.myBookings().then((response) => {
+            if (response === 'serverError') {
+                this.setState({ serverError: true })
+            }
+
+            if (response !== undefined && response !== 'serverError')
+                this.setState({ bookings: response })
         })
     }
 
@@ -66,12 +74,15 @@ export default class MyBookings extends React.Component<{}, Bookings> {
                 </ButtonBase>
             ))) : (<p className='no-bookings'>you have not booked any offer</p>)
         return (
+            this.state.serverError?
             <div className='my-bookings'>
                 <ButtonBase className='head-card'>
                     <Card className='header'>Booked rides</Card>
                 </ButtonBase>
                 <div className='all-bookings'>{BookingsDetails}</div>
-            </div>
+                </div> : (
+                    <ServerError/>
+                    )
         )
     }
 }

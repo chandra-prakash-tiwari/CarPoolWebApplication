@@ -3,12 +3,23 @@ import { Card, ButtonBase, Avatar, Grid } from '@material-ui/core';
 import UserService from '../../../Services/UserService';
 import BookingService from '../../../Services/BookingService';
 import '../../../css/booking-search.css';
+import { NoOffer, ServerError, BookingRequest } from '../Response';
 
 export class Bookings {
     bookings: Array<any>;
+    bookingConfirm: boolean;
+    serverError: boolean;
+    noOffer: boolean;
+    requestSended: boolean;
+    offer: boolean;
 
     constructor() {
-        this.bookings =[];
+        this.bookings = [];
+        this.bookingConfirm = false;
+        this.serverError = false;
+        this.noOffer = false;
+        this.offer = true;
+        this.requestSended = false;
     }
 }
 
@@ -17,6 +28,8 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
         super(props);
         this.state = new Bookings()
     }
+
+    timeEnum = { 1:'5am - 9am', 2: '9am - 12pm', 3: '12pm - 3pm', 4: '3pm - 6pm', 5: '6pm - 9pm' };
 
     componentDidMount() {
         var bookingSearch = localStorage.getItem('bookingSearch');
@@ -30,9 +43,13 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
 
     onSubmit = (booking: any) => {
         console.log(booking);
-        BookingService.addBookings(booking).then((booking) => {
-            if (booking === 'Ok') {
-                alert('Request will be sended');
+        this.setState({ offer: false })
+        BookingService.addBookings(booking).then((response) => {
+            if (response === 'Ok') {
+                this.setState({ requestSended: true })
+            }
+            else if (response === 'serverError') {
+                this.setState({ serverError: true })
             }
         })
     }
@@ -71,8 +88,8 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
                                 <span>{booking.travelDate.split('T')[0]}</span>
                             </div>
                             <div className='right'>
-                                <span className='label'>Time</span><br />
-                                <span>{booking.travelDate.split('T')[1]}</span>
+                                    <span className='label'>Time</span><br />
+                                    <span>{booking.time}</span>
                             </div>
                         </div>
                         <div className='booking-line'>
@@ -88,21 +105,28 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
                     </Card>
                 </ButtonBase>
             ))
-        ) : (<div className='no-offer'>
-            <p className="content">Sorry no offer currently available </p>
-                <p className="content">Better for next time</p>
-                <p className="content">Thanks for using my services</p>
-                </div>):null
+            ) : (
+                    <div>
+                        <p>Sorry no offer currently available </p>
+                        <p>Better for next time</p>
+                    </div>
+                ) : null
 
         return (
-            <div className='bookingsearches'>
-                <div className='header'>
-                    <p>Your Matches</p>
+            this.state.offer ?
+                <div className='bookingsearches'>
+                    <div className='header'>
+                        <p>Your Matches</p>
+                    </div>
+                    <div className='booking-search'>
+                        {Bookings}
+                    </div>
+                </div> :
+                (<div>
+                    <div>{this.state.serverError ? <ServerError /> : ''}</div>
+                    <div>{this.state.requestSended ? <BookingRequest/>:''}</div>
                 </div>
-                <div className='booking-search'>
-                    { Bookings } 
-                </div>
-            </div>
+                )
         )
     }
 }

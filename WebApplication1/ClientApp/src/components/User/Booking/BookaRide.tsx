@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, Chip, ButtonBase, Tooltip } from '@material-ui/core';
+import { TextField, Chip, ButtonBase, Tooltip, Grid } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import '../../../css/book-a-ride.css';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
@@ -70,7 +70,7 @@ export default class BookaRide extends React.Component<{}, BookARideProps> {
     
     render() {
         return (
-            <div className='booking-a-ride'>
+            <Grid md={12} item className='booking-a-ride'>
                  <form className='journey-details'>
                      <div className='header'>
                          <div className='head'>
@@ -106,8 +106,8 @@ export default class BookaRide extends React.Component<{}, BookARideProps> {
                         <Chip label="6pm - 9pm" clickable className='chip' />
                     </div>
                     <button type='submit' onClick={(event) => this.onSubmit(event)} className='submitButton'><span>Submit</span></button>
-                 </form>
-            </div> 
+                </form>
+            </Grid> 
         )
     }
 }

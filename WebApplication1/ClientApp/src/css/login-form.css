@@ -7,6 +7,7 @@
     background-image: url(../Images/imgg2.png);
 }
 
+
 .login .header {
     color: white;
     text-align-last: center;
@@ -30,6 +31,10 @@
     width: 80%;
     margin: 7% 12% auto;
     overflow: hidden;
+}
+
+.cointainer {
+    height: 100%;
 }
 
 .login .form input {

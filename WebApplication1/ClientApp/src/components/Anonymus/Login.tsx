@@ -10,6 +10,7 @@ import { InputAdornment, Tooltip, FormHelperText } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { LoginRequest } from '../../Classes/DataClasses/User';
 import { LoginMeta } from '../../Classes/MetaClasses/User';
+import { WrongPassword, ServerError } from '../User/Error';
 
 export class LoginProps{
     credentials: LoginRequest;
@@ -51,15 +52,22 @@ export default class Login extends React.Component<{}, LoginProps> {
         return emptyStatus;
     }
 
-    onSubmit = (event:any) => {
+    onSubmit = (event: any) => {
         event.preventDefault();
-        if (!this.isValidUserName(this.state.credentials.userName) && !this.isValidPassword(this.state.credentials.password)) {
+        var isValid = this.isValidUserName(this.state.credentials.userName);
+        isValid = isValid && this.isValidPassword(this.state.credentials.password);
+        this.setState({ ...this.state, meta: { ...this.state.meta, displaySpan:'' } })
+
+        if (!isValid) {
             UserService.login(this.state.credentials).then((value) => {
-                console.log(this.state.credentials);
-                if (value == 'ok')
+                if (value === 'ok')
                     window.location.pathname = '/home';
-                else
-                    alert("Wrong userid or password");
+                else if (value === 'wrong') {
+                    this.setState({ ...this.state, meta: { ...this.state.meta, wrongPasswordError: true } })
+                }
+                else if (value === 'servererror') {
+                    this.setState({ ...this.state, meta: { ...this.state.meta, serverError: true } })
+                }
             });
         }
     }
@@ -81,7 +89,7 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <Tooltip title={this.state.meta.userNameError} placement='left' >
                             <TextField variant="filled" className='input' value={this.state.credentials.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id "/>
                         </Tooltip>
-                        <span>{this.state.meta.userNameError}</span>
+                        <span style={{ display: this.state.meta.displaySpan }}>{this.state.meta.userNameError}</span>
                         <Tooltip title={this.state.meta.passwordError} placement='left' >
                             <TextField variant="filled" className='input' value={this.state.credentials.password} onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} name="password" type={this.state.meta.passwordType ? 'password' : 'text'} label="Enter Password"
                                 InputProps={{
@@ -92,7 +100,9 @@ export default class Login extends React.Component<{}, LoginProps> {
                                 )
                                 }} />
                         </Tooltip>
-                        <span>{this.state.meta.passwordError}</span>
+                        <span style={{ display: this.state.meta.displaySpan }}>{this.state.meta.passwordError}</span>
+                        {this.state.meta.wrongPasswordError ? <WrongPassword /> : ''}
+                        {this.state.meta.serverError ? <ServerError/>:''}
                         <div className='submit'>
                             <button type="submit" onClick={this.onSubmit}><span> Submit </span></button>
                         </div>

@@ -25,11 +25,10 @@ function login(loginDetails) {
                 return Promise.resolve("ok");
             }
             else if (response.status == 204) 
-                return Promise.reject("reject");
+                return Promise.reject("wrong");
 
             else if (response.status === 500) {
-                alert("Internal server can't working please contact to administrator");
-                return Promise.reject();
+                return Promise.reject("servererror");
             }
 
             return Promise.reject();

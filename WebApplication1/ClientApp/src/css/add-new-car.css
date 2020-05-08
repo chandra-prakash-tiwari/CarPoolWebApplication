@@ -1,13 +1,22 @@
-﻿.add-new-car {
+﻿.add-new-car .car-details{
     margin: 1% 10%;
     padding: 9% 7%;
-    width:80%;
     background-color: white;
     display: inline-block;
     box-shadow: 0px 2px 6px 8px #ededed;
     border-radius: 1rem;
     font-family: 'Open Sans', sans-serif;
     font-weight: 600;
+}
+
+.add-new-car .header h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 10px 0 0 0;
+}
+
+.add-new-car .car-details .header .head .switch{
+    font-size:4rem;
 }
 
     .add-new-car .car-details .header .head {
@@ -18,20 +27,21 @@
         margin-left: 15%;
     }
 
-        .add-new-car .car-details .header .head span span {
-            margin: auto;
-        }
+.add-new-car .car-details .submitButton {
+    border-radius: 2rem;
+    margin: 6% auto auto;
+    background-color: #ffac19;
+    width: 9rem;
+    height: 3rem;
+    border: 0;
+}
+
+.add-new-car .car-details .input {
+    width: 90%;
+    margin: 1rem auto;
+}
 
 .add-new-car .car-details label {
-    margin: 2%;
-}
-
-.add span {
-    color: blue;
-    font-size: 2.2rem
-}
-
-.add {
-    width: 3.1rem;
-    height: 4.1rem;
+    font-family: 'Open Sans', sans-serif;
+    color: #a7a6a5;
 }

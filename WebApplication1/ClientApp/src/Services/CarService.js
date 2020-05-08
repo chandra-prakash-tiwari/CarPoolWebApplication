@@ -28,11 +28,10 @@ function addNewCar(carDetails) {
             return Promise.reject();
         }
         else if (response.status === 404) {
-            return Promise.reject('Server error');
+            return Promise.reject('not found');
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject('Server error');
         }
         else
             return Promise.reject();
@@ -59,8 +58,7 @@ function getCars() {
             return Promise.reject();
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject('serverError');
         }
 
         else

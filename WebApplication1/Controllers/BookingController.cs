@@ -2,6 +2,7 @@
 using CarPoolingWebApiReact.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CarPoolWebApi.Controllers
 {
@@ -25,6 +26,8 @@ namespace CarPoolWebApi.Controllers
                 return BadRequest();
 
             booking.BookerId = bookerId;
+            booking.Status = BookingStatus.Pending;
+            booking.BookingDate = DateTime.Now;
             if (!this._BookingService.Create(booking))
                 return Ok();
 

@@ -104,12 +104,12 @@ export default class CreateRide extends React.Component<{}, RideDetails> {
                         </div>
                         <Tooltip title={this.state.meta.fromError} placement='left'>
                             <Autocomplete freeSolo options={CityService.getValidCity(this.state.data.from).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'from') }} renderInput={(param) => (
-                                <TextField {...param} label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' name='from' className='input' />
+                                <TextField {...param} label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} value={this.state.data.from} type='text' onChange={this.onChanges} name='from' className='input' />
                             )} />
                         </Tooltip>
                         <Tooltip title={this.state.meta.toError} placement='left'>
                             <Autocomplete freeSolo options={CityService.getValidCity(this.state.data.to).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'to') }} renderInput={(param) => (
-                                <TextField {...param} label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text'name='to' className='input' />
+                                <TextField {...param} label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} value={this.state.data.to} onChange={this.onChanges} type='text' name='to' className='input' />
                             )} />
                         </Tooltip>
                         <Tooltip title={this.state.meta.dateError} placement='left'>
