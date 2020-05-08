@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarPoolingWebApiReact.Context;
 using CarPoolingWebApiReact.Services.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,20 @@ namespace CarPoolingWebApiReact.Services.Services
         public List<Models.Client.Ride> GetOffers(Models.Client.SearchRideRequest booking)
         {
             var rides = this._db.Rides.Where(ride => ride.TravelDate == booking.TravelDate && ride.To.ToLower() == booking.To.ToLower() &&ride.From.ToLower() == booking.From.ToLower() && ride.AvailableSeats > 0).ToList();
+
+            //var rides = new List<Models.Data.Ride>();
+            //var abc = this._db.Rides;
+            //foreach (var ride in this._db.Rides)
+            //{
+            //    var viaPoints = JsonConvert.DeserializeObject<List<Models.Client.Point>>(ride.ViaPoints);
+
+            //    if (viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower()==booking.To.ToLower())) >
+            //        viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower()== booking.From.ToLower()))
+            //        && ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
+            //    {
+            //        rides.Add(ride);
+            //    }
+            //}
 
             return this._mapper.Map<List<Models.Client.Ride>>(rides);
         }

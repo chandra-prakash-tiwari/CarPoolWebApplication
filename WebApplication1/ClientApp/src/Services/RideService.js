@@ -24,6 +24,10 @@ function allRides() {
             UserService.sessionExpired();
             return Promise.reject();
         }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
+            return Promise.reject();
+        }
         else
             return Promise.reject();
         
@@ -78,6 +82,11 @@ function addRides(viaPointProps) {
         }
         else if (response === 401) {
             UserService.sessionExpired();
+            window.location.pathname = '/login';
+            return Promise.reject();
+        }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
             return Promise.reject();
         }
 

@@ -16,26 +16,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var core_1 = require("@material-ui/core");
 require("../../../css/my-rides.css");
-var Services_js_1 = require("./Services.js");
+var RideService_1 = require("../../../Services/RideService");
+var Rides = /** @class */ (function () {
+    function Rides() {
+        this.rides = [];
+    }
+    return Rides;
+}());
+exports.Rides = Rides;
+var Time;
+(function (Time) {
+    Time[Time["5am - 9am"] = 1] = "5am - 9am";
+    Time[Time["9am - 12pm"] = 2] = "9am - 12pm";
+    Time[Time["12pm - 3pm"] = 3] = "12pm - 3pm";
+    Time[Time["3pm - 6pm"] = 4] = "3pm - 6pm";
+    Time[Time["6pm - 9pm"] = 5] = "6pm - 9pm";
+})(Time = exports.Time || (exports.Time = {}));
 var MyRides = /** @class */ (function (_super) {
     __extends(MyRides, _super);
     function MyRides(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = {
-            rides: []
-        };
+        _this.timeEnum = { 1: '5am - 9am', 2: '9am - 12pm', 3: '12pm - 3pm', 4: '3pm - 6pm', 5: '6pm - 9pm' };
+        _this.state = new Rides();
         return _this;
     }
     MyRides.prototype.componentDidMount = function () {
-        var data = Services_js_1.default.AllRides();
-        //this.setState({ rides: data })
+        var _this = this;
+        RideService_1.default.allRides().then(function (response) {
+            if (response != undefined) {
+                _this.setState({ rides: response });
+            }
+        });
     };
     MyRides.prototype.render = function () {
-        var RidesDetails = this.state.rides.map(function (ride, i) { return (React.createElement(core_1.ButtonBase, { key: i, style: { margin: '1rem 4rem' } },
+        var RidesDetails = this.state.rides.length > 0 ? (this.state.rides.map(function (ride, i) { return (React.createElement(core_1.ButtonBase, { key: i, style: { margin: '1rem 4rem' } },
             React.createElement(core_1.Card, { className: 'rides' },
-                React.createElement("div", null,
-                    React.createElement("h4", null),
-                    React.createElement(core_1.Avatar, null)),
+                React.createElement("div", { className: 'head' },
+                    React.createElement(core_1.Grid, { item: true, md: 10 },
+                        React.createElement("h4", null, " ")),
+                    React.createElement(core_1.Grid, { item: true, md: 2 },
+                        React.createElement(core_1.Avatar, null))),
                 React.createElement("div", { className: 'ride-line' },
                     React.createElement("div", { className: 'left' },
                         React.createElement("span", { className: 'label' }, "From"),
@@ -53,16 +73,20 @@ var MyRides = /** @class */ (function (_super) {
                     React.createElement("div", { className: 'right' },
                         React.createElement("span", { className: 'label' }, "Time"),
                         React.createElement("br", null),
-                        React.createElement("span", null, ride.travelDate.split('T')[1]))),
+                        React.createElement("span", null, ride.time))),
                 React.createElement("div", { className: 'ride-line' },
                     React.createElement("div", { className: 'left' },
-                        React.createElement("span", { className: 'label' }, "Price"),
+                        React.createElement("span", { className: 'label' }, "Price(Per KM)"),
                         React.createElement("br", null),
-                        React.createElement("span", null, ride.ratePerKM)))))); });
+                        React.createElement("span", null, ride.ratePerKM)),
+                    React.createElement("div", { className: 'right' },
+                        React.createElement("span", { className: 'label' }, "Available seats"),
+                        React.createElement("br", null),
+                        React.createElement("span", null, ride.availableSeats)))))); })) : (React.createElement("p", { className: 'no-bookings' }, "you have not created any ride offer"));
         return (React.createElement("div", { className: 'my-ride' },
-            React.createElement(core_1.ButtonBase, null,
-                React.createElement(core_1.Card, { className: 'header' }, "Offered Ride")),
-            React.createElement("div", null, RidesDetails)));
+            React.createElement(core_1.ButtonBase, { className: 'head-card' },
+                React.createElement(core_1.Card, { className: 'header' }, "Offered rides")),
+            React.createElement("div", { className: 'rides-cards' }, RidesDetails)));
     };
     return MyRides;
 }(React.Component));

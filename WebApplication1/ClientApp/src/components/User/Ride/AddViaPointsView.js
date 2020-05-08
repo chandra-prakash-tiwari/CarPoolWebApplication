@@ -33,58 +33,127 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var core_1 = require("@material-ui/core");
-require("../../../css/create-ride.css");
-var Services_1 = require("./Services");
+require("../../../css/add-via-points.css");
+var Autocomplete_1 = require("@material-ui/lab/Autocomplete");
+var RideService_1 = require("../../../Services/RideService");
+var Icon_1 = require("@material-ui/core/Icon");
+var Delete_1 = require("@material-ui/icons/Delete");
+var Pagination_1 = require("@material-ui/lab/Pagination");
+var ToggleOn_1 = require("@material-ui/icons/ToggleOn");
+var ToggleOff_1 = require("@material-ui/icons/ToggleOff");
+var CityService_1 = require("../../../Services/CityService");
+var ViaPointsDetails = /** @class */ (function () {
+    function ViaPointsDetails() {
+        this.cities = [new ViaCity()];
+        this.availableSeats = 0;
+        this.ratePerKM = 0;
+        this.meta = new ViaCityMeta();
+        this.carCapacity = 0;
+    }
+    return ViaPointsDetails;
+}());
+exports.ViaPointsDetails = ViaPointsDetails;
+;
+var ViaCity = /** @class */ (function () {
+    function ViaCity() {
+        this.city = '';
+    }
+    return ViaCity;
+}());
+exports.ViaCity = ViaCity;
+var ViaCityMeta = /** @class */ (function () {
+    function ViaCityMeta() {
+        this.cityError = '';
+        this.switch = true;
+    }
+    return ViaCityMeta;
+}());
+exports.ViaCityMeta = ViaCityMeta;
 var AddViaPointsView = /** @class */ (function (_super) {
     __extends(AddViaPointsView, _super);
     function AddViaPointsView(props) {
         var _this = _super.call(this, props) || this;
-        _this.addViaPoints = function () {
-            _this.setState({ viaPoints: __spreadArrays(_this.state.viaPoints, [{ city: '', longitude: 0, latitude: 0 }]) });
+        _this.addViaCities = function () {
+            _this.setState({ cities: __spreadArrays(_this.state.cities, [{ city: '' }]) });
         };
-        _this.editViaPoints = function (e, index) {
-            _this.state.viaPoints[index].city = e.target.value;
-            _this.state.viaPoints[index].longitude = index;
-            _this.state.viaPoints[index].latitude = index + 1;
-            _this.setState({ viaPoints: _this.state.viaPoints });
+        _this.editViaCities = function (value, index) {
+            _this.state.cities[index].city = value;
+            _this.setState({ cities: _this.state.cities });
         };
-        _this.changes = function (event) {
+        _this.deleteViaCity = function (index) {
+            var list = __spreadArrays(_this.state.cities);
+            list.splice(index, 1);
+            _this.setState({ cities: list });
+        };
+        _this.editNoofSeats = function (number) {
+            _this.setState({ availableSeats: number });
+        };
+        _this.onChanges = function (event) {
             var _a;
             _this.setState(__assign(__assign({}, _this.state), (_a = {}, _a[event.target.name] = event.target.value, _a)));
         };
-        _this.submit = function () {
-            Services_1.default.AddRides(_this.state);
+        _this.onSubmit = function (event) {
+            var _a;
+            event.preventDefault();
+            console.log(_this.state);
+            (_a = RideService_1.default.addRides(_this.state)) === null || _a === void 0 ? void 0 : _a.then(function (response) {
+                if (response === 'Ok') {
+                    alert("Ride  is created");
+                    window.location.pathname = '/home';
+                }
+            });
         };
-        _this.state = {
-            viaPoints: [{
-                    city: '',
-                    longitude: 0,
-                    latitude: 0
-                }],
-            availableSeats: 0,
-            ratePerKM: 0,
-        };
+        _this.state = new ViaPointsDetails();
         return _this;
     }
+    AddViaPointsView.prototype.componentDidMount = function () {
+        var list = __spreadArrays(this.state.cities);
+        list.splice(0, 1);
+        this.setState({ cities: list });
+        var carDetailsStr = sessionStorage.getItem('carDetails');
+        if (carDetailsStr != null) {
+            var carDetails = JSON.parse(carDetailsStr);
+            this.setState(__assign(__assign({}, this.state), { carCapacity: carDetails.noofSeat }));
+        }
+        console.log(carDetails);
+    };
+    AddViaPointsView.prototype.isEmpty = function (value) {
+        return !value || (value && value.trim().length === 0);
+    };
+    AddViaPointsView.prototype.isValidCity = function (value) {
+        var isValid = CityService_1.CityService.getValidCity(value);
+        return isValid.length == 0;
+    };
+    AddViaPointsView.prototype.isValidCityResponse = function (value, index) {
+        var isEmpty = this.isEmpty(value);
+        var isValid = this.isValidCity(value);
+        this.setState({ meta: __assign(__assign({}, this.state.meta), { cityError: isEmpty ? 'Please enter source city name' : (isValid ? 'Please enter valid city name' : '') }) });
+        return isEmpty && !isValid;
+    };
     AddViaPointsView.prototype.render = function () {
         var _this = this;
-        return (React.createElement(core_1.Grid, { className: 'create-ride', item: true, md: 4, id: 'viapointdetails' },
-            React.createElement("form", { className: 'ride-details', onSubmit: this.submit },
+        return (React.createElement(core_1.Grid, { className: 'add-viaPoints', item: true, md: 4, id: 'viapointdetails' },
+            React.createElement("form", { className: 'form' },
                 React.createElement("div", { className: 'header' },
                     React.createElement("div", { className: 'head' },
-                        React.createElement("h1", null, "Create Ride"),
-                        React.createElement(core_1.Switch, { color: "secondary", name: "checkedB" })),
-                    React.createElement("p", null, "we get you the matches asap!")),
-                this.state.viaPoints.map(function (viapoint, index) {
+                        React.createElement("h1", null, "Add Via Points"),
+                        React.createElement(core_1.ButtonBase, { onClick: function () { _this.setState({ meta: __assign(__assign({}, _this.state.meta), { switch: !_this.state.meta.switch }) }); } }, this.state.meta.switch ? React.createElement(ToggleOn_1.default, { className: 'switch', style: { color: '#ac4fff' } }) : React.createElement(ToggleOff_1.default, { className: 'switch', style: { color: '#ffac19' } }))),
+                    React.createElement("p", null, "add all new via points")),
+                this.state.cities.map(function (city, index) {
                     return (React.createElement("div", { key: index, className: 'input-via-points' },
-                        React.createElement(core_1.TextField, { label: 'stop ' + (index + 1), style: { margin: 8 }, InputLabelProps: { shrink: true }, type: 'text', value: viapoint.city, onChange: function (event) { return _this.editViaPoints(event, index); } })));
+                        React.createElement(Autocomplete_1.default, { freeSolo: true, options: CityService_1.CityService.getValidCity(city.city).map(function (option) { return option.city; }), onChange: function (event, newInputvalue) { _this.editViaCities(newInputvalue, index); }, renderInput: function (param) { return (React.createElement(core_1.TextField, __assign({}, param, { label: 'stop ' + (index + 1), style: { width: '70%', marginBottom: '6%' }, InputLabelProps: { shrink: true }, type: 'text', onChange: function (event) { _this.editViaCities(event.target.value, index); } }))); } }),
+                        React.createElement(core_1.ButtonBase, { className: 'icon', onClick: function () { return _this.deleteViaCity(index); } },
+                            React.createElement(Delete_1.default, null))));
                 }),
-                React.createElement(core_1.ButtonBase, { className: 'add', onClick: this.addViaPoints },
-                    React.createElement("span", null, "+")),
+                React.createElement(core_1.ButtonBase, { className: 'icon', onClick: this.addViaCities },
+                    React.createElement(Icon_1.default, null, "add_circle")),
                 React.createElement("br", null),
-                React.createElement(core_1.TextField, { label: 'Available seat', style: { margin: 8 }, InputLabelProps: { shrink: true }, type: 'number', name: 'availableSeats', value: this.state.availableSeats, onChange: this.changes }),
-                React.createElement(core_1.TextField, { label: 'Rate per km', style: { margin: 8 }, InputLabelProps: { shrink: true }, type: 'number', name: 'ratePerKM', value: this.state.ratePerKM, onChange: this.changes }),
-                React.createElement("button", { type: 'submit' }, "Sumbit "))));
+                React.createElement("div", null,
+                    React.createElement("span", null, "Available seats"),
+                    React.createElement(Pagination_1.default, { count: this.state.carCapacity, hideNextButton: true, hidePrevButton: true, onChange: function (event, number) { return _this.editNoofSeats(number); } })),
+                React.createElement(core_1.TextField, { label: 'Rate per km', style: { width: '70%', marginBottom: '6%' }, InputLabelProps: { shrink: true }, type: 'number', name: 'ratePerKM', value: this.state.ratePerKM, onChange: this.onChanges }),
+                React.createElement("button", { type: 'submit', className: 'submitButton', onClick: this.onSubmit },
+                    React.createElement("span", null, "Submit ")))));
     };
     return AddViaPointsView;
 }(React.Component));

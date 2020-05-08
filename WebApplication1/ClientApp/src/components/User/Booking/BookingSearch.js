@@ -15,56 +15,90 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var core_1 = require("@material-ui/core");
-var Services_1 = require("../../Anonymus/Services");
-var Services_2 = require("./Services");
+var UserService_1 = require("../../../Services/UserService");
+var BookingService_1 = require("../../../Services/BookingService");
+require("../../../css/booking-search.css");
+var Bookings = /** @class */ (function () {
+    function Bookings() {
+        this.bookings = [];
+    }
+    return Bookings;
+}());
+exports.Bookings = Bookings;
 var BookingSearch = /** @class */ (function (_super) {
     __extends(BookingSearch, _super);
     function BookingSearch(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = {
-            bookings: []
+        _this.timeEnum = { 1: '5am - 9am', 2: '9am - 12pm', 3: '12pm - 3pm', 4: '3pm - 6pm', 5: '6pm - 9pm' };
+        _this.onSubmit = function (booking) {
+            console.log(booking);
+            BookingService_1.default.addBookings(booking).then(function (booking) {
+                if (booking === 'Ok') {
+                    alert('Request will be sended');
+                    window.location.pathname = '/home';
+                }
+            });
         };
+        _this.state = new Bookings();
         return _this;
     }
     BookingSearch.prototype.componentDidMount = function () {
-        var token = Services_1.default.userToken;
-        var BookingSearchStr = localStorage.getItem('bookingSearch');
-        if (BookingSearchStr === null)
+        var _this = this;
+        var bookingSearch = localStorage.getItem('bookingSearch');
+        if (bookingSearch === null)
             return;
-        if (token) {
-            Services_2.default.SearchRide(JSON.parse(BookingSearchStr));
-        }
+        BookingService_1.default.searchRide(JSON.parse(bookingSearch)).then(function (searchBooking) {
+            if (searchBooking != undefined)
+                _this.setState({ bookings: searchBooking });
+        });
+    };
+    BookingSearch.prototype.userDetails = function (id) {
+        return UserService_1.default.getUser(id).then(function (user) { return user; });
     };
     BookingSearch.prototype.render = function () {
-        var Bookings = this.state.bookings.map(function (booking, i) { return (React.createElement(core_1.ButtonBase, { key: i, style: { margin: '1rem 4rem' } },
-            React.createElement(core_1.Card, { className: 'bookings' },
-                React.createElement("div", { style: { width: '20rem' } },
-                    React.createElement("h4", null),
-                    React.createElement(core_1.Avatar, null)),
-                React.createElement("div", { className: 'booking-line' },
-                    React.createElement("div", { className: 'left' },
-                        React.createElement("span", { className: 'label' }, "From"),
-                        React.createElement("br", null),
-                        React.createElement("span", null, booking.from)),
-                    React.createElement("div", { className: 'right' },
-                        React.createElement("span", { className: 'label' }, "To"),
-                        React.createElement("br", null),
-                        React.createElement("span", null, booking.to))),
-                React.createElement("div", { className: 'booking-line' },
-                    React.createElement("div", { className: 'left' },
-                        React.createElement("span", { className: 'label' }, "Date"),
-                        React.createElement("br", null),
-                        React.createElement("span", null, booking.travelDate.split('T')[0])),
-                    React.createElement("div", { className: 'right' },
-                        React.createElement("span", { className: 'label' }, "Time"),
-                        React.createElement("br", null),
-                        React.createElement("span", null, booking.travelDate.split('T')[1]))),
-                React.createElement("div", { className: 'booking-line' },
-                    React.createElement("div", { className: 'left' },
-                        React.createElement("span", { className: 'label' }, "Price"),
-                        React.createElement("br", null),
-                        React.createElement("span", null, booking.ratePerKM)))))); });
-        return (React.createElement("div", { className: 'booking-search' }, Bookings));
+        var _this = this;
+        var Bookings = this.state.bookings != null ?
+            this.state.bookings.length > 0 ? (this.state.bookings.map(function (booking, i) { return (React.createElement(core_1.ButtonBase, { key: i, style: { margin: '1rem' }, onClick: function () { return _this.onSubmit(booking); } },
+                React.createElement(core_1.Card, { className: 'bookings' },
+                    React.createElement("div", { className: 'head' },
+                        React.createElement(core_1.Grid, { item: true, md: 10 },
+                            React.createElement("h1", null, " ")),
+                        React.createElement(core_1.Grid, { item: true, md: 2 },
+                            React.createElement(core_1.Avatar, null))),
+                    React.createElement("div", { className: 'booking-line' },
+                        React.createElement("div", { className: 'left' },
+                            React.createElement("span", { className: 'label' }, "From"),
+                            React.createElement("br", null),
+                            React.createElement("span", null, booking.from)),
+                        React.createElement("div", { className: 'right' },
+                            React.createElement("span", { className: 'label' }, "To"),
+                            React.createElement("br", null),
+                            React.createElement("span", null, booking.to))),
+                    React.createElement("div", { className: 'booking-line' },
+                        React.createElement("div", { className: 'left' },
+                            React.createElement("span", { className: 'label' }, "Date"),
+                            React.createElement("br", null),
+                            React.createElement("span", null, booking.travelDate.split('T')[0])),
+                        React.createElement("div", { className: 'right' },
+                            React.createElement("span", { className: 'label' }, "Time"),
+                            React.createElement("br", null),
+                            React.createElement("span", null, booking.time))),
+                    React.createElement("div", { className: 'booking-line' },
+                        React.createElement("div", { className: 'left' },
+                            React.createElement("span", { className: 'label' }, "Price"),
+                            React.createElement("br", null),
+                            React.createElement("span", null, booking.ratePerKM)),
+                        React.createElement("div", { className: 'right' },
+                            React.createElement("span", { className: 'label' }, "Seat availabilty"),
+                            React.createElement("br", null),
+                            React.createElement("span", null, booking.availableSeats)))))); })) : (React.createElement("div", { className: 'no-offer' },
+                React.createElement("p", { className: "content" }, "Sorry no offer currently available "),
+                React.createElement("p", { className: "content" }, "Better for next time"),
+                React.createElement("p", { className: "content" }, "Thanks for using my services"))) : null;
+        return (React.createElement("div", { className: 'bookingsearches' },
+            React.createElement("div", { className: 'header' },
+                React.createElement("p", null, "Your Matches")),
+            React.createElement("div", { className: 'booking-search' }, Bookings)));
     };
     return BookingSearch;
 }(React.Component));

@@ -29,6 +29,10 @@ function addBookings(booking) {
         if (response.status === 204) {
             return Promise.resolve("Ok");
         }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
+            return Promise.reject();
+        }
     }).catch(error => {
         return error;
     })
@@ -58,6 +62,10 @@ function searchRide(bookingSearch) {
             UserService.sessionExpired();
             return Promise.reject();
         }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
+            return Promise.reject();
+        }
         else
             return Promise.reject();
         }).catch(error => {
@@ -80,6 +88,10 @@ function myBookings() {
         }
         else if (response.status == 401) {
             UserService.sessionExpired();
+            return Promise.reject();
+        }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
             return Promise.reject();
         }
         return Promise.reject();

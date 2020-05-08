@@ -6,7 +6,6 @@ export const CarService = {
 };
 
 function addNewCar(carDetails) {
-    carDetails.noofseat = parseInt(carDetails.noofseat);
     return fetch(`/api/car/create?ownerid=${UserService.currentUser.id}`, {
         method: 'POST',
         headers: {
@@ -14,8 +13,13 @@ function addNewCar(carDetails) {
             Accept: 'application/json',
             Authorization: `Bearer ${UserService.currentUser.userToken}`,
         },
-        body: JSON.stringify(carDetails),
+        body: JSON.stringify({
+            number: carDetails.number,
+            model: carDetails.model,
+            noofSeat: parseInt(carDetails.noofSeats)
+        }),
     }).then(async response => {
+        console.log(response)
         if (response.status === 200) {
             return Promise.resolve('Ok')
         }
@@ -25,6 +29,10 @@ function addNewCar(carDetails) {
         }
         else if (response.status === 404) {
             return Promise.reject('Server error');
+        }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
+            return Promise.reject();
         }
         else
             return Promise.reject();
@@ -48,6 +56,10 @@ function getCars() {
         }
         else if (response.status === 401) {
             UserService.sessionExpired();
+            return Promise.reject();
+        }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
             return Promise.reject();
         }
 

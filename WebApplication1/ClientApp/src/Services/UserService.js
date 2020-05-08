@@ -26,7 +26,12 @@ function login(loginDetails) {
             }
             else if (response.status == 204) 
                 return Promise.reject("reject");
-       
+
+            else if (response.status === 500) {
+                alert("Internal server can't working please contact to administrator");
+                return Promise.reject();
+            }
+
             return Promise.reject();
         }).catch(error => {
             return error;
@@ -48,6 +53,10 @@ function addNewUser(userData) {
             if (response.status == 200) {
                 window.location.pathname = '/login';
                 return Promise.resolve('Ok');
+            }
+            else if (response.status === 500) {
+                alert("Internal server can't working please contact to administrator");
+                return Promise.reject();
             }
             else {
                 return Promise.reject('Reject');
@@ -93,6 +102,10 @@ function getUser(id) {
         if (response.status == 200) {
             const data = await response.json();
             return Promise.resolve(data.name);
+        }
+        else if (response.status === 500) {
+            alert("Internal server can't working please contact to administrator");
+            return Promise.reject();
         }
         else {
             return Promise.reject();

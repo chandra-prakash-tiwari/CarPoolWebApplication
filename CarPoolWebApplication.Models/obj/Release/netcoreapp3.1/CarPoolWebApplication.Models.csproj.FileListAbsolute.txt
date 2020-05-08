@@ -1,0 +1,9 @@
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\bin\Release\netcoreapp3.1\CarPoolWebApplication.Models.deps.json
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\bin\Release\netcoreapp3.1\CarPoolWebApplication.Models.dll
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\bin\Release\netcoreapp3.1\CarPoolWebApplication.Models.pdb
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\obj\Release\netcoreapp3.1\CarPoolWebApplication.Models.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\obj\Release\netcoreapp3.1\CarPoolWebApplication.Models.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\obj\Release\netcoreapp3.1\CarPoolWebApplication.Models.AssemblyInfo.cs
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\obj\Release\netcoreapp3.1\CarPoolWebApplication.Models.dll
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\obj\Release\netcoreapp3.1\CarPoolWebApplication.Models.pdb
+C:\Users\user\Desktop\WebApplication1\CarPoolWebApplication.Models\obj\Release\netcoreapp3.1\CarPoolWebApplication.Models.csprojAssemblyReference.cache

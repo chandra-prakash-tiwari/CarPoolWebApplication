@@ -15,30 +15,38 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var core_1 = require("@material-ui/core");
-var Services_1 = require("./Services");
-require("../../../css/my-rides.css");
+var BookingService_1 = require("../../../Services/BookingService");
+require("../../../css/my-bookings.css");
+var Bookings = /** @class */ (function () {
+    function Bookings() {
+        this.bookings = [];
+    }
+    return Bookings;
+}());
+exports.Bookings = Bookings;
 var MyBookings = /** @class */ (function (_super) {
     __extends(MyBookings, _super);
     function MyBookings(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = {
-            bookings: []
-        };
+        _this.state = new Bookings();
         return _this;
     }
     MyBookings.prototype.componentDidMount = function () {
-        var data = Services_1.default.MyBookings();
-        if (data == null)
-            return;
-        // this.setState({ bookings:data })
+        var _this = this;
+        BookingService_1.default.myBookings().then(function (myBookings) {
+            if (myBookings != undefined)
+                _this.setState({ bookings: myBookings });
+        });
     };
     MyBookings.prototype.render = function () {
-        var RidesDetails = this.state.bookings.map(function (booking, i) { return (React.createElement(core_1.ButtonBase, { key: i, style: { margin: '1rem 4rem' } },
+        var BookingsDetails = this.state.bookings.length > 0 ? (this.state.bookings.map(function (booking, i) { return (React.createElement(core_1.ButtonBase, { key: i, style: { margin: '1rem 4rem' } },
             React.createElement(core_1.Card, { className: 'bookings' },
-                React.createElement("div", null,
-                    React.createElement("h4", null),
-                    React.createElement(core_1.Avatar, null)),
-                React.createElement("div", { className: 'ride-line' },
+                React.createElement("div", { className: 'head' },
+                    React.createElement(core_1.Grid, { item: true, md: 10 },
+                        React.createElement("h4", null, " ")),
+                    React.createElement(core_1.Grid, { item: true, md: 2 },
+                        React.createElement(core_1.Avatar, null))),
+                React.createElement("div", { className: 'booking-line' },
                     React.createElement("div", { className: 'left' },
                         React.createElement("span", { className: 'label' }, "From"),
                         React.createElement("br", null),
@@ -47,7 +55,7 @@ var MyBookings = /** @class */ (function (_super) {
                         React.createElement("span", { className: 'label' }, "To"),
                         React.createElement("br", null),
                         React.createElement("span", null, booking.to))),
-                React.createElement("div", { className: 'ride-line' },
+                React.createElement("div", { className: 'booking-line' },
                     React.createElement("div", { className: 'left' },
                         React.createElement("span", { className: 'label' }, "Date"),
                         React.createElement("br", null),
@@ -56,15 +64,15 @@ var MyBookings = /** @class */ (function (_super) {
                         React.createElement("span", { className: 'label' }, "Time"),
                         React.createElement("br", null),
                         React.createElement("span", null, booking.travelDate.split('T')[1]))),
-                React.createElement("div", { className: 'ride-line' },
+                React.createElement("div", { className: 'booking-line' },
                     React.createElement("div", { className: 'left' },
                         React.createElement("span", { className: 'label' }, "Price"),
                         React.createElement("br", null),
-                        React.createElement("span", null, booking.ratePerKM)))))); });
+                        React.createElement("span", null, booking.ratePerKM)))))); })) : (React.createElement("p", { className: 'no-bookings' }, "you have not booked any offer"));
         return (React.createElement("div", { className: 'my-bookings' },
-            React.createElement(core_1.ButtonBase, null,
-                React.createElement(core_1.Card, null, "BookedRide")),
-            React.createElement("div", null, RidesDetails)));
+            React.createElement(core_1.ButtonBase, { className: 'head-card' },
+                React.createElement(core_1.Card, { className: 'header' }, "Booked rides")),
+            React.createElement("div", { className: 'all-bookings' }, BookingsDetails)));
     };
     return MyBookings;
 }(React.Component));
