@@ -4,7 +4,8 @@
 export class RideConfirm extends Component {
     render() {
         return (
-            <p style={{ color: 'green', fontSize:'1.5rem' }}>Ride is created successfully</p>
+            <p style={{
+                color: 'green', fontSize: '1.5rem', margin:'0.5rem' }}>Ride is created successfully</p>
             )
     }
 }
@@ -12,7 +13,7 @@ export class RideConfirm extends Component {
 export class WrongPassword extends Component {
     render() {
         return (
-            <p style={{ color: 'red', fontSize: '1.5rem' }}>Sorry wrong username or password</p>
+            <p style={{ color: 'white', fontSize: '1.5rem', margin:'0.5rem' }}>Sorry wrong username or password</p>
             )
     }
 }
@@ -20,7 +21,7 @@ export class WrongPassword extends Component {
 export class BookingRequest extends Component {
     render() {
         return (
-            <p style={{ color: 'green', fontSize: '1.5rem' }}>Booking request will be send</p>
+            <p style={{ color: 'green', fontSize: '1.5rem' , margin:'0.5rem'}}>Booking request will be send</p>
             )
     }
 }
@@ -28,7 +29,7 @@ export class BookingRequest extends Component {
 export class ServerError extends Component {
     render() {
         return (
-            <p style={{ color: 'red', fontSize: '1.5rem' }}>Sorry internal server is not working</p>
+            <p style={{ color: 'red', fontSize: '1.5rem', margin: '0.5rem' }}>Sorry internal server is not working</p>
             )
     }
 }

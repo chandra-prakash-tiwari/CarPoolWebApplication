@@ -11,7 +11,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 
         bool Cancel(string rideId);
 
-        bool OfferResponse(string rideId);
+        bool OfferResponse(string rideId, string bookingId, BookingStatus status);
 
         bool Update(Ride updateRide);
 

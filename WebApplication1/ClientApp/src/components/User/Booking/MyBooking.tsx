@@ -67,8 +67,8 @@ export default class MyBookings extends React.Component<{}, Bookings> {
                     </div>
                     <div className='booking-line'>
                         <div className='left'>
-                            <span className='label'>Price</span><br />
-                            <span>{booking.ratePerKM}</span>
+                                <span className='label'>Status</span><br />
+                                <span>{booking.status === 1 ? 'Confirm' : booking.status===2?'Reject':'Pending'}</span>
                         </div>
                     </div>
                 </Card>

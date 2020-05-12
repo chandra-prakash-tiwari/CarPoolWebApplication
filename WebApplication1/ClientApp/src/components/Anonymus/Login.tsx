@@ -86,11 +86,8 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <div className='header-underline'></div>
                     </div>
                     <form className='form'>
-                        <Tooltip title={this.state.meta.userNameError} placement='left' >
                             <TextField variant="filled" className='input' value={this.state.credentials.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id "/>
-                        </Tooltip>
-                        <span style={{ display: this.state.meta.displaySpan }}>{this.state.meta.userNameError}</span>
-                        <Tooltip title={this.state.meta.passwordError} placement='left' >
+                        <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.userNameError}</span>
                             <TextField variant="filled" className='input' value={this.state.credentials.password} onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} name="password" type={this.state.meta.passwordType ? 'password' : 'text'} label="Enter Password"
                                 InputProps={{
                                 endAdornment: (
@@ -99,8 +96,7 @@ export default class Login extends React.Component<{}, LoginProps> {
                                     </InputAdornment>
                                 )
                                 }} />
-                        </Tooltip>
-                        <span style={{ display: this.state.meta.displaySpan }}>{this.state.meta.passwordError}</span>
+                        <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.passwordError}</span>
                         {this.state.meta.wrongPasswordError ? <WrongPassword /> : ''}
                         {this.state.meta.serverError ? <ServerError/>:''}
                         <div className='submit'>

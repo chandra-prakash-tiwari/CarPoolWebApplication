@@ -5,6 +5,7 @@ import { Dialog } from '@material-ui/core';
 import BookingService from '../../../Services/BookingService';
 import '../../../css/booking-search.css';
 import { ServerError, BookingRequest } from '../Response';
+import CloseIcon from '@material-ui/icons/Close';
 import '../../../css/ride-details-dialog.css'
 import RideService from '../../../Services/RideService';
 
@@ -32,7 +33,15 @@ export class Bookings {
     }
 }
 
-export default class BookingSearch extends React.Component<{}, Bookings> {
+enum Time {
+    '5am - 9am' = 1,
+    '9am - 12pm',
+    '12pm - 3pm',
+    '3pm - 6pm',
+    '6pm - 9pm'
+}
+
+export default class BookingSearch extends React.Component<{}, Bookings, Time> {
     constructor(props: Bookings) {
         super(props);
         this.state = new Bookings()
@@ -41,7 +50,7 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
     timeEnum = { 1:'5am - 9am', 2: '9am - 12pm', 3: '12pm - 3pm', 4: '3pm - 6pm', 5: '6pm - 9pm' };
 
     componentDidMount() {
-        var bookingSearch = localStorage.getItem('bookingSearch');
+        var bookingSearch = sessionStorage.getItem('bookingSearch');
         if (bookingSearch === null)
             return;
         BookingService.searchRide(JSON.parse(bookingSearch)).then((searchBooking) => {
@@ -79,7 +88,7 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
         })
     }
 
-    onBookingCancel=()=> {
+    onDialogClose=()=> {
         this.setState({ bookingDetailsDisplay: false })
     }
 
@@ -92,50 +101,50 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
             this.state.bookings.length > 0 ? (
                 this.state.bookings.map((booking: any, i) => (
                     <ButtonBase key={i} style={{ margin: '1rem' }} onClick={() => this.onSubmit(booking)} >
-                    <Card className='bookings'>
-                        <div className='head'>
-                            <Grid item md={10}>
-                                <h1> </h1>
-                            </Grid>
-                            <Grid item md={2}>
-                                <Avatar></Avatar>
-                            </Grid>
-                        </div>
-                        <div className='booking-line'>
-                            <div className='left'>
-                                <span className='label'>From</span><br />
-                                <span>{booking.from}</span>
+                        <Card className='bookings'>
+                            <div className='head'>
+                                <Grid item md={10}>
+                                    <h1> </h1>
+                                </Grid>
+                                <Grid item md={2}>
+                                    <Avatar></Avatar>
+                                </Grid>
                             </div>
-                            <div className='right'>
-                                <span className='label'>To</span><br />
-                                <span>{booking.to}</span>
+                            <div className='booking-line'>
+                                <div className='left'>
+                                    <span className='label'>From</span><br />
+                                    <span>{booking.from}</span>
+                                </div>
+                                <div className='right'>
+                                    <span className='label'>To</span><br />
+                                    <span>{booking.to}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div className='booking-line'>
-                            <div className='left'>
-                                <span className='label'>Date</span><br />
-                                <span>{booking.travelDate.split('T')[0]}</span>
-                            </div>
-                            <div className='right'>
+                            <div className='booking-line'>
+                                <div className='left'>
+                                    <span className='label'>Date</span><br />
+                                    <span>{booking.travelDate.split('T')[0]}</span>
+                                </div>
+                                <div className='right'>
                                     <span className='label'>Time</span><br />
-                                    <span>{booking.time}</span>
+                                    <span>{Time[booking.time]}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div className='booking-line'>
-                            <div className='left'>
+                            <div className='booking-line'>
+                                <div className='left'>
                                     <span className='label'>Price</span><br />
                                     <span>{Math.round(booking.ratePerKM * booking.totalDistance)}</span>
+                                </div>
+                                <div className='right'>
+                                    <span className='label'>Seat availabilty</span><br />
+                                    <span>{booking.availableSeats}</span>
+                                </div>
                             </div>
-                            <div className='right'>
-                                <span className='label'>Seat availabilty</span><br />
-                                <span>{booking.availableSeats}</span>
-                            </div>
-                        </div>
-                    </Card>
-                </ButtonBase>
-            ))
+                        </Card>
+                    </ButtonBase>
+                ))
             ) : (
-                    <div>
+                    <div style={{ margin: '1rem', fontSize:'1.5rem' }}>
                         <p>Sorry no offer currently available </p>
                         <p>Better for next time</p>
                     </div>
@@ -143,38 +152,42 @@ export default class BookingSearch extends React.Component<{}, Bookings> {
 
         const viaPoints = this.state.rides !== null ?
             ((JSON.parse(this.state.rides.viaPoints)).map((viacity: any, i: any) => (
-                <p key={i} className='via-point'>{viacity.city}</p>
+                <p key={i} className='via-point'>Stop {i+1}:  {viacity.city}</p>
             ))) : null
 
         const dialog = (this.state.bookingDetailsDisplay && this.state.rides !== null) ? (
             <Dialog fullScreen open={this.state.bookingDetailsDisplay} className='dialog'>
-                <div className='content'>
-                    <p className='left'>From</p>
-                    <p className='right'>{this.state.rides.from}</p>
-                </div>
-                <div className='content'>
-                    <p className='left'>To</p>
-                    <p className='right'>{this.state.rides.to}</p>
-                </div>
-                <div className='content'>
-                    <p className='left'>Date</p>
-                    <p className='right'>{this.state.rides.travelDate}</p>
-                </div>
-                <div className='content'>
-                    <p className='left'>Available Seats </p>
-                    <p className='right'>{this.state.rides.availableSeats}</p>
-                </div>
-                <div className='content'>
-                    <p className='left'>Time</p>
-                    <p className='right'>{this.state.rides.time}</p>
-                </div>
-                <div className='content'>
-                    <p className='left'>Via Points</p>
-                    {viaPoints}
-                </div>
-                <div>
-                    <button className='submit' onClick={this.onBookingConfirm}>Submit</button>
-                    <button className='cancel' onClick={this.onBookingCancel}>Cancel</button>
+                <ButtonBase onClick={this.onDialogClose} className='close'><CloseIcon className='icon' /></ButtonBase>
+                <div className='ride-full-details'>
+                    <div className='content'>
+                        <p className='left'>From</p>
+                        <p className='right'>{this.state.rides.from}</p>
+                    </div>
+                    <div className='content'>
+                        <p className='left'>To</p>
+                        <p className='right'>{this.state.rides.to}</p>
+                    </div>
+                    <div className='content'>
+                        <p className='left'>Date</p>
+                        <p className='right'>{this.state.rides.travelDate.split('T')[0]}</p>
+                    </div>
+                    <div className='content'>
+                        <p className='left'>Available Seats </p>
+                        <p className='right'>{this.state.rides.availableSeats}</p>
+                    </div>
+                    <div className='content'>
+                        <p className='left'>Rate</p>
+                        <p className='right'>{this.state.rides.ratePerKM} RS/KM</p>
+                    </div>
+                    <div className='content'>
+                        <p className='left'>Time</p>
+                        <p className='right'>{Time[this.state.rides.time]}</p>
+                    </div>
+                    <div className='via-points'>
+                        <p className='left'>Via Points</p>
+                        <div className='right'>{viaPoints}</div>
+                    </div>
+                    <button className='submit' onClick={this.onBookingConfirm}>Request</button>
                 </div>
             </Dialog>
         ) : null;

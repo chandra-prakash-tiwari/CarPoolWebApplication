@@ -3,7 +3,8 @@
 export const BookingService = {
     searchRide,
     myBookings,
-    addBookings
+    addBookings,
+    bookingResponse
 };
 
 function addBookings(booking) {
@@ -91,6 +92,34 @@ function myBookings() {
         }
         return Promise.reject();
         
+    }).catch(error => {
+        return error;
+    })
+}
+
+function bookingResponse(rideId, bookingId, status) {
+    return fetch(`/api/ride/response?rideId=${rideId}&bookingId=${bookingId}&status=${parseInt(status)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            Authorization: `Bearer ${UserService.currentUser.userToken}`
+        }
+    }).then(async response => {
+        console.log(response)
+        if (response) {
+            const data = await response.json();
+            return Promise.resolve(data);
+        }
+        else if (response.status == 401) {
+            UserService.sessionExpired();
+            return Promise.reject();
+        }
+        else if (response.status === 500) {
+            return Promise.reject('serverError');
+        }
+        return Promise.reject();
+
     }).catch(error => {
         return error;
     })

@@ -1,6 +1,8 @@
 ﻿import * as React from 'react';
 import { User } from '../../Classes/DataClasses/User';
 import UserService from '../../Services/UserService';
+import CloseIcon from '@material-ui/icons/Close';
+import { ButtonBase } from '@material-ui/core';
 import '../../css/user-profile.css'
 
 export default class UserProfile extends React.Component<{}, User> {
@@ -21,9 +23,14 @@ export default class UserProfile extends React.Component<{}, User> {
         })
     }
 
+    onClose = () => {
+        window.location.pathname='/home'
+    }
+
     render() {
         return (
             <div className='profile-display'>
+                <ButtonBase onClick={this.onClose} className='close'><CloseIcon className='icon' /></ButtonBase>
                 <div className='block'>
                     <p className='left'>Name</p>
                     <p className='right'> : {this.state.name}</p>

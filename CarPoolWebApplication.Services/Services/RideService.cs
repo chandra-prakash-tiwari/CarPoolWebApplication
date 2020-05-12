@@ -93,13 +93,16 @@ namespace CarPoolingWebApiReact.Services.Services
             return false;
         }
 
-        public bool OfferResponse(string rideId)
+        public bool OfferResponse(string rideId, string bookingId, Models.Client.BookingStatus status)
         {
             var ride = this._mapper.Map<Models.Data.Ride>(this.GetById(rideId));
             if (ride.AvailableSeats > 0)
             {
-                ride.AvailableSeats--;
-                return this._db.SaveChanges() > 0;
+                if (this._bookingService.Response(bookingId, status))
+                {
+                    ride.AvailableSeats--;
+                    return this._db.SaveChanges() > 0;
+                }
             }
 
             return false;

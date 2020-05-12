@@ -4,7 +4,8 @@ import { CityService } from './CityService';
 export const RideService = {
     allRides,
     addRides,
-    getRideById
+    getRideById,
+    getAllBookers
 }
 
 function allRides() {
@@ -106,6 +107,25 @@ function getRideById(id) {
     }).then(async response => {
         if (response.status === 200) {
             const data = await response.json();
+            return Promise.resolve(data);
+        }
+    }).catch(error => {
+        return error;
+    })
+}
+
+function getAllBookers(id) {
+    return fetch(`/api/booking/getallbyrideid?rideId=${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${UserService.currentUser.userToken}`,
+        }
+    }).then(async response => {
+        if (response.status === 200) {
+            const data = await response.json();
+            console.log(data)
             return Promise.resolve(data);
         }
     }).catch(error => {

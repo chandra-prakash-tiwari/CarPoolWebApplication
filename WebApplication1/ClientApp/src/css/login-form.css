@@ -43,13 +43,13 @@
 }
 
 .login .form .input {
-    margin: 5px;
+    margin: 0.5rem;
     width: 90%;
 }
 
 .login .form .input div {
     background-color: white;
-    height: 4rem;
+    height: 3.5rem;
     border-radius: 0.4rem;
 }
 
@@ -94,7 +94,7 @@
 
 .login .footer {
     display: flex;
-    margin: 10% 20%
+    margin: 5% 20%
 }
 
 .login .footer .footer-underline {
@@ -131,4 +131,9 @@
     color: red;
     font-size: 1rem;
     font-family: 'Open Sans', sans-serif;
+}
+
+.login .form .helper{
+    color:white;
+    margin:6px;
 }

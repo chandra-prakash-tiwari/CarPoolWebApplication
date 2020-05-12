@@ -25,3 +25,13 @@
     .profile-display .block p {
         margin: auto;
     }
+
+.profile-display .close {
+    width: 2rem;
+    align-self: flex-end;
+    margin: 0.5rem;
+}
+
+    .profile-display .close .icon {
+        font-size: 1.8rem;
+    }

@@ -8,6 +8,14 @@
     color: white;
 }
 
+.car-selectors .car-cards .cards{
+    width: 15.8rem;
+    height: 18rem;
+    text-align-last: center;
+    background-color: #ffac19;
+    color: white;
+}
+
 .car-selectors .car-cards .add-car{
     font-size:5rem;
 }

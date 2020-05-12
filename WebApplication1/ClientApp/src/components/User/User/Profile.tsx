@@ -7,10 +7,14 @@ import { Avatar, ButtonBase, SvgIcon } from '@material-ui/core';
 
 
 export default function Profile() {
-    const [close, open] = React.useState(null);
+    const [open, close] = React.useState(null);
 
-    const onClicked = (event: any) => {
-        open(event.currentTarget);
+    const handleClick = (event:any) => {
+        close(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        close(null);
     };
 
     const profile = () => {
@@ -32,11 +36,15 @@ export default function Profile() {
 
     return (
         <div className='Avatar'>
-            <Button aria-controls="menu" onClick={onClicked} style={{ margin: "0px 4px" }}>
+            <Button aria-controls="menu" onClick={handleClick} style={{ margin: "0px 4px" }}>
                 <p style={{ margin: '5px', fontFamily: 'Roboto', fontSize: '1.2rem', textTransform: "capitalize" }}>{UserService.currentUser.name}</p>
                 <Avatar/>
             </Button>
-            <Menu id="menu" anchorEl={close} open={Boolean(close)} >
+            <Menu id="simple-menu"
+                anchorEl={open}
+                keepMounted
+                open={Boolean(open)}
+                onClose={handleClose} >
                 <MenuItem onClick={profile} >Profile</MenuItem>
                 <MenuItem onClick={myRides}>My Rides</MenuItem>
                 <MenuItem onClick={logout}>Logout</MenuItem>

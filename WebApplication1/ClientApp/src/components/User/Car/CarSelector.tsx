@@ -14,7 +14,7 @@ export class UserCar {
     constructor() {
         this.cars = [];
         this.serverError = true;
-        this.deleteButton = true;
+        this.deleteButton = false;
         this.deleteStatus = false;
     }
 }
@@ -39,18 +39,17 @@ export default class CarSelector extends React.Component<{}, UserCar> {
 
     onDelete(id: any) {
         CarService.deleteCar(id).then((response) => {
-            if (response === 'ok'){
+            if (response === 'ok') {
                 window.location.reload();
             }
             else {
-                this.setState({ deleteStatus:true })
+                this.setState({ deleteStatus: true })
             }
-            this.setState({ deleteButton: true });
         })
     }
 
     onSubmit = (carRecord: any) => {
-        if (this.state.deleteButton) {
+        if (!this.state.deleteButton) {
             sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
             window.location.pathname = '/createride';
         }
@@ -58,13 +57,15 @@ export default class CarSelector extends React.Component<{}, UserCar> {
 
     render() {
         const carDetails = this.state.cars.map((carRecord: any, i) => (
-            <ButtonBase key={i} onClick={() => this.onSubmit(carRecord)} >
+            <ButtonBase key={i}>
                 <Card className='car-cards'>
-                    <div className='delete' onClick={() => this.onDelete(carRecord.id)}><DeleteIcon style={{ color: 'white', fontSize: '1.4rem' }} /></div>
+                <div className='delete' onClick={() => this.onDelete(carRecord.id)}><DeleteIcon style={{ color: 'white', fontSize: '1.4rem' }} /></div>
+                    <div className='cards' onClick={() => this.onSubmit(carRecord)}>    
                      <p className='car-details'>Model : {carRecord.model}</p>
                      <p className='car-details'>Car Number : {carRecord.number}</p>
                      <p className='car-details'>MAX NUMBER OF SEAT: {carRecord.noofSeat}</p>
-                </Card>
+                    </div>
+                    </Card>
             </ButtonBase>
         ))
 

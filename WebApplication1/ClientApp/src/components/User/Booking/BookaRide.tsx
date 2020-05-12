@@ -24,6 +24,22 @@ export default class BookaRide extends React.Component<{}, BookARideProps> {
         this.state = new BookARideProps()
     } 
 
+    componentDidMount() {
+        if (window.location.pathname === '/booking/search') {
+            var bookingSearch = sessionStorage.getItem('bookingSearch');
+            if (bookingSearch !== null) {
+                var booking = JSON.parse(bookingSearch);
+                this.state.data.from = booking.from;
+                this.state.data.to = booking.to;
+                this.state.data.date = booking.date;
+                this.setState({ data: this.state.data });
+            }
+            else {
+                window.location.pathname = '/booking';
+            }
+        }
+    }
+
     onChanges = (event: any) => {
         this.setState({
             ...this.state,
@@ -63,7 +79,7 @@ export default class BookaRide extends React.Component<{}, BookARideProps> {
         event.preventDefault();
         if (!this.isValidFromCityName(this.state.data.from) && !this.isValidToCityName(this.state.data.to) && !this.isValidDate(this.state.data.date)) {
             console.log(this.state.data);
-            localStorage.setItem('bookingSearch', JSON.stringify(this.state.data));
+            sessionStorage.setItem('bookingSearch', JSON.stringify(this.state.data));
             window.location.pathname = '/booking/search';
         }
     }
@@ -80,16 +96,15 @@ export default class BookaRide extends React.Component<{}, BookARideProps> {
                             </ButtonBase>
                          </div>
                          <p>we get you the matches asap!</p>
-                         
                     </div>
-                    <Tooltip title={this.state.meta.fromError} placement='right'>
-                        <Autocomplete options={CityService.getValidCity(this.state.data.from).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'from') }} renderInput={(param) => (
+                    <Tooltip title={this.state.meta.fromError} placement='bottom-start'>
+                        <Autocomplete options={CityService.getValidCity(this.state.data.from).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'from') }} value={this.state.data.from} renderInput={(param) => (
                             <TextField {...param} label="From" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.data.from} onChange={(event) => { this.onChanges(event); this.isValidFromCityName(event.target.value) }} name='from' className='input' />
                         )}
                         />
                     </Tooltip>
                     <Tooltip title={this.state.meta.toError} placement='right'>
-                        <Autocomplete freeSolo options={CityService.getValidCity(this.state.data.to).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'to') }} renderInput={(param) => (
+                        <Autocomplete freeSolo options={CityService.getValidCity(this.state.data.to).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.onSelect(newInputvalue, 'to') }} value={this.state.data.to} renderInput={(param) => (
                             <TextField {...param} label="To" style={{ width: '85%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' value={this.state.data.to} onChange={(event) => { this.onChanges(event); this.isValidToCityName(event.target.value) }} name='to' className='input ' helperText={this.state.meta.toError} />
                         )}
                         />

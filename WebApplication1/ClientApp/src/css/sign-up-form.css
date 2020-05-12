@@ -7,23 +7,24 @@
     background-image: url(../Images/imgg2.png);
 }
 
-.signup .header {
-    color: white;
-    text-align-last: center;
-}
+    .signup .header {
+        color: white;
+        text-align-last: center;
+        padding: 0.65rem;
+    }
 
 .signup .header .head {
-    font-size: 1.9rem;
+    font-size: 1.7rem;
     font-weight: bold;
     font-family: 'Noto Sans TC', sans-serif;
 }
 
-.signup .header .header-underline {
-    background-color: white;
-    width: 4rem;
-    height: 2.5px;
-    margin: 0.7rem auto;
-}
+    .signup .header .header-underline {
+        background-color: white;
+        width: 4.5rem;
+        height: 2.5px;
+        margin: 0.2rem auto;
+    }
 
 .signup .form {
     width: 80%;
@@ -88,7 +89,8 @@
 
     .signup .footer {
         display: flex;
-        margin: auto 24%
+        margin: auto 24%;
+        margin: 1rem 24%;
     }
 
         .signup .footer .footer-underline {
@@ -126,3 +128,8 @@
         font-size: 1rem;
         font-family: 'Open Sans', sans-serif;
     }
+
+.signup .form .helper {
+    color: white;
+    margin: 6px;
+}

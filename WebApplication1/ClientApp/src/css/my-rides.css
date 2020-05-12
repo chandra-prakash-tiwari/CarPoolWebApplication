@@ -45,3 +45,54 @@
     font-size: 1.5rem;
     margin: 25% auto;
 }
+
+.ride-dialog{
+    width:80%;
+    height:90%;
+    margin:auto;
+}
+
+.ride-dialog .ride-booking{
+    width:40%;
+    margin:1.5rem 3rem;
+    padding:1rem;
+    border:2px solid black;
+    border-radius:1rem;
+}
+
+    .ride-dialog .ride-booking .confirm {
+        border-radius: 2rem;
+        background-color: #ac4fff;
+        margin: 1rem 0 0;
+        width: 6rem;
+        height: 2.5rem;
+        border: 0;
+    }
+
+        .ride-dialog .ride-booking .confirm:disabled,
+        .ride-dialog .ride-booking .cancel:disabled {
+            display:none;
+        }
+
+        .ride-dialog .ride-booking .cancel {
+            border-radius: 2rem;
+            background-color: #ffac19;
+            margin: 1rem 2rem 0;
+            width: 6rem;
+            height: 2.5rem;
+            border: 0;
+        }
+
+    .ride-dialog .close {
+        width: 2rem;
+        align-self: flex-end;
+        margin: 0.5rem;
+    }
+
+        .ride-dialog .close .icon {
+            font-size: 1.8rem;
+        }
+
+.ride-dialog .ride-booking .head {
+    display: flex;
+}

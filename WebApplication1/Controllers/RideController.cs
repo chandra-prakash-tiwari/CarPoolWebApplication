@@ -32,35 +32,14 @@ namespace CarPoolWebApi.Controllers
             return Ok();
         }
 
-        [Authorize(Roles ="Admin")]
-        [HttpPut]
-        [ActionName("cancel")]
-        public IActionResult Cancel(string rideId)
+        [HttpGet]
+        [ActionName("response")]
+        public bool RideResponse(string rideId, string bookingId, BookingStatus status)
         {
-            if(string.IsNullOrEmpty(rideId))
+            if (!this._rideServices.OfferResponse(rideId, bookingId, status))
+                return false;
 
-            if (!this._rideServices.Cancel(rideId))
-            {
-                return NoContent();
-            }
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [ActionName("update")]
-        public IActionResult Update([FromBody] Ride updateRide,string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
-
-            updateRide.Id = id;
-            if (this._rideServices.Update(updateRide))
-            {
-                return Ok();
-            }
-
-            return NoContent();
+            return true;
         }
 
         [HttpGet]
