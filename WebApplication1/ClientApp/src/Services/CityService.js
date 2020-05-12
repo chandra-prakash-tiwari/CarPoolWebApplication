@@ -14,7 +14,8 @@ function getValidCity(value) {
 }
 
 function getCityDetails(value) {
-    return CityRecord.filter((city) => city.city.toLowerCase()==(value.toLowerCase()))
+    var abc = CityRecord.filter((city) => city.city.toLowerCase() === (value.toLowerCase()));
+    return abc[0];
 }
 
 function getCitiesDetails(value) {

@@ -11,6 +11,9 @@ function Profile() {
     var onClicked = function (event) {
         open(event.currentTarget);
     };
+    var profile = function () {
+        window.location.pathname = '/profile';
+    };
     var myRides = function () {
         window.location.pathname = '/myride';
     };
@@ -26,7 +29,7 @@ function Profile() {
             React.createElement("p", { style: { margin: '5px', fontFamily: 'Roboto', fontSize: '1.2rem', textTransform: "capitalize" } }, UserService_1.default.currentUser.name),
             React.createElement(core_1.Avatar, null)),
         React.createElement(Menu_1.default, { id: "menu", anchorEl: close, open: Boolean(close) },
-            React.createElement(MenuItem_1.default, null, "Profile"),
+            React.createElement(MenuItem_1.default, { onClick: profile }, "Profile"),
             React.createElement(MenuItem_1.default, { onClick: myRides }, "My Rides"),
             React.createElement(MenuItem_1.default, { onClick: logout }, "Logout")),
         React.createElement(core_1.ButtonBase, { style: { height: '2.8rem', width: '2rem' } },

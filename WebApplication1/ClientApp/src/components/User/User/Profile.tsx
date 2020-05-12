@@ -13,6 +13,10 @@ export default function Profile() {
         open(event.currentTarget);
     };
 
+    const profile = () => {
+        window.location.pathname = '/profile';
+    }
+
     const myRides = () => {
         window.location.pathname = '/myride';
     }
@@ -33,7 +37,7 @@ export default function Profile() {
                 <Avatar/>
             </Button>
             <Menu id="menu" anchorEl={close} open={Boolean(close)} >
-                <MenuItem>Profile</MenuItem>
+                <MenuItem onClick={profile} >Profile</MenuItem>
                 <MenuItem onClick={myRides}>My Rides</MenuItem>
                 <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>

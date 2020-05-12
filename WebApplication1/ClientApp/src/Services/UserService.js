@@ -54,11 +54,10 @@ function addNewUser(userData) {
                 return Promise.resolve('Ok');
             }
             else if (response.status === 500) {
-                alert("Internal server can't working please contact to administrator");
                 return Promise.reject();
             }
             else {
-                return Promise.reject('Reject');
+                return Promise.reject('serverError');
             }
         }).catch(error => {
             return console.log(error);
@@ -84,9 +83,8 @@ function validEmail(email) {
 }
 
 function sessionExpired() {
-    alert("Your session is expired please login again");
-    window.location.pathname = '/home';
     localStorage.clear();
+    window.location.pathname = '/home';
 }
 
 function getUser(id) {
@@ -100,11 +98,10 @@ function getUser(id) {
     }).then(async response => {
         if (response.status == 200) {
             const data = await response.json();
-            return Promise.resolve(data.name);
+            return Promise.resolve(data);
         }
         else if (response.status === 500) {
-            alert("Internal server can't working please contact to administrator");
-            return Promise.reject();
+            return Promise.reject("serverError");
         }
         else {
             return Promise.reject();

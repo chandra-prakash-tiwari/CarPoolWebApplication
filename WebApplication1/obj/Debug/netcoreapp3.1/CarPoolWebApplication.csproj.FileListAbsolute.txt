@@ -90,3 +90,7 @@ C:\Users\user\Desktop\WebApplication1\WebApplication1\bin\Debug\netcoreapp3.1\ru
 C:\Users\user\Desktop\WebApplication1\WebApplication1\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\user\Desktop\WebApplication1\WebApplication1\obj\Debug\netcoreapp3.1\CarPoolWebApplication.Properties.Resources.resources
 C:\Users\user\Desktop\WebApplication1\WebApplication1\obj\Debug\netcoreapp3.1\CarPoolWebApplication.csproj.GenerateResource.cache
+C:\Users\user\Desktop\WebApplication1\WebApplication1\bin\Debug\netcoreapp3.1\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\user\Desktop\WebApplication1\WebApplication1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyModel.dll
+C:\Users\user\Desktop\WebApplication1\WebApplication1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.PlatformAbstractions.dll
+C:\Users\user\Desktop\WebApplication1\WebApplication1\bin\Debug\netcoreapp3.1\Nancy.dll

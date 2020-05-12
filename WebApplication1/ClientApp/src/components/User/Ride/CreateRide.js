@@ -48,7 +48,6 @@ var CreateRide = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.componentDidMount = function () {
             if (sessionStorage.getItem('carDetails') === null) {
-                alert("Please add any car for this ride");
                 window.location.pathname = '/car';
             }
         };

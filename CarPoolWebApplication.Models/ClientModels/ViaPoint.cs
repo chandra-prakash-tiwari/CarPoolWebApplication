@@ -4,8 +4,8 @@
     {
         public string City { get; set; }
 
-        public string Longitude { get; set; }
+        public string Lng { get; set; }
 
-        public string Latitude { get; set; }
+        public string Lat { get; set; }
     }
 }

@@ -18,9 +18,13 @@ var core_1 = require("@material-ui/core");
 require("../../../css/car-selector.css");
 var Delete_1 = require("@material-ui/icons/Delete");
 var CarService_1 = require("../../../Services/CarService");
+var Response_1 = require("../Response");
 var UserCar = /** @class */ (function () {
     function UserCar() {
         this.cars = [];
+        this.serverError = true;
+        this.deleteButton = true;
+        this.deleteStatus = false;
     }
     return UserCar;
 }());
@@ -30,8 +34,10 @@ var CarSelector = /** @class */ (function (_super) {
     function CarSelector(props) {
         var _this = _super.call(this, props) || this;
         _this.onSubmit = function (carRecord) {
-            sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
-            window.location.pathname = '/createride';
+            if (_this.state.deleteButton) {
+                sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
+                window.location.pathname = '/createride';
+            }
         };
         _this.state = new UserCar();
         return _this;
@@ -40,13 +46,25 @@ var CarSelector = /** @class */ (function (_super) {
         var _this = this;
         CarService_1.default.getCars().then(function (response) {
             console.log(response);
-            if (response != undefined) {
+            if (response !== undefined && response === 'serverError') {
+                _this.setState({ serverError: false });
+            }
+            else if (response !== undefined) {
                 _this.setState({ cars: response });
             }
         });
     };
     CarSelector.prototype.onDelete = function (id) {
-        console.log(id);
+        var _this = this;
+        CarService_1.default.deleteCar(id).then(function (response) {
+            if (response === 'ok') {
+                window.location.reload();
+            }
+            else {
+                _this.setState({ deleteStatus: true });
+            }
+            _this.setState({ deleteButton: true });
+        });
     };
     CarSelector.prototype.render = function () {
         var _this = this;
@@ -63,13 +81,15 @@ var CarSelector = /** @class */ (function (_super) {
                 React.createElement("p", { className: 'car-details' },
                     "MAX NUMBER OF SEAT: ",
                     carRecord.noofSeat)))); });
-        return (React.createElement("div", { className: 'car-selectors' },
-            React.createElement("div", { className: 'header' },
-                React.createElement("p", { className: 'head' }, "Select a car for a ride or add new car")),
-            React.createElement("div", { className: 'user-cars' }, carDetails),
-            React.createElement(core_1.ButtonBase, { href: '/car/addnewcar' },
-                React.createElement(core_1.Card, { className: 'car-cards' },
-                    React.createElement("div", { className: 'add-car' }, "+")))));
+        return (this.state.serverError ?
+            React.createElement("div", { className: 'car-selectors' },
+                React.createElement("div", { className: 'header' },
+                    React.createElement("p", { className: 'head' }, "Select a car for a ride or add new car")),
+                this.state.deleteStatus ? React.createElement("p", { style: { fontSize: '1.4rem', margin: 'auto 1rem' } }, "sorry car is not deleted. car is booked for a ride") : null,
+                React.createElement("div", { className: 'user-cars' }, carDetails),
+                React.createElement(core_1.ButtonBase, { href: '/car/addnewcar' },
+                    React.createElement(core_1.Card, { className: 'car-cards' },
+                        React.createElement("div", { className: 'add-car' }, "+")))) : React.createElement(Response_1.ServerError, null));
     };
     return CarSelector;
 }(React.Component));

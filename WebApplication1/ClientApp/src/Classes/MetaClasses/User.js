@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var LoginMeta = /** @class */ (function () {
     function LoginMeta() {
-        this.userNameError = '';
-        this.passwordError = '';
+        this.userNameError = 'Required';
+        this.passwordError = 'Required';
+        this.displaySpan = 'none';
         this.passwordType = true;
         this.errorDisaplyOnSubmit = true;
+        this.wrongPasswordError = false;
+        this.serverError = false;
     }
     return LoginMeta;
 }());

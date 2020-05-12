@@ -1,0 +1,43 @@
+﻿.dialog{
+    width:60%;
+    height:90%;
+    margin:auto;
+}
+
+.dialog p{
+    margin:auto;
+}
+
+.dialog .content{
+    display:flex;
+}
+
+.dialog .content .left{
+    width:50%;
+}
+
+.dialog .content .right{
+    width:50%
+}
+
+.dialog.content.via-point{
+    display:flex;
+}
+
+    .dialog .submit {
+        border-radius: 2rem;
+        background-color: #ac4fff;
+        margin:0;
+        width: 9rem;
+        height: 3rem;
+        border: 0;
+    }
+
+    .dialog .cancel {
+        border-radius: 2rem;
+        background-color: #ffac19;
+        margin:0;
+        width: 9rem;
+        height: 3rem;
+        border: 0;
+    }

@@ -1,0 +1,27 @@
+﻿.text .turn,
+.text .into {
+    color: #334053;
+}
+
+.text .miles {
+    color: #ffac19;
+}
+
+.text .money {
+    color: #9319ff;
+}
+
+.text .ride {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.text {
+    margin: 10rem 4rem;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 800;
+    font-size: 6.5rem;
+    font-style: italic;
+    display:grid;
+    line-height:1.2;
+}

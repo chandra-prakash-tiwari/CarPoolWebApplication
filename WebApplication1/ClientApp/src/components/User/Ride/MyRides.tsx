@@ -15,8 +15,7 @@ export class Rides {
         this.serverError = false;
     }
 }
-
-export enum Time {
+ enum Time {
     '5am - 9am' = 1,
     '9am - 12pm',
     '12pm - 3pm',
@@ -29,8 +28,6 @@ export default class MyRides extends React.Component<{}, Rides> {
         super(props);
         this.state = new Rides()
     }
-
-    timeEnum = { 1:'5am - 9am', 2:'9am - 12pm', 3:'12pm - 3pm', 4:'3pm - 6pm', 5:'6pm - 9pm' };
 
     componentDidMount() {
         RideService.allRides().then((response) => {
@@ -47,7 +44,7 @@ export default class MyRides extends React.Component<{}, Rides> {
 
         const RidesDetails =this.state.rides.length>0?(
             this.state.rides.map((ride: any, i) => (
-            <ButtonBase key={i} style={{ margin:'1rem 4rem' }}>
+            <div key={i} style={{ margin:'1rem 4rem' }}>
                 <Card className='rides'>
                     <div className='head'>
                         <Grid item md={10}>
@@ -88,13 +85,13 @@ export default class MyRides extends React.Component<{}, Rides> {
                         </div>
                     </div>
                 </Card>
-                </ButtonBase>
+                </div>
             ))) : (<p className='no-bookings'>you have not created any ride offer</p>)
         return (!this.state.serverError?
             <div className='my-ride'>
-                <ButtonBase className='head-card'>
+                <div className='head-card'>
                     <Card className='header'>Offered rides</Card>
-                </ButtonBase>
+                </div>
                 <div className='rides-cards'>{RidesDetails}</div>
             </div> : <ServerError />
             )

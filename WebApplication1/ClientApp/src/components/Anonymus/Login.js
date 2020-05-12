@@ -36,6 +36,7 @@ var core_1 = require("@material-ui/core");
 var VisibilityOff_1 = require("@material-ui/icons/VisibilityOff");
 var User_1 = require("../../Classes/DataClasses/User");
 var User_2 = require("../../Classes/MetaClasses/User");
+var Response_1 = require("../User/Response");
 var LoginProps = /** @class */ (function () {
     function LoginProps() {
         this.credentials = new User_1.LoginRequest();
@@ -54,13 +55,19 @@ var Login = /** @class */ (function (_super) {
         };
         _this.onSubmit = function (event) {
             event.preventDefault();
-            if (!_this.isValidUserName(_this.state.credentials.userName) && !_this.isValidPassword(_this.state.credentials.password)) {
+            var isValid = _this.isValidUserName(_this.state.credentials.userName);
+            isValid = isValid && _this.isValidPassword(_this.state.credentials.password);
+            _this.setState(__assign(__assign({}, _this.state), { meta: __assign(__assign({}, _this.state.meta), { displaySpan: '' }) }));
+            if (!isValid) {
                 UserService_1.default.login(_this.state.credentials).then(function (value) {
-                    console.log(_this.state.credentials);
-                    if (value == 'ok')
+                    if (value === 'ok')
                         window.location.pathname = '/home';
-                    else
-                        alert("Wrong userid or password");
+                    else if (value === 'wrong') {
+                        _this.setState(__assign(__assign({}, _this.state), { meta: __assign(__assign({}, _this.state.meta), { wrongPasswordError: true }) }));
+                    }
+                    else if (value === 'servererror') {
+                        _this.setState(__assign(__assign({}, _this.state), { meta: __assign(__assign({}, _this.state.meta), { serverError: true }) }));
+                    }
                 });
             }
         };
@@ -95,12 +102,14 @@ var Login = /** @class */ (function (_super) {
                 React.createElement("form", { className: 'form' },
                     React.createElement(core_1.Tooltip, { title: this.state.meta.userNameError, placement: 'left' },
                         React.createElement(TextField_1.default, { variant: "filled", className: 'input', value: this.state.credentials.userName, onChange: function (event) { _this.onChanges(event); _this.isValidUserName(event.target.value); }, name: "userName", type: 'text', label: "Enter Email or UserName Id " })),
-                    React.createElement("span", null, this.state.meta.userNameError),
+                    React.createElement("span", { style: { display: this.state.meta.displaySpan } }, this.state.meta.userNameError),
                     React.createElement(core_1.Tooltip, { title: this.state.meta.passwordError, placement: 'left' },
                         React.createElement(TextField_1.default, { variant: "filled", className: 'input', value: this.state.credentials.password, onChange: function (event) { _this.onChanges(event); _this.isValidPassword(event.target.value); }, name: "password", type: this.state.meta.passwordType ? 'password' : 'text', label: "Enter Password", InputProps: {
                                 endAdornment: (React.createElement(core_1.InputAdornment, { position: 'end', onClick: this.onChangePasswordType }, this.state.meta.passwordType ? React.createElement(Visibility_1.default, null) : React.createElement(VisibilityOff_1.default, null)))
                             } })),
-                    React.createElement("span", null, this.state.meta.passwordError),
+                    React.createElement("span", { style: { display: this.state.meta.displaySpan } }, this.state.meta.passwordError),
+                    this.state.meta.wrongPasswordError ? React.createElement(Response_1.WrongPassword, null) : '',
+                    this.state.meta.serverError ? React.createElement(Response_1.ServerError, null) : '',
                     React.createElement("div", { className: 'submit' },
                         React.createElement("button", { type: "submit", onClick: this.onSubmit },
                             React.createElement("span", null, " Submit ")))),

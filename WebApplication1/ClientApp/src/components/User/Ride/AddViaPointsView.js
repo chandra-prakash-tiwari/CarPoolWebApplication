@@ -42,6 +42,7 @@ var Pagination_1 = require("@material-ui/lab/Pagination");
 var ToggleOn_1 = require("@material-ui/icons/ToggleOn");
 var ToggleOff_1 = require("@material-ui/icons/ToggleOff");
 var CityService_1 = require("../../../Services/CityService");
+var Response_1 = require("../Response");
 var ViaPointsDetails = /** @class */ (function () {
     function ViaPointsDetails() {
         this.cities = [new ViaCity()];
@@ -49,6 +50,9 @@ var ViaPointsDetails = /** @class */ (function () {
         this.ratePerKM = 0;
         this.meta = new ViaCityMeta();
         this.carCapacity = 0;
+        this.offerStatus = true;
+        this.serverError = false;
+        this.rideStatus = false;
     }
     return ViaPointsDetails;
 }());
@@ -95,11 +99,13 @@ var AddViaPointsView = /** @class */ (function (_super) {
         _this.onSubmit = function (event) {
             var _a;
             event.preventDefault();
-            console.log(_this.state);
+            _this.setState({ offerStatus: false });
             (_a = RideService_1.default.addRides(_this.state)) === null || _a === void 0 ? void 0 : _a.then(function (response) {
                 if (response === 'Ok') {
-                    alert("Ride  is created");
-                    window.location.pathname = '/home';
+                    _this.setState({ rideStatus: true });
+                }
+                else if (response === 'serverError') {
+                    _this.setState({ serverError: true });
                 }
             });
         };
@@ -115,7 +121,6 @@ var AddViaPointsView = /** @class */ (function (_super) {
             var carDetails = JSON.parse(carDetailsStr);
             this.setState(__assign(__assign({}, this.state), { carCapacity: carDetails.noofSeat }));
         }
-        console.log(carDetails);
     };
     AddViaPointsView.prototype.isEmpty = function (value) {
         return !value || (value && value.trim().length === 0);
@@ -132,28 +137,31 @@ var AddViaPointsView = /** @class */ (function (_super) {
     };
     AddViaPointsView.prototype.render = function () {
         var _this = this;
-        return (React.createElement(core_1.Grid, { className: 'add-viaPoints', item: true, md: 4, id: 'viapointdetails' },
-            React.createElement("form", { className: 'form' },
-                React.createElement("div", { className: 'header' },
-                    React.createElement("div", { className: 'head' },
-                        React.createElement("h1", null, "Add Via Points"),
-                        React.createElement(core_1.ButtonBase, { onClick: function () { _this.setState({ meta: __assign(__assign({}, _this.state.meta), { switch: !_this.state.meta.switch }) }); } }, this.state.meta.switch ? React.createElement(ToggleOn_1.default, { className: 'switch', style: { color: '#ac4fff' } }) : React.createElement(ToggleOff_1.default, { className: 'switch', style: { color: '#ffac19' } }))),
-                    React.createElement("p", null, "add all new via points")),
-                this.state.cities.map(function (city, index) {
-                    return (React.createElement("div", { key: index, className: 'input-via-points' },
-                        React.createElement(Autocomplete_1.default, { freeSolo: true, options: CityService_1.CityService.getValidCity(city.city).map(function (option) { return option.city; }), onChange: function (event, newInputvalue) { _this.editViaCities(newInputvalue, index); }, renderInput: function (param) { return (React.createElement(core_1.TextField, __assign({}, param, { label: 'stop ' + (index + 1), style: { width: '70%', marginBottom: '6%' }, InputLabelProps: { shrink: true }, type: 'text', onChange: function (event) { _this.editViaCities(event.target.value, index); } }))); } }),
-                        React.createElement(core_1.ButtonBase, { className: 'icon', onClick: function () { return _this.deleteViaCity(index); } },
-                            React.createElement(Delete_1.default, null))));
-                }),
-                React.createElement(core_1.ButtonBase, { className: 'icon', onClick: this.addViaCities },
-                    React.createElement(Icon_1.default, null, "add_circle")),
-                React.createElement("br", null),
-                React.createElement("div", null,
-                    React.createElement("span", null, "Available seats"),
-                    React.createElement(Pagination_1.default, { count: this.state.carCapacity, hideNextButton: true, hidePrevButton: true, onChange: function (event, number) { return _this.editNoofSeats(number); } })),
-                React.createElement(core_1.TextField, { label: 'Rate per km', style: { width: '70%', marginBottom: '6%' }, InputLabelProps: { shrink: true }, type: 'number', name: 'ratePerKM', value: this.state.ratePerKM, onChange: this.onChanges }),
-                React.createElement("button", { type: 'submit', className: 'submitButton', onClick: this.onSubmit },
-                    React.createElement("span", null, "Submit ")))));
+        return (this.state.offerStatus ?
+            React.createElement(core_1.Grid, { className: 'add-viaPoints', item: true, md: 4, id: 'viapointdetails' },
+                React.createElement("form", { className: 'form' },
+                    React.createElement("div", { className: 'header' },
+                        React.createElement("div", { className: 'head' },
+                            React.createElement("h1", null, "Add Via Points"),
+                            React.createElement(core_1.ButtonBase, { onClick: function () { _this.setState({ meta: __assign(__assign({}, _this.state.meta), { switch: !_this.state.meta.switch }) }); } }, this.state.meta.switch ? React.createElement(ToggleOn_1.default, { className: 'switch', style: { color: '#ac4fff' } }) : React.createElement(ToggleOff_1.default, { className: 'switch', style: { color: '#ffac19' } }))),
+                        React.createElement("p", null, "add all new via points")),
+                    this.state.cities.map(function (city, index) {
+                        return (React.createElement("div", { key: index, className: 'input-via-points' },
+                            React.createElement(Autocomplete_1.default, { freeSolo: true, options: CityService_1.CityService.getValidCity(city.city).map(function (option) { return option.city; }), onChange: function (event, newInputvalue) { _this.editViaCities(newInputvalue, index); }, renderInput: function (param) { return (React.createElement(core_1.TextField, __assign({}, param, { label: 'stop ' + (index + 1), style: { width: '70%', marginBottom: '6%' }, InputLabelProps: { shrink: true }, type: 'text', onChange: function (event) { _this.editViaCities(event.target.value, index); } }))); } }),
+                            React.createElement(core_1.ButtonBase, { className: 'icon', onClick: function () { return _this.deleteViaCity(index); } },
+                                React.createElement(Delete_1.default, null))));
+                    }),
+                    React.createElement(core_1.ButtonBase, { className: 'icon', onClick: this.addViaCities },
+                        React.createElement(Icon_1.default, null, "add_circle")),
+                    React.createElement("br", null),
+                    React.createElement("div", null,
+                        React.createElement("span", null, "Available seats"),
+                        React.createElement(Pagination_1.default, { count: this.state.carCapacity, hideNextButton: true, hidePrevButton: true, onChange: function (event, number) { return _this.editNoofSeats(number); } })),
+                    React.createElement(core_1.TextField, { label: 'Rate per km', style: { width: '70%', marginBottom: '6%' }, InputLabelProps: { shrink: true }, type: 'number', name: 'ratePerKM', value: this.state.ratePerKM, onChange: this.onChanges }),
+                    React.createElement("button", { type: 'submit', className: 'submitButton', onClick: this.onSubmit },
+                        React.createElement("span", null, "Submit ")))) : (React.createElement("div", null,
+            React.createElement("div", null, this.state.rideStatus ? React.createElement(Response_1.RideConfirm, null) : ''),
+            React.createElement("div", null, this.state.serverError ? React.createElement(Response_1.ServerError, null) : ''))));
     };
     return AddViaPointsView;
 }(React.Component));

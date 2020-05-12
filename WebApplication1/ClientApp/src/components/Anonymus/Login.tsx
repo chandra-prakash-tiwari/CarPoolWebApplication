@@ -6,11 +6,11 @@ import Typography from '@material-ui/core/Typography';
 import '../../css/login-form.css';
 import UserService from '../../Services/UserService'
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import { InputAdornment, Tooltip, FormHelperText } from '@material-ui/core';
+import { InputAdornment, Tooltip } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { LoginRequest } from '../../Classes/DataClasses/User';
 import { LoginMeta } from '../../Classes/MetaClasses/User';
-import { WrongPassword, ServerError } from '../User/Error';
+import { WrongPassword, ServerError } from '../User/Response';
 
 export class LoginProps{
     credentials: LoginRequest;

@@ -86,7 +86,7 @@ var BookaRide = /** @class */ (function (_super) {
     };
     BookaRide.prototype.render = function () {
         var _this = this;
-        return (React.createElement(core_1.Grid, { md: 12, className: 'booking-a-ride' },
+        return (React.createElement(core_1.Grid, { md: 12, item: true, className: 'booking-a-ride' },
             React.createElement("form", { className: 'journey-details' },
                 React.createElement("div", { className: 'header' },
                     React.createElement("div", { className: 'head' },

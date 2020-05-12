@@ -4,6 +4,7 @@ import { CityService } from './CityService';
 export const RideService = {
     allRides,
     addRides,
+    getRideById
 }
 
 function allRides() {
@@ -46,6 +47,7 @@ function addRides(viaPointProps) {
         }
 
         else if (i === viaPointProps.cities.length + 1) {
+            console.log(CityService.getCityDetails(rideDetails.to))
             ViaPoints.push(CityService.getCityDetails(rideDetails.to))
         }
 
@@ -53,7 +55,7 @@ function addRides(viaPointProps) {
             ViaPoints.push(CityService.getCityDetails(viaPointProps.cities[i-1].city))
         }
     }
-
+    console.log(JSON.stringify(ViaPoints).toString());
     return fetch('/api/ride/create', {
         method: 'POST',
         headers: {
@@ -91,6 +93,24 @@ function addRides(viaPointProps) {
         }).catch(error => {
             return error;
         })
+}
+
+function getRideById(id) {
+    return fetch(`/api/ride/getbyid?id=${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${UserService.currentUser.userToken}`,
+        }
+    }).then(async response => {
+        if (response.status === 200) {
+            const data = await response.json();
+            return Promise.resolve(data);
+        }
+    }).catch(error => {
+        return error;
+    })
 }
 
 export default RideService;

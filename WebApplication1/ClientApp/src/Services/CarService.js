@@ -3,6 +3,7 @@
 export const CarService = {
     addNewCar,
     getCars,
+    deleteCar
 };
 
 function addNewCar(carDetails) {
@@ -52,6 +53,33 @@ function getCars() {
         if (response.status === 200) {
             const data = await response.json();
             return Promise.resolve(data);
+        }
+        else if (response.status === 401) {
+            UserService.sessionExpired();
+            return Promise.reject();
+        }
+        else if (response.status === 500) {
+            return Promise.reject('serverError');
+        }
+
+        else
+            return Promise.reject();
+    }).catch(error => {
+        return error;
+    })
+}
+
+function deleteCar(id) {
+    return fetch(`/api/car/delete?id=${id}`, {
+        method: 'DELETE',
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        Authorization: `Bearer ${UserService.currentUser.userToken}`
+        }
+    }).then(async response => {
+        if (response.status === 200) {
+            return Promise.resolve('ok');
         }
         else if (response.status === 401) {
             UserService.sessionExpired();

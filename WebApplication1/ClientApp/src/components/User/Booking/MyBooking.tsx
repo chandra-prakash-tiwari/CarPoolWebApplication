@@ -22,6 +22,7 @@ export default class MyBookings extends React.Component<{}, Bookings> {
 
     componentDidMount() {
         BookingService.myBookings().then((response) => {
+            console.log(response)
             if (response === 'serverError') {
                 this.setState({ serverError: true })
             }
@@ -34,7 +35,7 @@ export default class MyBookings extends React.Component<{}, Bookings> {
     render() {
         const BookingsDetails = this.state.bookings.length>0?(
             this.state.bookings.map((booking: any, i) => (
-            <ButtonBase key={i} style={{ margin: '1rem 4rem' }}>
+            <div key={i} style={{ margin: '1rem 4rem' }}>
                 <Card className='bookings'>
                     <div className='head'>
                         <Grid item md={10}>
@@ -71,14 +72,14 @@ export default class MyBookings extends React.Component<{}, Bookings> {
                         </div>
                     </div>
                 </Card>
-                </ButtonBase>
+                </div>
             ))) : (<p className='no-bookings'>you have not booked any offer</p>)
         return (
-            this.state.serverError?
+            !this.state.serverError?
             <div className='my-bookings'>
-                <ButtonBase className='head-card'>
+                <div className='head-card'>
                     <Card className='header'>Booked rides</Card>
-                </ButtonBase>
+                </div>
                 <div className='all-bookings'>{BookingsDetails}</div>
                 </div> : (
                     <ServerError/>

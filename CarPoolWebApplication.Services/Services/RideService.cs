@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CarPoolingWebApiReact.Context;
 using CarPoolingWebApiReact.Services.Interfaces;
-using Newtonsoft.Json;
+using Nancy.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,23 +33,52 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Ride> GetOffers(Models.Client.SearchRideRequest booking)
         {
-            var rides = this._db.Rides.Where(ride => ride.TravelDate == booking.TravelDate && ride.To.ToLower() == booking.To.ToLower() &&ride.From.ToLower() == booking.From.ToLower() && ride.AvailableSeats > 0).ToList();
+            //var rides = this._db.Rides.Where(ride => ride.TravelDate == booking.TravelDate && ride.To.ToLower() == booking.To.ToLower() &&ride.From.ToLower() == booking.From.ToLower() && ride.AvailableSeats > 0).ToList();
 
-            //var rides = new List<Models.Data.Ride>();
-            //var abc = this._db.Rides;
-            //foreach (var ride in this._db.Rides)
-            //{
-            //    var viaPoints = JsonConvert.DeserializeObject<List<Models.Client.Point>>(ride.ViaPoints);
+            var rides = new List<Models.Data.Ride>();
+            foreach (var ride in this._db.Rides)
+            {
+                JavaScriptSerializer ser = new JavaScriptSerializer();
 
-            //    if (viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower()==booking.To.ToLower())) >
-            //        viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower()== booking.From.ToLower()))
-            //        && ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
-            //    {
-            //        rides.Add(ride);
-            //    }
-            //}
+                var viaPoints = ser.Deserialize<List<Models.Client.Point>>(ride.ViaPoints);
+                var destIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower() == booking.To.ToLower()));
+                var srcIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower() == booking.From.ToLower()));
+
+
+                if ( destIndex>srcIndex&& ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
+                {
+                    ride.TotalDistance = 0;
+                    for(int i = srcIndex; i < destIndex; i++)
+                    {
+                        ride.TotalDistance +=
+                            (float)DistanceCalculator(double.Parse(viaPoints[i].Lat), double.Parse(viaPoints[i].Lng), double.Parse(viaPoints[i + 1].Lat), double.Parse(viaPoints[i + 1].Lng));
+                    }
+                    rides.Add(ride);
+                }
+            }
 
             return this._mapper.Map<List<Models.Client.Ride>>(rides);
+        }
+
+        public double DistanceCalculator(double srcLat,double srcLng, double descLat, double descLng)
+        {
+            var radiusOverDegress = (Math.PI / 180);
+            var srcLatROD = srcLat * radiusOverDegress;
+            var srcLngROD = srcLng * radiusOverDegress;
+            var descLatROD = descLat * radiusOverDegress;
+            var descLngROD = descLng * radiusOverDegress;
+
+            var lngDiff = descLngROD - srcLngROD;
+            var latDiff = descLatROD - srcLatROD;
+
+            var result1 = Math.Pow(Math.Sin(latDiff / 2.0), 2.0) +
+                          Math.Cos(srcLatROD) * Math.Cos(descLatROD) *
+                          Math.Pow(Math.Sin(lngDiff / 2.0), 2.0);
+
+            var result2 = 3956.0 * 2.0 *
+                          Math.Atan2(Math.Sqrt(result1), Math.Sqrt(1.0 - result1));
+
+            return result2;
         }
 
         public bool Cancel(string rideId)

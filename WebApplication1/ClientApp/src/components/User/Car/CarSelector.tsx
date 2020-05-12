@@ -8,10 +8,14 @@ import { ServerError } from '../Response';
 export class UserCar {
     cars: Array<any>;
     serverError: boolean;
+    deleteButton: boolean;
+    deleteStatus: boolean;
 
     constructor() {
         this.cars = [];
         this.serverError = true;
+        this.deleteButton = true;
+        this.deleteStatus = false;
     }
 }
 
@@ -33,13 +37,23 @@ export default class CarSelector extends React.Component<{}, UserCar> {
         })
     }
 
-    onDelete(id:any) {
-        console.log(id)
+    onDelete(id: any) {
+        CarService.deleteCar(id).then((response) => {
+            if (response === 'ok'){
+                window.location.reload();
+            }
+            else {
+                this.setState({ deleteStatus:true })
+            }
+            this.setState({ deleteButton: true });
+        })
     }
 
     onSubmit = (carRecord: any) => {
-        sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
-        window.location.pathname = '/createride';
+        if (this.state.deleteButton) {
+            sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
+            window.location.pathname = '/createride';
+        }
     }
 
     render() {
@@ -59,6 +73,7 @@ export default class CarSelector extends React.Component<{}, UserCar> {
                 <div className='header'>
                     <p className='head'>Select a car for a ride or add new car</p>
                 </div>
+                {this.state.deleteStatus ? <p style={{ fontSize: '1.4rem', margin:'auto 1rem' }}>sorry car is not deleted. car is booked for a ride</p> : null}
                 <div className='user-cars'>{carDetails}</div>
                 <ButtonBase href='/car/addnewcar' >
                     < Card className='car-cards'>

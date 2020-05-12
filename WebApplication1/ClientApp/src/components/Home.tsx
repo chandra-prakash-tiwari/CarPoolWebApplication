@@ -2,7 +2,6 @@ import * as React from 'react'
 import { CardContent, Typography, Card, ButtonBase } from '@material-ui/core';
 import '../css/home.css';
 import '../css/add-new-car.css';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import UserService from '../Services/UserService'
 
 export default class Home extends React.Component {

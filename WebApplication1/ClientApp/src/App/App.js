@@ -2,18 +2,18 @@
 import Grid from '@material-ui/core/Grid';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import '../index.css';
-import Login from '../components/Anonymus/Login';
-import SignUp from '../components/Anonymus/SignUp';
 import UserService from '../Services/UserService'
 import Profile from '../components/User/User/Profile.tsx';
 import Home from '../components/Home';
-import BookaRide from '../components/User/Booking/BookaRide';
-import BookingSearch from '../components/User/Booking/BookingSearch';
 import CarSelector from '../components/User/Car/CarSelector';
 import AddNewCar from '../components/User/Car/AddNewCar';
 import CreateRide from '../components/User/Ride/CreateRide';
-import MyBookings from '../components/User/Booking/MyBooking';
-import MyRides from '../components/User/Ride/MyRides';
+import LoginLayout from './LoginLayout';
+import SignUpLayout from './SignUpLayout';
+import BookingLayout from './BookingLayout';
+import BookingSearchLayout from './BookingSearchLayout';
+import MyRideLayout from './MyRideLayout';
+import UserProfile from '../components/User/UserProfile';
 
 export default class App extends Component {
 
@@ -26,36 +26,13 @@ export default class App extends Component {
                             <Profile/>
                             <Switch>
                                 <Route exact path='/home' component={Home} />
-                                <Route exact path='/booking'>
-                                    <Grid container className='booking'>
-                                        <Grid item md={4}>
-                                            <BookaRide />
-                                        </Grid>
-                                    </Grid>
-                                </Route>
-                                <Route exact path='/booking/search'>
-                                    <Grid container className='booking'>
-                                        <Grid item md={4}>
-                                            <BookaRide />
-                                        </Grid>
-                                        <Grid item md={8}>
-                                            <BookingSearch />
-                                        </Grid>
-                                    </Grid>
-                                </Route>
+                                <Route exact path='/booking' component={BookingLayout} />
+                                <Route exact path='/booking/search' component={BookingSearchLayout} />
                                 <Route exact path='/car' component={CarSelector}/ >
                                 <Route exact path='/car/addnewcar' component={AddNewCar} />
-                                <Route exact path='/createride' component={CreateRide}/>
-                                <Route exact path='/myride'>
-                                    <Grid container className='rides'>
-                                        <Grid item md={4}>
-                                            <MyBookings />
-                                        </Grid>
-                                        <Grid item md={4}>
-                                            <MyRides />
-                                        </Grid>
-                                    </Grid>
-                                </Route>
+                                <Route exact path='/createride' component={CreateRide} />
+                                <Route exact path='/myride' component={MyRideLayout} />
+                                <Route exact path='/profile' component={UserProfile}/>
                                 <Route path='/'>
                                     <Redirect to='/home' />
                                  </Route>
@@ -63,18 +40,8 @@ export default class App extends Component {
                         </Grid>
                     :
                         <Switch>
-                            <Route exact path='/login'>
-                                <Grid container className='cointainer'>
-                                    <Grid item xs={false} sm={4} md={8} className='image' />
-                                    <Login />
-                                </Grid>
-                            </Route>
-                            <Route exact path='/signup'>
-                                <Grid container className='cointainer'>
-                                    <Grid item xs={false} sm={4} md={8} className='image' />
-                                    <SignUp />
-                                </Grid>
-                            </Route>
+                            <Route exact path='/login' component={LoginLayout} />
+                            <Route exact path='/signup' component={SignUpLayout}/>
                             <Route path='/'>
                                 <Redirect to='/login'/>
                             </Route>

@@ -18,21 +18,8 @@ html,body{
   background-image: url(./Images/img1.png);
   background-repeat: no-repeat;
   background-position: bottom;
-  height: 100%;
-  width: 100%;
-  background-size:100%;
 }
-
-.paper {
-  margin: 8px 4px;
-  height: 100%;
-  flex-direction: column;
-  background-color: #ffac19;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-image: url(./Images/imgg2.png);
-}
-
+nav hm  
 .input{
   margin: 10px;
 }
@@ -44,6 +31,12 @@ html,body{
     background-position: bottom;
     background-size: 100%;
     background-image: url(./Images/img4.png);
+}
+
+.page {
+    height: 100%;
+    width: 100%;
+    background-size: 100%;
 }
 
 .def {

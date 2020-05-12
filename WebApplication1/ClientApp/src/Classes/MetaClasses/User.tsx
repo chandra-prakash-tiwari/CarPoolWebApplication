@@ -3,12 +3,18 @@
     passwordError: string;
     passwordType: boolean;
     errorDisaplyOnSubmit: boolean;
+    displaySpan: string;
+    wrongPasswordError: boolean;
+    serverError: boolean;
 
     constructor() {
-        this.userNameError = '';
-        this.passwordError = '';
+        this.userNameError = 'Required';
+        this.passwordError = 'Required';
+        this.displaySpan = 'none';
         this.passwordType = true;
         this.errorDisaplyOnSubmit = true;
+        this.wrongPasswordError = false;
+        this.serverError = false;
     }
 }
 

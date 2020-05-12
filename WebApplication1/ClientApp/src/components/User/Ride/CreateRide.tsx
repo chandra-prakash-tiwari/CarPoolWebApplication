@@ -27,7 +27,6 @@ export default class CreateRide extends React.Component<{}, RideDetails> {
 
     componentDidMount = () => {
         if (sessionStorage.getItem('carDetails') === null) {
-            alert("Please add any car for this ride");
             window.location.pathname = '/car';
         }
     }
