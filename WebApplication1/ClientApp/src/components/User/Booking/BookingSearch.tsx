@@ -5,6 +5,7 @@ import { Dialog } from '@material-ui/core';
 import BookingService from '../../../Services/BookingService';
 import '../../../css/booking-search.css';
 import { ServerError, BookingRequest } from '../Response';
+import Pagination from '@material-ui/lab/Pagination';
 import CloseIcon from '@material-ui/icons/Close';
 import '../../../css/ride-details-dialog.css'
 import RideService from '../../../Services/RideService';
@@ -12,6 +13,7 @@ import RideService from '../../../Services/RideService';
 export class Bookings {
     bookings: Array<any>;
     rides: any;
+    noofSeats: number;
     bookingConfirm: boolean;
     serverError: boolean;
     noOffer: boolean;
@@ -19,10 +21,13 @@ export class Bookings {
     offer: boolean;
     bookingDetailsDisplay: boolean;
     bookingDetails: any;
+    requestSeat: number;
+    requestPermission: boolean;
 
     constructor() {
         this.bookings = [];
         this.rides = null;
+        this.noofSeats = 0;
         this.bookingConfirm = false;
         this.serverError = false;
         this.noOffer = false;
@@ -30,6 +35,8 @@ export class Bookings {
         this.requestSended = false;
         this.bookingDetailsDisplay = false;
         this.bookingDetails = null;
+        this.requestSeat = 0;
+        this.requestPermission = true;
     }
 }
 
@@ -47,8 +54,6 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
         this.state = new Bookings()
     }
 
-    timeEnum = { 1:'5am - 9am', 2: '9am - 12pm', 3: '12pm - 3pm', 4: '3pm - 6pm', 5: '6pm - 9pm' };
-
     componentDidMount() {
         var bookingSearch = sessionStorage.getItem('bookingSearch');
         if (bookingSearch === null)
@@ -63,24 +68,41 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
         });
     }
 
+    editNoofSeats(number: number) {
+        this.setState({ noofSeats:number })
+    }
+
     onSubmit = (booking: any) => {
         this.setState({ bookingDetailsDisplay: true })
         RideService.getRideById(booking.id).then((response) => {
             if (response !== undefined) {
                 this.setState({ bookingDetailsDisplay: true })
                 this.setState({ rides: response })
+                if (UserService.currentUser.id === response.ownerId)
+                    this.setState({ requestPermission:false })
+
+                BookingService.getByRideId(booking.id, UserService.currentUser.id).then((response1) => {
+                    if (response1 !== undefined) {
+                        var seat = 0;
+                        for (let i = 0; i < response1.length; i++) {
+                            if (response1[i].status === 3) {
+                                seat = seat + response1[i].noofSeats;
+                            }
+                        }
+                        this.setState({ requestSeat: seat })
+                    }
+                })
             }
         })
     }
 
     onBookingConfirm=()=> {
         this.setState({ bookingDetailsDisplay: false });
-        this.setState({ offer:false })
-        BookingService.addBookings(this.state.rides).then((response) => {
+        this.setState({ offer: false })
+        BookingService.addBookings(this.state.rides, this.state.noofSeats).then((response) => {
             if (response === 'Ok') {
                 this.setState({ rides: null })
-                this.setState({ requestSended: true })
-                localStorage.removeItem('bookingSearch')
+                window.location.pathname='/myride'
             }
             else if (response === 'serverError') {
                 this.setState({ serverError: true })
@@ -88,7 +110,8 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
         })
     }
 
-    onDialogClose=()=> {
+    onDialogClose = () => {
+        this.setState({ noofSeats:0 })
         this.setState({ bookingDetailsDisplay: false })
     }
 
@@ -187,7 +210,17 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
                         <p className='left'>Via Points</p>
                         <div className='right'>{viaPoints}</div>
                     </div>
-                    <button className='submit' onClick={this.onBookingConfirm}>Request</button>
+                    <div className='via-points'>
+                        <span>Select no of seats</span>
+                        <Pagination count={this.state.rides.availableSeats - this.state.requestSeat} hideNextButton hidePrevButton defaultPage={0} onChange={(event, number) => this.editNoofSeats(number)} />
+                    </div>
+                    <div className='via-points'>
+                        {this.state.requestSeat > 0 ? <span style={{color:'red'}}>You have already requested {this.state.requestSeat} for this ride</span> : ''}
+                    </div>
+                    <div className='via-points'>
+                        {this.state.requestPermission ? '' : <span style={{ color: 'red' }}> you are created this offer </span>}
+                    </div>
+                    <button className='submit' style={{ display: (this.state.noofSeats > 0 && this.state.requestPermission) ? '' : 'none' }} onClick={this.onBookingConfirm}>Request</button>
                 </div>
             </Dialog>
         ) : null;
@@ -204,7 +237,8 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
                     {dialog}
                 </div> :
                 (<div>
-                    <div>{this.state.serverError ? <ServerError /> : ''}</div>
+                    <div>{this.state.serverError ? <ServerError /> : ''}
+                    </div>
                     <div>{this.state.requestSended ? <BookingRequest/>:''}</div>
                 </div>
                 )

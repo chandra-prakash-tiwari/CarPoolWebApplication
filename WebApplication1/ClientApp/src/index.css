@@ -4,6 +4,7 @@ html,body{
   background-image: url(./Images/logo.png);
   background-repeat: no-repeat;
   background-position: 3% 6%;
+  background-size:5%;
 }
 
 #root{
@@ -18,6 +19,7 @@ html,body{
   background-image: url(./Images/img1.png);
   background-repeat: no-repeat;
   background-position: bottom;
+  background-size:90%;
 }
 
 .input{
@@ -25,7 +27,8 @@ html,body{
 }
 
 .cointainer {
-    height: 100%;
+    overflow:auto;
+    height: auto;
     width: 100%;
     background-repeat: no-repeat;
     background-position: bottom;
@@ -54,4 +57,12 @@ html,body{
     padding:3%;
     clear:both;
     text-align:right;
+}
+
+.MuiGrid-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    height: 100%;
 }

@@ -3,7 +3,8 @@
 export const CarService = {
     addNewCar,
     getCars,
-    deleteCar
+    deleteCar,
+    hasNumber
 };
 
 function addNewCar(carDetails) {
@@ -20,7 +21,6 @@ function addNewCar(carDetails) {
             noofSeat: parseInt(carDetails.noofSeats)
         }),
     }).then(async response => {
-        console.log(response)
         if (response.status === 200) {
             return Promise.resolve('Ok')
         }
@@ -93,6 +93,26 @@ function deleteCar(id) {
             return Promise.reject();
     }).catch(error => {
         return error;
+    })
+}
+
+function hasNumber(number) {
+    return fetch(`/api/car/hasnumber?number=${number}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            Authorization: `Bearer ${UserService.currentUser.userToken}`
+        }
+    }).then(async response => {
+        if (response.status === 401) {
+            UserService.sessionExpired();
+            return Promise.reject();
+        }
+        else if (response.status === 500) {
+            return Promise.reject('serverError');
+        }
+        return await response.json();
     })
 }
 

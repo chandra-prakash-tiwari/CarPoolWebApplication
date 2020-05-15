@@ -1,4 +1,5 @@
 ﻿using CarPoolingWebApiReact.Models.Client;
+using System;
 using System.Collections.Generic;
 
 namespace CarPoolingWebApiReact.Services.Interfaces
@@ -16,6 +17,8 @@ namespace CarPoolingWebApiReact.Services.Interfaces
         bool Update(Ride updateRide);
 
         Ride GetById(string id);
+
+        bool IsCarAvailable(string carId, int time, DateTime date);
 
         List<Ride> GetByOwnerId(string ownerId);
     }

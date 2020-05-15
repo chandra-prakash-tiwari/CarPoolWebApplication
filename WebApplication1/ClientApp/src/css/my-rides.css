@@ -28,13 +28,14 @@
 }
 
 .my-ride .head-card .header {
-    width: 12rem;
+    zwidth: 12rem;
     height: 2.7rem;
     background-color: #ffac19;
     color: white;
-    margin:auto 4rem;
+    margin: auto 4rem;
     font-size: 1.2rem;
     padding: 0.4rem;
+    text-align-last: center;
 }
 
 .my-ride .rides .head{
@@ -54,10 +55,12 @@
 
 .ride-dialog .ride-booking{
     width:40%;
+    height:17rem;
     margin:1.5rem 3rem;
     padding:1rem;
     border:2px solid black;
     border-radius:1rem;
+    display:inline-grid;
 }
 
     .ride-dialog .ride-booking .confirm {
@@ -69,10 +72,14 @@
         border: 0;
     }
 
-        .ride-dialog .ride-booking .confirm:disabled,
-        .ride-dialog .ride-booking .cancel:disabled {
-            display:none;
-        }
+    .ride-dialog .MuiDialog-paperFullScreen{
+        display:inline-block;
+    }
+
+    .ride-dialog .ride-booking .confirm:disabled,
+    .ride-dialog .ride-booking .cancel:disabled {
+        display: none;
+    }
 
         .ride-dialog .ride-booking .cancel {
             border-radius: 2rem;
@@ -86,7 +93,6 @@
     .ride-dialog .close {
         width: 2rem;
         align-self: flex-end;
-        margin: 0.5rem;
     }
 
         .ride-dialog .close .icon {
@@ -96,3 +102,41 @@
 .ride-dialog .ride-booking .head {
     display: flex;
 }
+
+    .ride-dialog .header {
+        height: 3rem;
+        text-align-last: end;
+        font-size: 1.4rem;
+        background-color: blueviolet;
+    }
+
+    .ride-dialog .header button{
+        height:3rem;
+        margin:auto 0.5rem;
+    }
+
+    .ride-dialog .ride-full-details {
+        width: 80%;
+        height: auto;
+        border: 3px solid black;
+        border-radius: 2rem;
+        overflow: auto;
+        padding: 1.5rem;
+        margin: 5% auto;
+    }
+
+    .ride-dialog .ride-full-details  .content{
+        display:flex;
+    }
+
+        .ride-dialog .ride-full-details .content .left {
+            width: 50%;
+        } 
+
+        .ride-dialog .ride-full-details .via-points {
+            display: flex;
+        }
+
+            .ride-dialog .ride-full-details .via-points .left {
+                width: 50%;
+            }

@@ -23,6 +23,9 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Create(Models.Client.Ride ride)
         {
+            if (ride == null)
+                return false;
+
             ride.RideDate = DateTime.Now;
             ride.Id = Extensions.GenerateId();
             ride.Status = Models.Client.RideStatus.Active;
@@ -41,8 +44,8 @@ namespace CarPoolingWebApiReact.Services.Services
                 JavaScriptSerializer ser = new JavaScriptSerializer();
 
                 var viaPoints = ser.Deserialize<List<Models.Client.Point>>(ride.ViaPoints);
-                var destIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower() == booking.To.ToLower()));
-                var srcIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => a.City.ToLower() == booking.From.ToLower()));
+                var destIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => (a != null && !string.IsNullOrEmpty(a.City) && !string.IsNullOrEmpty(booking.To)) && a.City.ToLower() == booking.To.ToLower()));
+                var srcIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => (a != null && !string.IsNullOrEmpty(a.City) && !string.IsNullOrEmpty(booking.To)) && a.City.ToLower() == booking.From.ToLower()));
 
 
                 if ( destIndex>srcIndex&& ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
@@ -84,7 +87,7 @@ namespace CarPoolingWebApiReact.Services.Services
         public bool Cancel(string rideId)
         {
             var ride = this._db.Rides.FirstOrDefault(a => a.Id == rideId);
-            if (ride != null && this._bookingService.GetByRideId(rideId).Any())
+            if (ride != null && this._bookingService.GetAllByRideId(rideId).Any())
             {
                 ride.Status = Models.Client.RideStatus.Cancel;
                 return this._db.SaveChanges() > 0;
@@ -95,12 +98,13 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool OfferResponse(string rideId, string bookingId, Models.Client.BookingStatus status)
         {
-            var ride = this._mapper.Map<Models.Data.Ride>(this.GetById(rideId));
-            if (ride.AvailableSeats > 0)
+            var ride = this._db.Rides.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(rideId)) && a.Id == rideId);
+            var booking = this._db.Bookings.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(bookingId)) && a.Id == bookingId);
+            if (ride.AvailableSeats >= booking.NoofSeats)
             {
                 if (this._bookingService.Response(bookingId, status))
                 {
-                    ride.AvailableSeats--;
+                    ride.AvailableSeats -= booking.NoofSeats;
                     return this._db.SaveChanges() > 0;
                 }
             }
@@ -110,26 +114,35 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Update(Models.Client.Ride updateRide)
         {
-            var ride = this._mapper.Map<Models.Data.Ride>(this.GetById(updateRide.Id));
-            if (ride != null)
+            var ride = this._db.Rides.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && a.Id == updateRide.Id));
+            if (ride != null && updateRide!=null)
             {
-                ride.RideDate = updateRide.RideDate;
-                ride.From = updateRide.From;
-                ride.CarId = updateRide.CarId;
                 ride.To = updateRide.To;
+                ride.From = updateRide.From;
+                ride.TravelDate = updateRide.TravelDate;
+                ride.ViaPoints = updateRide.ViaPoints;
+                ride.Time = updateRide.Time;
+                ride.RatePerKM = updateRide.RatePerKM;
+                ride.CarId = updateRide.CarId;
+                return this._db.SaveChanges() > 0;
             }
 
-            return this._db.SaveChanges() > 0;
+            return false;
         }
 
         public Models.Client.Ride GetById(string id)
         {
-            return this._mapper.Map<Models.Client.Ride>(this._db.Rides.FirstOrDefault(ride => ride.Id == id));
+            return this._mapper.Map<Models.Client.Ride>(this._db.Rides.FirstOrDefault(ride => (!string.IsNullOrEmpty(ride.Id) && !string.IsNullOrEmpty(id))&&ride.Id == id));
         }
 
         public List<Models.Client.Ride> GetByOwnerId(string ownerId)
         {
-            return this._mapper.Map<List<Models.Client.Ride>>(this._db.Rides.Where(ride => ride.OwnerId == ownerId).ToList());
+            return this._mapper.Map<List<Models.Client.Ride>>(this._db.Rides.Where(ride =>(!string.IsNullOrEmpty(ride.OwnerId) && !string.IsNullOrEmpty(ownerId)) && ride.OwnerId == ownerId).ToList());
+        }
+
+        public bool IsCarAvailable(string carId, int time, DateTime date)
+        {
+            return this._db.Rides.FirstOrDefault(ride => (!string.IsNullOrEmpty(ride.CarId)) && ride.CarId == carId && ride.Time == time && ride.TravelDate == date) == null;
         }
     }
 }

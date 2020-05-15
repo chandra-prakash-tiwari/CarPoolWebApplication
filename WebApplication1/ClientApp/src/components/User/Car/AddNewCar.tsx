@@ -10,7 +10,7 @@ import { ServerError } from '../Response';
 
 export class AddNewCarProps {
     data: Car;
-    meta: AddNewCarMeta;
+    meta: AddNewCarMeta
 
     constructor() {
         this.data = new Car();
@@ -31,35 +31,48 @@ export default class AddNewCar extends React.Component<{}, AddNewCarProps> {
         });
     }
 
+    hasCarNumber(value: any) {
+        return CarService.hasNumber(value).then(async (response) => {
+            this.setState({ meta: { ...this.state.meta, hasCarNumber: await response } })
+        })
+    }
+
     isEmpty(value: string) {
         return !value || (value && value.trim().length === 0);
     }
 
     isValidCarNumber(value: any) {
+        this.hasCarNumber(value)
         let emptyStatus = this.isEmpty(value);
-        this.setState({ meta: { ...this.state.meta, carNumberError: emptyStatus ? 'Please enter car number' : '' } });
-        return emptyStatus;
+        let isValid = this.state.meta.hasCarNumber;
+        this.state.meta.carNumberError = emptyStatus ? 'Please enter car number' : (isValid ? 'This car is already registered' : '');
+        this.setState({ meta: this.state.meta });
+        return !emptyStatus;
     }
 
     isValiCarModel(value: any) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ meta: { ...this.state.meta, carNumberError: emptyStatus ? 'Please enter car model' : '' } });
-        return emptyStatus;
+        this.state.meta.carModelError = emptyStatus ? 'Please enter car model' : '';
+        this.setState({ meta: this.state.meta });
+        return !emptyStatus;
     }
 
     isValidSeat(value: any) {
-        let emptyStatus = this.isEmpty(value);
         let seatValidStatus = value <= 0 ? true : false
-        this.setState({ meta: { ...this.state.meta, carNumberError: emptyStatus ? 'Please enter no of seats' : (seatValidStatus ? 'Please enter correct seat' : '') }});
-        return emptyStatus && !seatValidStatus;
+        this.state.meta.seatError = seatValidStatus ? 'Please enter correct seat' : ''
+        this.setState({ meta: this.state.meta });
+        return !seatValidStatus;
     }
 
     onSubmit = (event: any) => {
         event.preventDefault();
-        if (!this.isValidCarNumber(this.state.data.number) && !this.isValiCarModel(this.state.data.model) && !this.isValidSeat(this.state.data.noofSeats)) {
+        this.hasCarNumber(this.state.data.number)
+        let isValid = this.isValidCarNumber(this.state.data.number) && this.isValiCarModel(this.state.data.model) && this.isValidSeat(this.state.data.noofSeats);
+
+        if (isValid && !this.state.meta.hasCarNumber) {
             CarService.addNewCar(this.state.data).then((response) => {
                 if (response == 'Ok') {
-                    window.location.pathname = '/car';
+                    window.location.pathname = '/ride/selectcar';
                 }
                 else if (response == 'Server error') {
                     this.setState({ meta: { ...this.state.meta, serverError: true } })
@@ -81,9 +94,18 @@ export default class AddNewCar extends React.Component<{}, AddNewCarProps> {
                         </div>
                         <p>we get you the matches asap!</p>
                     </div>
-                    <TextField className='input' label="CarNumber" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.number} onChange={(event) => { this.onChanges(event); this.isValidCarNumber(event.target.value) }} name='number' helperText={this.state.meta.carNumberError} />
-                    <TextField className='input' label="Model" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.model} onChange={(event) => { this.onChanges(event); this.isValiCarModel(event.target.value) }} name='model' helperText={this.state.meta.carModelError} />
-                    <TextField className='input' label="Max Number Of Seat" InputLabelProps={{ shrink: true }} type='number' value={this.state.data.noofSeats} onChange={(event) => { this.onChanges(event); this.isValidSeat(event.target.value) }} name='noofSeats' helperText={this.state.meta.seatError} />  
+                    <div className='input-box'>
+                        <TextField className='input' label="CarNumber" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.number} onChange={(event) => { this.onChanges(event); this.isValidCarNumber(event.target.value) }} name='number' />
+                        <span className='helper'>{this.state.meta.carNumberError}</span>
+                    </div>
+                    <div className='input-box'>
+                        <TextField className='input' label="Model" InputLabelProps={{ shrink: true }} type='text' value={this.state.data.model} onChange={(event) => { this.onChanges(event); this.isValiCarModel(event.target.value) }} name='model' />
+                        <span className='helper'>{this.state.meta.carModelError}</span>
+                    </div>
+                    <div className='input-box'>
+                        <TextField className='input' label="Max Number Of Seat" InputLabelProps={{ shrink: true }} type='number' value={this.state.data.noofSeats} onChange={(event) => { this.onChanges(event); this.isValidSeat(event.target.value) }} name='noofSeats' inputProps={{ min: 0, max: 8 }} />
+                        <span className='helper'>{this.state.meta.seatError}</span>
+                    </div>
                     <div>
                         <button type='submit' className='submitButton' onClick={this.onSubmit}>Submit</button>
                     </div>

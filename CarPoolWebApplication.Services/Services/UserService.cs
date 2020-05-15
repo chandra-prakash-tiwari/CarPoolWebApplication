@@ -27,6 +27,9 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Create(Models.Client.User user)
         {
+            if(user == null)
+                return false;
+
             user.Id = Extensions.GenerateId();
             this._db.Users.Add(this._mapper.Map<Models.Data.User>(user));
             return this._db.SaveChanges() > 0;
@@ -34,6 +37,14 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public Models.Client.User Authenticate(Models.Client.LoginRequest credentials)
         {
+            //var response = new Models.Data.User();
+            //try
+            //{
+            //    response = this._db.Users.FirstOrDefault(a => ((!string.IsNullOrEmpty(credentials.UserName) && (!string.IsNullOrEmpty(a.UserName) &&
+            //      a.UserName.Equals(credentials.UserName, StringComparison.InvariantCultureIgnoreCase) || a.Email.Equals(credentials.UserName, StringComparison.InvariantCultureIgnoreCase)
+            //      && a.Password == credentials.Password))));
+            //}catch(Exception e)
+            
             var response = this._db.Users.FirstOrDefault(a => (a.UserName.ToLower() == credentials.UserName.ToLower() || a.Email.ToLower() == credentials.UserName.ToLower()) && a.Password == credentials.Password);
             var user = response!=null ? this._mapper.Map<Models.Client.User>(response):null;
 
@@ -61,7 +72,7 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Delete(string id)
         {
-            var user = this._db.Users.FirstOrDefault(a => a.Id == id);
+            var user = this._db.Users.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(id)) && a.Id == id);
 
             if (user != null)
             {
@@ -74,7 +85,10 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Update(Models.Client.User updateUser)
         {
-            Models.Data.User user = this._db.Users.FirstOrDefault(a => a.Id == updateUser.Id);
+            if (updateUser == null)
+                return false;
+
+            Models.Data.User user = this._db.Users.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id)) && a.Id == updateUser.Id);
             if (user != null)
             {
                 user.Name = updateUser.Name;
@@ -89,17 +103,17 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public Models.Client.User GetById(string id)
         {
-            return this._mapper.Map<Models.Client.User>(this._db.Users.FirstOrDefault(a => a.Id == id));
+            return this._mapper.Map<Models.Client.User>(this._db.Users.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(id)) && a.Id == id));
         }
 
         public bool HasUserName(string userName)
         {
-            return this._db.Users.FirstOrDefault(a => a.UserName.ToLower() == userName.ToLower()) != null;
+            return this._db.Users.FirstOrDefault(a => (!string.IsNullOrEmpty(a.UserName) && !string.IsNullOrEmpty(userName)) && a.UserName.ToLower() == userName.ToLower()) != null;
         }
 
         public bool HasEmail(string email)
         {
-            return this._db.Users.FirstOrDefault(a => a.Email.ToLower() == email.ToLower()) != null;
+            return this._db.Users.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Email) && !string.IsNullOrEmpty(email)) && a.Email.ToLower() == email.ToLower()) != null;
         }
     }
 }

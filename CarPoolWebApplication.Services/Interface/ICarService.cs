@@ -12,5 +12,7 @@ namespace CarPoolingWebApiReact.Services.Interfaces
         List<Car> GetByOwnerId(string ownerId);
 
         Car GetById(string id);
+
+        bool HasCarNumber(string number);
     }
 }

@@ -25,6 +25,15 @@
     margin:10px 0 0 0;
 }
 
+.booking-a-ride .journey-details .helper{
+    color:red;
+    font-size:0.8rem;
+}
+
+.booking-a-ride .journey-details .input-box{
+    margin:6% auto;
+}
+
 .booking-a-ride .journey-details .header .head span{
     margin-left:15%;
 }

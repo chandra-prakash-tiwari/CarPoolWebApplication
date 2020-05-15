@@ -4,6 +4,7 @@
     carModelError: string;
     seatError: string;
     serverError: boolean;
+    hasCarNumber: boolean;
 
     constructor() {
         this.switch = true;
@@ -11,6 +12,7 @@
         this.carModelError = '';
         this.seatError = '';
         this.serverError = false;
+        this.hasCarNumber = false;
     }
 }
 

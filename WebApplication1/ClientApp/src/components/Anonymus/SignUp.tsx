@@ -10,6 +10,7 @@ import { InputAdornment, Tooltip } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { User } from '../../Classes/DataClasses/User';
 import { SignUpMeta } from '../../Classes/MetaClasses/User';
+import { Required, Invalid, NameRegex, EmailRegex, MobileNumberRegex, PasswordRegex, DrivingLicenceRegex, UserNameAvailability } from '../../Classes/Constraint';
 
 export class SignUpProps {
     user: User;
@@ -25,39 +26,6 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
     constructor(props: SignUpProps) {
         super(props);
         this.state = new SignUpProps();
-    }
-
-    onChanges = (event: any) => {
-        const { name, value } = event.target;
-        console.log(name,value)
-        switch (name) {
-            case 'name':
-                this.state.user.name = value;
-                break;
-            case 'mobile':
-                this.state.user.mobile = value;
-                break;
-            case 'email':
-                this.state.user.email = value;
-                break;
-            case 'password':
-                this.state.user.password = value;
-                break;
-            case 'address':
-                this.state.user.address = value;
-                break;
-            case 'confirmPassword':
-                this.state.user.confirmPassword = value;
-                break;
-            case 'drivingLicence':
-                this.state.user.drivingLicence = value;
-                break;
-            case 'userName':
-                this.state.user.userName = value;
-                break;
-        }
-        
-        this.setState({ user: this.state.user })
     }
 
     isEmpty(value: string) {
@@ -77,76 +45,90 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
     }
 
     isValidName(value: string) {
-        let emptyStatus = this.isEmpty(value);
-        let isValidExp = this.isValid(value, /^[a-zA-Z ]*$/);
-        this.setState({ ...this.state, meta: { ...this.state.meta, nameError: emptyStatus ? "Required" : (isValidExp ? "Invalid" : "") } });
-        return emptyStatus && !isValidExp;
+        this.state.user.name = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
+        let isValidExp = !this.isValid(value, NameRegex);
+        this.state.meta.nameError = !emptyStatus ? Required : (!isValidExp ? Invalid : "")
+        this.setState({ meta: this.state.meta });
+        return (emptyStatus && isValidExp);
     }
 
     isValidEmail(value: string) {
-        let emptyStatus = this.isEmpty(value);
-        let isValidExp = this.isValid(value, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-        this.setState({ ...this.state, meta: { ...this.state.meta, emailError: emptyStatus ? "Required" : (isValidExp ? "Invalid" : "") } });
-        return emptyStatus && !isValidExp;
+        this.state.user.email = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
+        let isValidExp = !this.isValid(value, EmailRegex);
+        this.state.meta.emailError = !emptyStatus ? Required : (!isValidExp ? Invalid : "");
+        this.setState({ meta: this.state.meta });
+        return (emptyStatus && isValidExp);
     }
 
     isValidMobileNumber(value: string) {
-        let emptyStatus = this.isEmpty(value);
-        let isValidExp = this.isValid(value, /^[6789]\d{9}$/);
-        this.setState({ ...this.state, meta: { ...this.state.meta, mobileError: emptyStatus ? "Required" : (isValidExp ? "Invalid" : "") } });
-        return emptyStatus && !isValidExp;
+        this.state.user.mobile = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
+        let isValidExp = !this.isValid(value, MobileNumberRegex);
+        this.state.meta.mobileError = !emptyStatus ? Required : (!isValidExp ? Invalid : "");
+        this.setState({ ...this.state, meta: this.state.meta });
+        return (emptyStatus && isValidExp);
     }
 
     isValidPassword(value: string) {
-        let emptyStatus = this.isEmpty(value);
-        let validStatus = this.isValid(value, /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/);
-        this.setState({ ...this.state, meta: { ...this.state.meta, passwordError: emptyStatus ? "Required" : (validStatus ? "Invalid" : "") } });
-        return emptyStatus && !validStatus;
+        this.state.user.password = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
+        let validStatus = !this.isValid(value, PasswordRegex);
+        this.state.meta.passwordError = !emptyStatus ? Required : (!validStatus ? Invalid : "");
+        this.setState({  meta: this.state.meta });
+        return (emptyStatus && validStatus);
     }
 
     isValidUserName(value: string) {
-        let emptyStatus = this.isEmpty(value);
+        this.state.user.userName = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
         const isAvailable = this.hasUserName(value);
-        this.setState({ ...this.state, meta: { ...this.state.meta, userNameError: emptyStatus ? "Required" : (!isAvailable ? "taken by someone" : "") } });
+        this.state.meta.userNameError = !emptyStatus ? Required : (!isAvailable ? UserNameAvailability : "");
+        this.setState({ meta: this.state.meta });
         return emptyStatus;
     }
 
     isEqualPassword(value: string) {
-        let emptyStatus = this.isEmpty(value);
-        let validStatus = (value == this.state.user.password);
-        this.setState({ ...this.state, meta: { ...this.state.meta, passwordError: emptyStatus ? "Required" : (validStatus ? "password not matched" : "") } });
-        return emptyStatus && validStatus;
-    }
-
-    isValidDrivingLicence(value: string) {
-        let validStatus = this.isValid(value, /^[0-9a-zA-Z]{4,9}$/);
-        this.setState({ ...this.state, meta: { ...this.state.meta, drivingLicenceError:  (validStatus ? "Invalid" : "") } })
-        return !validStatus;
+        this.state.user.confirmPassword = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
+        let validStatus = (value === this.state.user.password);
+        this.state.meta.passwordMatchError = !emptyStatus ? Required : (!validStatus ? "password not matched" : "");
+        this.setState({ meta: this.state.meta });
+        return (emptyStatus && validStatus);
     }
 
     isValidAddress(value: string) {
-        let emptyStatus = this.isEmpty(value);
-        this.setState({ ...this.state, meta: { ...this.state.meta, addressError: emptyStatus ? "Please enter address" : "" } });
+        this.state.user.address = value;
+        this.setState({ user: this.state.user })
+        let emptyStatus = !this.isEmpty(value);
+        this.state.meta.addressError = !emptyStatus ? Required : "";
+        this.setState({ ...this.state, meta: this.state.meta });
         return emptyStatus;
+    }
+
+    isValidDrivingLicence(value: string) {
+        this.state.user.drivingLicence = value;
+        this.setState({ user: this.state.user })
     }
 
     onSubmit = (event: any) => {
         event.preventDefault();
-        let isValid = this.isValidName(this.state.user.name);
-        isValid = isValid && this.isValidAddress(this.state.user.address);
-        isValid = isValid && this.isValidMobileNumber(this.state.user.mobile);
-        isValid = isValid && this.isValidUserName(this.state.user.userName);
-        isValid = isValid && this.isValidPassword(this.state.user.password);
-        isValid = isValid && this.isEqualPassword(this.state.user.password);
-        isValid = isValid && this.isValidEmail(this.state.user.email);
-        isValid = isValid && this.isValidDrivingLicence(this.state.user.drivingLicence);
-        console.log(this.state.user)
+        let isValid = this.isValidName(this.state.user.name) && this.isValidAddress(this.state.user.address) && this.isValidMobileNumber(this.state.user.mobile)
+            && this.isValidUserName(this.state.user.userName) && this.isValidPassword(this.state.user.password) && this.isEqualPassword(this.state.user.password)
+            && this.isValidEmail(this.state.user.email);
+
         if (isValid) {
             UserService.addNewUser(this.state.user).then((response) => {
                 if (response == 'Ok')
                     window.location.pathname = '/login';
                 else if (response == 'Reject') {
-
                 }
             })
         }
@@ -161,45 +143,47 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
                         <div className='header-underline'></div>
                     </div>
                     <form className="form">
-                        <Tooltip title='Required' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event: any) => { this.onChanges(event); this.isValidName(event.target.value) }} value={this.state.user.name} label="Name" type='text' name="name" autoFocus />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.nameError}</span>
-                        <Tooltip title='Required' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidMobileNumber(event.target.value) }} value={this.state.user.mobile} label="Mobile" name="mobile" />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.mobileError}</span>
-                        <Tooltip title='Required' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} value={this.state.user.userName} label="UserName" name="userName" />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.userNameError}</span>
-                        <Tooltip title='Required' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidAddress(event.target.value) }} value={this.state.user.address} label="Address" name="address" />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.addressError}</span>
-                        <Tooltip title={this.state.meta.drivingLicenceError} placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidDrivingLicence(event.target.value) }} value={this.state.user.drivingLicence} label="Driving Licenece" name="drivingLicence" />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.drivingLicenceError}</span>
-                        <Tooltip title='Required' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidEmail(event.target.value) }} value={this.state.user.email} label="Email Address" name="email" type='email' />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.emailError}</span>
-                        <Tooltip title='Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} value={this.state.user.password} name="password" label="Password" type={this.state.meta.passwordType ? 'password' : 'text'}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end' onClick={() => { this.setState({ meta: { ...this.state.meta, passwordType: !this.state.meta.passwordType } }) }} >
-                                            {this.state.meta.passwordType ? <VisibilityIcon /> : <VisibilityOff />}
-                                        </InputAdornment>
-                                    )
-                                }} />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.passwordError}</span>
-                        <Tooltip title='Required' placement='bottom' >
-                            <TextField className='input' variant="filled" onChange={(event) => { this.onChanges(event); this.isEqualPassword(event.target.value) }} value={this.state.user.confirmPassword} name="confirmPassword" label="Confirm Password" type="text" />
-                        </Tooltip>
-                        <span className='helper'>{this.state.meta.passwordError}</span>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event: any) => { this.isValidName(event.target.value) }} value={this.state.user.name} label="Name" type='text' name="name" autoFocus />
+                            <span className='helper'>{this.state.meta.nameError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event) => { this.isValidMobileNumber(event.target.value) }} value={this.state.user.mobile} label="Mobile" name="mobile" />
+                            <span className='helper'>{this.state.meta.mobileError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event) => { this.isValidUserName(event.target.value) }} value={this.state.user.userName} label="UserName" name="userName" />
+                            <span className='helper'>{this.state.meta.userNameError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event) => { this.isValidAddress(event.target.value) }} value={this.state.user.address} label="Address" name="address" />
+                            <span className='helper'>{this.state.meta.addressError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event) => { this.isValidDrivingLicence(event.target.value) }} value={this.state.user.drivingLicence} label="Driving Licenece" name="drivingLicence" />
+                            <span className='helper'>{this.state.meta.drivingLicenceError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event) => { this.isValidEmail(event.target.value) }} value={this.state.user.email} label="Email Address" name="email" type='email' />
+                            <span className='helper'>{this.state.meta.emailError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <Tooltip title='Password contain 8-15 character and atleast one numberic, upper alphabet, lower alphabet and special character' placement='bottom' >
+                                <TextField className='input' variant="filled" onChange={(event) => { this.isValidPassword(event.target.value) }} value={this.state.user.password} name="password" label="Password" type={this.state.meta.passwordType ? 'password' : 'text'}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position='end' onClick={() => { this.setState({ meta: { ...this.state.meta, passwordType: !this.state.meta.passwordType } }) }} >
+                                                {this.state.meta.passwordType ? <VisibilityIcon /> : <VisibilityOff />}
+                                            </InputAdornment>
+                                        )
+                                    }} />
+                            </Tooltip>
+                            <span className='helper'>{this.state.meta.passwordError}</span>
+                        </div>
+                        <div className='input-box'>
+                            <TextField className='input' variant="filled" onChange={(event) => { this.isEqualPassword(event.target.value) }} value={this.state.user.confirmPassword} name="confirmPassword" label="Confirm Password" type="password" />
+                            <span className='helper'>{this.state.meta.passwordMatchError}</span>
+                        </div>
                         <div className='submit'>
                             <button type='submit' onClick={this.onSubmit}><span>Submit</span></button>
                         </div>

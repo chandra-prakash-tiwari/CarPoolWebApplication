@@ -20,9 +20,18 @@
             margin: auto;
         }
 
+.create-ride .ride-details .input-box{
+    margin:1rem auto;
+}
+
 .create-ride .ride-details label {
     font-family: 'Open Sans', sans-serif;
     color: #a7a6a5;
+}
+
+.create-ride .ride-details .helper{
+    font-size:0.8rem;
+    color:red;
 }
 
 .add span{

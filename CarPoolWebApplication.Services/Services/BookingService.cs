@@ -21,6 +21,9 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Create(Models.Client.Booking booking)
         {
+            if(booking==null)
+                return false;
+
             booking.Id = Extensions.GenerateId();
             this._db.Bookings.Add(this._mapper.Map<Models.Data.Booking>(booking));
 
@@ -29,7 +32,10 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public bool Cancel(string id)
         {
-            Models.Data.Booking booking = this._db.Bookings.FirstOrDefault(a => a.Id == id);
+            if (id == null)
+                return false;
+
+            Models.Data.Booking booking = this._db.Bookings.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(id)) && a.Id == id);
             if (booking != null && booking.Status == Models.Client.BookingStatus.Pending)
             {
                 booking.Status = Models.Client.BookingStatus.Cancel;
@@ -41,12 +47,13 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Booking> Status(string id)
         {
-            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings.Where(a => a.BookerId == id && a.Status != Models.Client.BookingStatus.Completed).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>
+                (this._db.Bookings.Where(a => (!string.IsNullOrEmpty(a.BookerId) && !string.IsNullOrEmpty(id)) && a.BookerId == id && a.Status != Models.Client.BookingStatus.Completed).ToList());
         }
 
         public bool Response(string id, Models.Client.BookingStatus status)
         {
-            var bookingResponse = this._db.Bookings.FirstOrDefault(booking => booking.Id == id);
+            var bookingResponse = this._db.Bookings.FirstOrDefault(booking => (!string.IsNullOrEmpty(booking.Id) && !string.IsNullOrEmpty(id)) && booking.Id == id);
             if (bookingResponse == null)
             {
                 return false;
@@ -59,27 +66,36 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public string GetRequesterById(string id)
         {
-            return this._db.Bookings.FirstOrDefault(a => a.Id == id).RideId;
+            return this._db.Bookings.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(id)) && a.Id == id).RideId;
         }
 
         public List<Models.Client.Booking> GetByUserId(string userId)
         {
-            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings.Where(booking => booking.BookerId == userId).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.BookerId) && !string.IsNullOrEmpty(userId)) && booking.BookerId == userId).ToList());
         }
 
-        public List<Models.Client.Booking> GetByRideId(string rideId)
+        public List<Models.Client.Booking> GetAllByRideId(string rideId)
         {
-            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings.Where(booking => booking.RideId == rideId).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.RideId) && !string.IsNullOrEmpty(rideId)) && booking.RideId == rideId).ToList());
         }
 
         public List<Models.Client.Booking> RequestPending(string rideId)
         {
-            return this._mapper.Map<List<Models.Client.Booking>>(this._db.Bookings?.Where(booking => booking.Status == Models.Client.BookingStatus.Pending && booking.RideId == rideId).ToList());
+            return this._mapper.Map<List<Models.Client.Booking>>
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.RideId) && !string.IsNullOrEmpty(rideId)) && booking.Status == Models.Client.BookingStatus.Pending && booking.RideId == rideId).ToList());
         }
 
         public Models.Client.Booking GetById(string id)
         {
-            return this._mapper.Map<Models.Client.Booking>(this._db.Bookings?.FirstOrDefault(booking => booking.Id == id));
+            return this._mapper.Map<Models.Client.Booking>(this._db.Bookings?.FirstOrDefault(booking => (!string.IsNullOrEmpty(booking.Id) && !string.IsNullOrEmpty(id)) && booking.Id == id));
+        }
+
+        public List<Models.Client.Booking> GetByRideId(string rideId,string bookerId)
+        {
+            return this._mapper.Map<List<Models.Client.Booking>>
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.BookerId) && !string.IsNullOrEmpty(booking.RideId)) && booking.RideId == rideId && booking.BookerId == bookerId)).ToList();
         }
     }
 }

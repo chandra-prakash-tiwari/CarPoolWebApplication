@@ -42,10 +42,20 @@ function logout() {
 }
 
 function addNewUser(userData) {
+    var data = {
+        name: userData.name,
+        mobile: userData.mobile,
+        address: userData.address,
+        email: userData.email,
+        password: userData.password,
+        userName: userData.userName,
+        drivingLicence: userData.drivingLicence
+    }
+
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
+        body: JSON.stringify(data)
     };
     return fetch('/api/user/create', requestOptions)
         .then(async response => {
@@ -60,7 +70,7 @@ function addNewUser(userData) {
                 return Promise.reject('serverError');
             }
         }).catch(error => {
-            return console.log(error);
+            return error;
         })
 }
 
@@ -108,7 +118,7 @@ function getUser(id) {
         }
         
     }).catch(error => {
-        console.log(error);
+        return error;
     })
 }
 

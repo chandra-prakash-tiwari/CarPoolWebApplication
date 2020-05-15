@@ -2,6 +2,7 @@
 using CarPoolingWebApiReact.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CarPoolWebApi.Controllers
 {
@@ -42,6 +43,20 @@ namespace CarPoolWebApi.Controllers
             return true;
         }
 
+        [HttpPut]
+        [ActionName("update")]
+        public IActionResult Update([FromBody]Ride ride,string rideId)
+        {
+            if (ride == null && rideId == null)
+                return BadRequest();
+
+            ride.Id = rideId;
+            if (!_rideServices.Update(ride))
+                return NoContent();
+
+            return Ok();
+        }
+
         [HttpGet]
         [ActionName("getbyid")]
         public IActionResult GetById(string id)
@@ -76,5 +91,14 @@ namespace CarPoolWebApi.Controllers
             return Ok(this._rideServices.GetOffers(booking));
         }
 
+        [HttpGet]
+        [ActionName("caravailable")]
+        public bool CarAvailable(string carId, int time,DateTime date)
+        {
+            if (carId == null || date == null)
+                return false;
+
+            return this._rideServices.IsCarAvailable(carId, time, date);
+        }
     }
 }

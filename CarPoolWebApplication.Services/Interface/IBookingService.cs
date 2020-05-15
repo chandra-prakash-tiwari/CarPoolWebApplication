@@ -17,10 +17,12 @@ namespace CarPoolingWebApiReact.Services.Interfaces
 
         List<Booking> GetByUserId(string userId);
 
-        List<Booking> GetByRideId(string rideId);
+        List<Booking> GetAllByRideId(string rideId);
 
         List<Booking> RequestPending(string rideId);
 
         Booking GetById(string bookingId);
+
+        List<Booking> GetByRideId(string rideId, string bookerId);
     }
 }

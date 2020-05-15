@@ -28,7 +28,7 @@
 
 .signup .form {
     width: 80%;
-    margin: 2% 12% auto;
+    margin: 3% 12%;
     overflow: hidden;
 }
 
@@ -38,13 +38,12 @@
 }
 
 .signup .form .input {
-    margin: 5px;
     width: 90%;
 }
 
 .signup .form .input div {
     background-color: white;
-    height: 3.5rem;
+    height: 3.4rem;
     border-radius: 0.4rem;
 }
 
@@ -69,7 +68,7 @@
 
 .signup .form .submit {
     display: flex;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .signup .form .submit span {
@@ -88,9 +87,9 @@
     }
 
     .signup .footer {
-        display: flex;
-        margin: auto 24%;
-        margin: 1rem 24%;
+    display: flex;
+    margin: 0.5rem auto;
+    width: fit-content;
     }
 
         .signup .footer .footer-underline {
@@ -129,7 +128,13 @@
         font-family: 'Open Sans', sans-serif;
     }
 
-.signup .form .helper {
-    color: white;
-    margin: 6px;
+    .signup .form .helper {
+        color: red;
+        font-size: 0.8rem;
+        margin: auto 4px;
+    }
+
+.signup .form .input-box {
+    margin: 0.5rem;
+    display: grid;
 }

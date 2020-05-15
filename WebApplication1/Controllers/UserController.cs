@@ -41,7 +41,7 @@ namespace CarPoolWebApi.Controllers
             {
                 return NoContent();
             }
-            else if (!this._userService.Create(user))
+            else if (this._userService.Create(user))
             {
                 return Ok(user);
             }
@@ -110,7 +110,7 @@ namespace CarPoolWebApi.Controllers
             if (string.IsNullOrEmpty(userName))
                 return true;
 
-            return !(this._userService.HasUserName(userName));
+            return (this._userService.HasUserName(userName));
         }
 
         [AllowAnonymous]
@@ -121,7 +121,7 @@ namespace CarPoolWebApi.Controllers
             if (string.IsNullOrEmpty(email))
                 return true;
 
-            return !(this._userService.HasEmail(email));
+            return (this._userService.HasEmail(email));
         }
     }
 }

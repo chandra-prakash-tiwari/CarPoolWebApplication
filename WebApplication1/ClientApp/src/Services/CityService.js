@@ -2,8 +2,7 @@
 
 export const CityService = {
     getValidCity,
-    getCityDetails,
-    getCitiesDetails
+    getCityDetails
 }
 
 function getValidCity(value) {
@@ -14,10 +13,9 @@ function getValidCity(value) {
 }
 
 function getCityDetails(value) {
-    var abc = CityRecord.filter((city) => city.city.toLowerCase() === (value.toLowerCase()));
-    return abc[0];
-}
+    if (value === null||value==='')
+        return null;
 
-function getCitiesDetails(value) {
-    console.log(CityRecord.filter((city) => city.city == value))
+    var city = CityRecord.filter((city) => city.city.toLowerCase() === (value.toLowerCase()));
+    return city[0];
 }

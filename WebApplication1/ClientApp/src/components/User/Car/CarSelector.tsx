@@ -27,7 +27,6 @@ export default class CarSelector extends React.Component<{}, UserCar> {
 
     componentDidMount() {
         CarService.getCars().then((response) => {
-            console.log(response)
             if (response !== undefined && response === 'serverError') {
                 this.setState({ serverError:false })
             }
@@ -51,7 +50,12 @@ export default class CarSelector extends React.Component<{}, UserCar> {
     onSubmit = (carRecord: any) => {
         if (!this.state.deleteButton) {
             sessionStorage.setItem('carDetails', JSON.stringify(carRecord));
-            window.location.pathname = '/createride';
+            if (window.location.pathname === '/ride/selectcar') {
+                window.location.pathname = '/ride/details';
+            }
+            else if (window.location.pathname === '/edit/ride/car') {
+                window.location.pathname ='/edit/ride/details'
+            }
         }
     }
 
@@ -76,11 +80,12 @@ export default class CarSelector extends React.Component<{}, UserCar> {
                 </div>
                 {this.state.deleteStatus ? <p style={{ fontSize: '1.4rem', margin:'auto 1rem' }}>sorry car is not deleted. car is booked for a ride</p> : null}
                 <div className='user-cars'>{carDetails}</div>
-                <ButtonBase href='/car/addnewcar' >
-                    < Card className='car-cards'>
-                        <div className='add-car'>+</div>
-                    </Card>
-                </ButtonBase>
+                {window.location.pathname ==='/ride/selectcar'?
+                    <ButtonBase href='/car/addnewcar' >
+                        < Card className='car-cards'>
+                            <div className='add-car'>+</div>
+                        </Card>
+                    </ButtonBase>:''}
             </div> : <ServerError/>
         )
     }

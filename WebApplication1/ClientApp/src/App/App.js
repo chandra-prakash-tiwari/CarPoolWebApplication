@@ -28,9 +28,11 @@ export default class App extends Component {
                                 <Route exact path='/home' component={Home} />
                                 <Route exact path='/booking' component={BookingLayout} />
                                 <Route exact path='/booking/search' component={BookingSearchLayout} />
-                                <Route exact path='/car' component={CarSelector}/ >
+                                <Route exact path='/ride/selectcar' component={CarSelector} />
+                                <Route exact path='/edit/ride/car' component={CarSelector} />
+                                <Route exact path='/edit/ride/details' component={CreateRide} />
                                 <Route exact path='/car/addnewcar' component={AddNewCar} />
-                                <Route exact path='/createride' component={CreateRide} />
+                                <Route exact path='/ride/details' component={CreateRide} />
                                 <Route exact path='/myride' component={MyRideLayout} />
                                 <Route exact path='/profile' component={UserProfile}/>
                                 <Route path='/'>

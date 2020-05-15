@@ -64,5 +64,15 @@ namespace CarPoolWebApi.Controllers
 
             return Ok(this._carServices.GetById(id));
         }
+
+        [HttpGet]
+        [ActionName("hasnumber")]
+        public bool HasNumber(string number)
+        {
+            if (number == null)
+                return false;
+
+            return this._carServices.HasCarNumber(number);
+        }
     }
 }

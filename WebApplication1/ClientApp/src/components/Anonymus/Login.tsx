@@ -11,6 +11,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { LoginRequest } from '../../Classes/DataClasses/User';
 import { LoginMeta } from '../../Classes/MetaClasses/User';
 import { WrongPassword, ServerError } from '../User/Response';
+import { Required } from '../../Classes/Constraint';
 
 export class LoginProps{
     credentials: LoginRequest;
@@ -41,13 +42,13 @@ export default class Login extends React.Component<{}, LoginProps> {
 
     isValidUserName(value: string) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ meta: { ...this.state.meta, userNameError: emptyStatus ? "Please enter username or email address" : "" } });
+        this.setState({ meta: { ...this.state.meta, userNameError: emptyStatus ? Required : "" } });
         return emptyStatus;
     }
 
     isValidPassword(value: string) {
         let emptyStatus = this.isEmpty(value);
-        this.setState({ meta: { ...this.state.meta, passwordError: emptyStatus ? "Please enter password" : "" } })
+        this.setState({ meta: { ...this.state.meta, passwordError: emptyStatus ? Required : "" } })
         this.setState({ })
         return emptyStatus;
     }
@@ -86,17 +87,21 @@ export default class Login extends React.Component<{}, LoginProps> {
                         <div className='header-underline'></div>
                     </div>
                     <form className='form'>
-                            <TextField variant="filled" className='input' value={this.state.credentials.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id "/>
-                        <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.userNameError}</span>
+                        <div className='input-box'>
+                            <TextField variant="filled" className='input' value={this.state.credentials.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id " />
+                            <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.userNameError}</span>
+                        </div>
+                        <div className='input-box'>
                             <TextField variant="filled" className='input' value={this.state.credentials.password} onChange={(event) => { this.onChanges(event); this.isValidPassword(event.target.value) }} name="password" type={this.state.meta.passwordType ? 'password' : 'text'} label="Enter Password"
-                                InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position='end' onClick={this.onChangePasswordType} >
-                                        {this.state.meta.passwordType ? <VisibilityIcon /> : <VisibilityOff />}
-                                    </InputAdornment>
-                                )
-                                }} />
-                        <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.passwordError}</span>
+                             InputProps={{
+                             endAdornment: (
+                                 <InputAdornment position='end' onClick={this.onChangePasswordType} >
+                                     {this.state.meta.passwordType ? <VisibilityIcon /> : <VisibilityOff />}
+                                 </InputAdornment>
+                             )
+                             }} />
+                            <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.passwordError}</span>
+                        </div>
                         {this.state.meta.wrongPasswordError ? <WrongPassword /> : ''}
                         {this.state.meta.serverError ? <ServerError/>:''}
                         <div className='submit'>

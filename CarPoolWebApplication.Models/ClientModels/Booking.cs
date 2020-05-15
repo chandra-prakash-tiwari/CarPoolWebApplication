@@ -17,6 +17,8 @@ namespace CarPoolingWebApiReact.Models.Client
 
         public float TravellingDistance { get; set; }
 
+        public int NoofSeats { get; set; }
+
         public DateTime BookingDate { get; set; }
 
         public DateTime TravelDate { get; set; }

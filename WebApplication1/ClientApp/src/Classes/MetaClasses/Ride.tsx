@@ -24,14 +24,20 @@ export class CreateRideMeta {
     viaPointComponent: boolean;
     switch: boolean;
     fromError: string;
+    validDate: string;
     toError: string;
     dateError: string;
+    carAvailable: boolean;
+    carNotAvailableError: string;
 
     constructor() {
         this.viaPointComponent = false;
         this.switch = true;
         this.fromError = '';
+        this.validDate = '';
         this.toError = '';
         this.dateError = '';
+        this.carNotAvailableError = '';
+        this.carAvailable = true;
     }
 }

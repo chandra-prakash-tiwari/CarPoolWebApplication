@@ -38,10 +38,19 @@
 
 .add-new-car .car-details .input {
     width: 90%;
-    margin: 1rem auto;
 }
 
 .add-new-car .car-details label {
     font-family: 'Open Sans', sans-serif;
     color: #a7a6a5;
+}
+
+.input-box {
+    margin: 1rem auto;
+    display:grid;
+}
+
+.helper{
+    font-size:0.8rem;
+    color:red;
 }

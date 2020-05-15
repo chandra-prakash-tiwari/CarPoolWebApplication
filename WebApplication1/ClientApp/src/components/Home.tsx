@@ -20,7 +20,7 @@ export default class Home extends React.Component {
                             </CardContent>
                         </Card>
                     </ButtonBase>
-                    <ButtonBase href='/car'>
+                    <ButtonBase href='/ride/selectcar'>
                         < Card className='booking' >
                             <CardContent >
                                 < Typography className='cards-element' component='h1' variant='h5' >Offer a ride </Typography>

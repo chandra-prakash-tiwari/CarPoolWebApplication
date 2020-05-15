@@ -12,16 +12,22 @@ export class Rides {
     bookers: Array<any>;
     noofSeat: number;
     serverError: boolean;
+    dialogRide: any;
     dialogDisplay: boolean;
+    dialogDetails: boolean;
     dialog1Display: boolean;
+    editButton: string;
 
     constructor() {
         this.rides = [];
         this.noofSeat = 0;
         this.serverError = false;
+        this.dialogRide = null;
         this.bookers = [];
         this.dialogDisplay = false;
+        this.dialogDetails = false;
         this.dialog1Display = false;
+        this.editButton = '';
     }
 }
  enum Time {
@@ -30,6 +36,14 @@ export class Rides {
     '12pm - 3pm',
     '3pm - 6pm',
     '6pm - 9pm'
+}
+
+enum Status {
+    Confirmed = 1,
+    Rejected,
+    Pending,
+    Completed,
+    Canceled
 }
 
 export default class MyRides extends React.Component<{}, Rides, Time> {
@@ -50,7 +64,8 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
     }
 
     onChoice = (ride: any) => {
-        this.setState({ dialogDisplay:true })
+        this.setState({ dialogDisplay: true })
+        this.setState({ dialogRide: ride });
         RideService.getAllBookers(ride.id).then((response) => {
             if (response !== undefined) {
                 this.setState({ bookers: response })
@@ -60,12 +75,28 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
 
     onResponse = (rideId: string, bookingId:string, status:number) => {
         BookingService.bookingResponse(rideId, bookingId, status).then((response) => {
+            if (response !== undefined&&response!=='serverError')
             window.location.reload();
         })
     }
 
+    onEditClick = () => {
+        sessionStorage.setItem('rideId', this.state.dialogRide.id)
+        window.location.pathname = '/edit/ride/car';
+    }
+
+    onViewDetails = () => {
+        this.setState({ dialogDetails:true })
+    }
+
+    onBookerDetails = () => {
+        this.setState({ dialogDetails:false })
+    }
+
     onDialogClose = () => {
+        this.setState({ editButton:'' })
         this.setState({ dialogDisplay: false })
+        this.setState({ dialog1Display: false })
     }
 
     render() {
@@ -96,55 +127,107 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
                     </div>
                     <div className='right'>
                         <span className='label'>Status</span><br />
-                        <span>{booker.status === 1 ? 'Confirm' : booker.status === 2 ? 'Reject' : 'Pending'}</span>
+                        <span>{Status[booker.status]}</span>
                     </div>
-                </div>            
-                <button className='confirm' disabled={booker.status !== 3 ? true : false} onClick={() => this.onResponse(booker.rideId, booker.id, 1)}>Confirm</button>
-                <button className='cancel' disabled={booker.status !== 3 ? true : false} onClick={() => this.onResponse(booker.rideId, booker.id, 2)}>Cancel</button>
+                </div>    
+                <div className='ride-line'>
+                    <div className='left'>
+                        <span className='label'>No of seats</span><br />
+                        <span>{booker.noofSeats}</span>
+                    </div>
+                </div>
+                <div className='ride-line'>
+                    {this.state.editButton === '' ? ((booker.status === 1 || booker.status === 4) ? this.setState({ editButton:'none' }):''):''}
+                    <button className='confirm' disabled={booker.status !== 3 ? true : false} onClick={() => this.onResponse(booker.rideId, booker.id, 1)}>Accept</button>
+                    <button className='cancel' disabled={booker.status !== 3 ? true : false} onClick={() => this.onResponse(booker.rideId, booker.id, 2)}>Reject</button>
+                </div>
             </div>)
-        )) : <div style={{ textAlignLast: 'center', fontSize:'2rem' }}>No booker is available</div>;
+        )) : <div style={{ textAlignLast: 'center', fontSize: '2rem' }}>No booker is available</div>;
+
+        const viaPoints = this.state.dialogRide !== null ?
+            ((JSON.parse(this.state.dialogRide.viaPoints)).map((viacity: any, i: any) => (
+                <p key={i} className='via-point'>Stop {i + 1}:  {viacity.city}</p>
+            ))) : '';
+
+        const dialog1 = (this.state.dialogDetails) ? (
+          <div className='ride-full-details'>
+              <div className='content'>
+                  <p className='left'>From</p>
+                  <p className='right'>{this.state.dialogRide.from}</p>
+              </div>
+              <div className='content'>
+                  <p className='left'>To</p>
+                  <p className='right'>{this.state.dialogRide.to}</p>
+              </div>
+              <div className='content'>
+                  <p className='left'>Date</p>
+                  <p className='right'>{this.state.dialogRide.travelDate.split('T')[0]}</p>
+              </div>
+              <div className='content'>
+                  <p className='left'>Available Seats </p>
+                  <p className='right'>{this.state.dialogRide.availableSeats}</p>
+              </div>
+              <div className='content'>
+                  <p className='left'>Rate</p>
+                  <p className='right'>{this.state.dialogRide.ratePerKM} RS/KM</p>
+              </div>
+              <div className='content'>
+                  <p className='left'>Time</p>
+                  <p className='right'>{Time[this.state.dialogRide.time]}</p>
+              </div>
+              <div className='via-points'>
+                  <p className='left'>Via Points</p>
+                  <div className='right'>{viaPoints}</div>
+              </div>                   
+          </div>
+        ):'';
 
         const dialog = (this.state.dialogDisplay) ?(
             <Dialog fullScreen open={this.state.dialogDisplay} className='ride-dialog'>
-                <ButtonBase onClick={this.onDialogClose} className='close'><CloseIcon className='icon' /></ButtonBase>
-                {Bookers}
+                <div className='header'>
+                    <ButtonBase onClick={() => this.onViewDetails()}><span> View details </span></ButtonBase>
+                    <ButtonBase onClick={() => this.onBookerDetails()}><span> All booker </span></ButtonBase>
+                    <ButtonBase style={{ display: this.state.editButton }} onClick={() => this.onEditClick()}><span> EDIT </span></ButtonBase>
+                    <ButtonBase onClick={this.onDialogClose} className='close'><CloseIcon className='icon' /></ButtonBase>
+                </div>
+                {!this.state.dialogDetails ? Bookers : dialog1}
             </Dialog>
 
-        ): null;
+        ) : null;
 
         const RidesDetails =this.state.rides.length>0?(
             this.state.rides.map((ride: any, i) => (
                 <ButtonBase key={i} style={{ margin: '1rem 4rem' }}>
                     <Card className='rides' onClick={()=>this.onChoice(ride)}>
-                    <div className='head'>
-                        <Grid item md={10}>
-                            <h4> </h4>
-                        </Grid>
-                        <Grid item md={2}>
-                            <Avatar></Avatar>
-                        </Grid>
-                    </div>
-                    <div className='ride-line'>
-                        <div className='left'>
-                            <span className='label'>From</span><br />
-                            <span>{ride.from}</span>
+                        <div className='head'>
+                            <Grid item md={10}>
+                                <h4> </h4>
+                            </Grid>
+                            <Grid item md={2}>
+                                <Avatar></Avatar>
+                            </Grid>
                         </div>
-                        <div className='right'>
-                            <span className='label'>To</span><br />
-                            <span>{ride.to}</span>
-                        </div>
-                    </div>
-                    <div className='ride-line'>
-                        <div className='left'>
-                            <span className='label'>Date</span><br />
-                            <span>{ride.travelDate.split('T')[0]}</span>
-                        </div>
+                        <div className='ride-line'>
+                            <div className='left'>
+                                <span className='label'>From</span><br />
+                                <span>{ride.from}</span>
+                            </div>
                             <div className='right'>
-                                <span className='label'>Time</span><br />
-                                <span>{Time[ride.time]}</span>
+                                <span className='label'>To</span><br />
+                                <span>{ride.to}</span>
+                            </div>
                         </div>
-                      </div>
-                    <div className='ride-line'>
+                        <div className='ride-line'>
+                            <div className='left'>
+                                <span className='label'>Date</span><br />
+                                <span>{ride.travelDate.split('T')[0]}</span>
+                            </div>
+                                <div className='right'>
+                                    <span className='label'>Time</span><br />
+                                    <span>{Time[ride.time]}</span>
+                            </div>
+                          </div>
+                        <div className='ride-line'>
                         <div className='left'>
                             <span className='label'>Price(Per KM)</span><br />
                             <span>{ride.ratePerKM}</span>
@@ -153,7 +236,7 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
                             <span className='label'>Available seats</span><br />
                             <span>{ride.availableSeats}</span>
                         </div>
-                    </div>
+                        </div>
                     </Card>
                 </ButtonBase>
             ))) : (<p className='no-bookings'>you have not created any ride offer</p>)
@@ -164,6 +247,7 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
                 </div>
                 <div className='rides-cards'>{RidesDetails}</div>
                 {dialog}
+                {dialog1}
             </div> : <ServerError />
             )
     }

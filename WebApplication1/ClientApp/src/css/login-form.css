@@ -22,7 +22,7 @@
 
 .login .header .header-underline {
     background-color: white;
-    width: 4rem;
+    width: 4vw;
     height: 2.5px;
     margin: 0.7rem auto;
 }
@@ -43,7 +43,6 @@
 }
 
 .login .form .input {
-    margin: 0.5rem;
     width: 90%;
 }
 
@@ -51,6 +50,11 @@
     background-color: white;
     height: 3.5rem;
     border-radius: 0.4rem;
+}
+
+.login .form .input-box{
+    margin:0.5rem;
+    display:grid;
 }
 
 .login .form .input div::before{
@@ -94,7 +98,8 @@
 
 .login .footer {
     display: flex;
-    margin: 5% 20%
+    margin: 5% auto;
+    width: fit-content;
 }
 
 .login .footer .footer-underline {
@@ -122,7 +127,6 @@
 .login .footer p {
     color: white;
     font-size: larger;
-    margin-left: 15%;
     font-weight: 200;
     font-family: 'Open Sans', sans-serif;
 }
@@ -134,6 +138,7 @@
 }
 
 .login .form .helper{
-    color:white;
-    margin:6px;
+    color:red;
+    font-size:0.7rem;
+    margin:auto 4px;
 }

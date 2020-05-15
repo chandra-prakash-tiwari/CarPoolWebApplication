@@ -34,7 +34,7 @@ namespace CarPoolWebApi.Controllers
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpGet]
         [ActionName("cancel")]
         public IActionResult Cancel(string id)
         {
@@ -74,7 +74,7 @@ namespace CarPoolWebApi.Controllers
             if (string.IsNullOrEmpty(rideId))
                 return BadRequest();
 
-            return Ok(this._BookingService.GetByRideId(rideId));
+            return Ok(this._BookingService.GetAllByRideId(rideId));
         }
 
         [HttpGet]
@@ -95,6 +95,16 @@ namespace CarPoolWebApi.Controllers
                 return BadRequest();
 
             return Ok(this._BookingService.GetById(id));
+        }
+
+        [HttpGet]
+        [ActionName("getbookerbyrideid")]
+        public IActionResult GetByRideId(string rideId,string bookerId)
+        {
+            if (rideId == null || bookerId == null)
+                return BadRequest();
+
+            return Ok(this._BookingService.GetByRideId(rideId, bookerId));
         }
     }
 }
