@@ -111,17 +111,16 @@
 }
 .login .footer .link {
     margin-left: 0.5rem;
+    display:grid;
 }
 
-.login a {
+.login .footer .link .signup {
     font-family: 'Open Sans', sans-serif;
     color: white;
     font-size: larger;
     font-weight: 600;
-}
-
-.login a:hover{
-    text-decoration:none;
+    background:none;
+    cursor:pointer;
 }
 
 .login .footer p {

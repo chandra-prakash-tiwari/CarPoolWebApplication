@@ -6,6 +6,10 @@ import { ServerError } from '../Response';
 import { Dialog } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import BookingService from '../../../Services/BookingService';
+import { Redirect } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export class Rides {
     rides: Array<any>;
@@ -14,9 +18,15 @@ export class Rides {
     serverError: boolean;
     dialogRide: any;
     dialogDisplay: boolean;
+    confirmDialog: boolean;
     dialogDetails: boolean;
     dialog1Display: boolean;
     editButton: string;
+    editRedirect: boolean;
+    rideId: string;
+    bookingId: string;
+    status: number;
+    number: number;
 
     constructor() {
         this.rides = [];
@@ -27,7 +37,13 @@ export class Rides {
         this.dialogDisplay = false;
         this.dialogDetails = false;
         this.dialog1Display = false;
+        this.confirmDialog = false;
         this.editButton = '';
+        this.editRedirect = false;
+        this.rideId = '';
+        this.bookingId = '';
+        this.status = 0;
+        this.number = 0;
     }
 }
  enum Time {
@@ -73,16 +89,31 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
         })
     }
 
-    onResponse = (rideId: string, bookingId:string, status:number) => {
-        BookingService.bookingResponse(rideId, bookingId, status).then((response) => {
-            if (response !== undefined&&response!=='serverError')
-            window.location.reload();
+    onConfirm = () => {
+        this.setState({ confirmDialog: false });
+        BookingService.bookingResponse(this.state.rideId, this.state.bookingId, this.state.status).then((response) => {
+            if (response !== undefined && response !== 'serverError') {
+                this.state.bookers[this.state.number].status = this.state.status;
+                this.setState({ bookers: this.state.bookers })
+            }
         })
+    }
+
+    onDisagree = () => {
+        this.setState({ confirmDialog: false });
+    }
+
+    onConfirmation = (riderId: string, bookerId: string, status: number, i: number) => {
+        this.setState({ bookingId: bookerId });
+        this.setState({ rideId: riderId });
+        this.setState({ status: status });
+        this.setState({ number: i });
+        this.setState({ confirmDialog: true });
     }
 
     onEditClick = () => {
         sessionStorage.setItem('rideId', this.state.dialogRide.id)
-        window.location.pathname = '/edit/ride/car';
+        this.setState({ editRedirect: true })
     }
 
     onViewDetails = () => {
@@ -138,16 +169,26 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
                 </div>
                 <div className='ride-line'>
                     {this.state.editButton === '' ? ((booker.status === 1 || booker.status === 4) ? this.setState({ editButton:'none' }):''):''}
-                    <button className='confirm' disabled={booker.status !== 3 ? true : false} onClick={() => this.onResponse(booker.rideId, booker.id, 1)}>Accept</button>
-                    <button className='cancel' disabled={booker.status !== 3 ? true : false} onClick={() => this.onResponse(booker.rideId, booker.id, 2)}>Reject</button>
+                    <button className='confirm' disabled={booker.status !== 3 ? true : false} onClick={() => this.onConfirmation(booker.rideId, booker.id, 1,i)}>Accept</button>
+                    <button className='cancel' disabled={booker.status !== 3 ? true : false} onClick={() => this.onConfirmation(booker.rideId, booker.id, 2,i)}>Reject</button>
                 </div>
             </div>)
-        )) : <div style={{ textAlignLast: 'center', fontSize: '2rem' }}>No booker is available</div>;
+        )) : <div style={{ textAlignLast: 'center', fontSize: '2rem' }}>No bookers are available</div>;
 
         const viaPoints = this.state.dialogRide !== null ?
             ((JSON.parse(this.state.dialogRide.viaPoints)).map((viacity: any, i: any) => (
                 <p key={i} className='via-point'>Stop {i + 1}:  {viacity.city}</p>
             ))) : '';
+
+        const dialog3 = (
+            <Dialog open={this.state.confirmDialog} fullScreen className='confirm-dialog'>
+                <DialogTitle>Do you want to {Status[this.state.status]} this booking</DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => this.onDisagree()} color="primary">No</Button>
+                    <Button onClick={() => this.onConfirm()} color="primary" autoFocus>Yes</Button>
+                </DialogActions>
+            </Dialog>
+        );
 
         const dialog1 = (this.state.dialogDetails) ? (
           <div className='ride-full-details'>
@@ -186,7 +227,7 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
             <Dialog fullScreen open={this.state.dialogDisplay} className='ride-dialog'>
                 <div className='header'>
                     <ButtonBase onClick={() => this.onViewDetails()}><span> View details </span></ButtonBase>
-                    <ButtonBase onClick={() => this.onBookerDetails()}><span> All booker </span></ButtonBase>
+                    <ButtonBase onClick={() => this.onBookerDetails()}><span> All bookers </span></ButtonBase>
                     <ButtonBase style={{ display: this.state.editButton }} onClick={() => this.onEditClick()}><span> EDIT </span></ButtonBase>
                     <ButtonBase onClick={this.onDialogClose} className='close'><CloseIcon className='icon' /></ButtonBase>
                 </div>
@@ -238,6 +279,7 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
                         </div>
                         </div>
                     </Card>
+                    {this.state.editRedirect ? <Redirect to='/edit/ride/car' /> : ''}
                 </ButtonBase>
             ))) : (<p className='no-bookings'>you have not created any ride offer</p>)
         return (!this.state.serverError?
@@ -245,9 +287,9 @@ export default class MyRides extends React.Component<{}, Rides, Time> {
                 <div className='head-card'>
                     <Card className='header'>Offered rides</Card>
                 </div>
+                {dialog3}
                 <div className='rides-cards'>{RidesDetails}</div>
                 {dialog}
-                {dialog1}
             </div> : <ServerError />
             )
     }

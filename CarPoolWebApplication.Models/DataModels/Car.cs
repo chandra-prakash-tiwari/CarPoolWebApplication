@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CarPoolingWebApiReact.Models.Data
 {
@@ -11,6 +12,8 @@ namespace CarPoolingWebApiReact.Models.Data
         public string Model { get; set; }
 
         public int NoofSeat { get; set; }
+
+        public DateTime CreatedDate { get; set; }
 
         public string OwnerId { get; set; }
 

@@ -27,8 +27,10 @@ export class CreateRideMeta {
     validDate: string;
     toError: string;
     dateError: string;
+    timeError: string;
     carAvailable: boolean;
     carNotAvailableError: string;
+    viaPointcar: boolean;
 
     constructor() {
         this.viaPointComponent = false;
@@ -37,7 +39,9 @@ export class CreateRideMeta {
         this.validDate = '';
         this.toError = '';
         this.dateError = '';
+        this.timeError = '';
         this.carNotAvailableError = '';
         this.carAvailable = true;
+        this.viaPointcar = false;
     }
 }

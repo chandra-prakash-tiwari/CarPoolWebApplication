@@ -47,29 +47,28 @@ export default class AddNewCar extends React.Component<{}, AddNewCarProps> {
         let isValid = this.state.meta.hasCarNumber;
         this.state.meta.carNumberError = emptyStatus ? 'Please enter car number' : (isValid ? 'This car is already registered' : '');
         this.setState({ meta: this.state.meta });
-        return !emptyStatus;
+        return (emptyStatus === false && isValid === false) ? 0 : 1;
     }
 
     isValiCarModel(value: any) {
         let emptyStatus = this.isEmpty(value);
         this.state.meta.carModelError = emptyStatus ? 'Please enter car model' : '';
         this.setState({ meta: this.state.meta });
-        return !emptyStatus;
+        return emptyStatus === false ? 0 : 1;
     }
 
     isValidSeat(value: any) {
         let seatValidStatus = value <= 0 ? true : false
         this.state.meta.seatError = seatValidStatus ? 'Please enter correct seat' : ''
         this.setState({ meta: this.state.meta });
-        return !seatValidStatus;
+        return seatValidStatus === false ? 0 : 1;
     }
 
     onSubmit = (event: any) => {
         event.preventDefault();
         this.hasCarNumber(this.state.data.number)
-        let isValid = this.isValidCarNumber(this.state.data.number) && this.isValiCarModel(this.state.data.model) && this.isValidSeat(this.state.data.noofSeats);
-
-        if (isValid && !this.state.meta.hasCarNumber) {
+        let isValid = this.isValidCarNumber(this.state.data.number) + this.isValiCarModel(this.state.data.model) + this.isValidSeat(this.state.data.noofSeats);
+        if (isValid === 0) {
             CarService.addNewCar(this.state.data).then((response) => {
                 if (response == 'Ok') {
                     window.location.pathname = '/ride/selectcar';

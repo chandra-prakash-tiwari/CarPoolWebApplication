@@ -102,13 +102,16 @@
 
         .signup .footer .link {
             margin-left: 0.5rem;
+            display:grid;
         }
 
-    .signup a {
+    .signup .link .login {
         font-family: 'Open Sans', sans-serif;
         color: white;
         font-size: larger;
         font-weight: 600;
+        background:none;
+        cursor:pointer;
     }
 
         .signup a:hover {

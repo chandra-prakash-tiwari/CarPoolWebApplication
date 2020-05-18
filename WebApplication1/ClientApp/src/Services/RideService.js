@@ -65,7 +65,6 @@ function addRides(viaPointProps) {
         }
 
         else if (i === viaPointProps.cities.length + 1) {
-           
             ViaPoints.push(CityService.getCityDetails(rideDetails.to))
         }
 
@@ -75,43 +74,63 @@ function addRides(viaPointProps) {
             ViaPoints.push(city)
         }
     }
-    return fetch('/api/ride/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${UserService.currentUser.userToken}`,
-        },
-        body: JSON.stringify({
-            From: rideDetails.from,
-            To: rideDetails.to,
-            TravelDate: rideDetails.date.toString(),
-            AvailableSeats: parseInt(viaPointProps.availableSeats),
-            RatePerKM: parseInt(viaPointProps.ratePerKM),
-            ViaPoints: JSON.stringify(ViaPoints).toString(),
-            OwnerId: carDetails.ownerId,
-            CarId: carDetails.id,
-            time: rideDetails.time
-        }),
-    }).then(async response => {
-        if (response.status === 200) {
-            sessionStorage.removeItem('carDetails');
-            sessionStorage.removeItem('rideDetails');
-            return Promise.resolve("Ok");
-        }
-        else if (response === 401) {
-            UserService.sessionExpired();
-            window.location.pathname = '/login';
-            return Promise.reject();
-        }
-        else if (response.status === 500) {
-            return Promise.reject('serverError');
-        }
 
-        return Promise.reject();
+    for (let i = 0; i < ViaPoints.length - 1; i++) {
+        for (let j = 1; j < ViaPoints.length; j++) {
+            if (ViaPoints[i].city === ViaPoints[j].city) {
+                if (i !== j) {
+                    return new Promise(function (resolve, reject) {
+                        resolve('duplicate');
+                    });
+                }
+            }
+        }
+    }
+
+    if (ViaPoints.length >= 2) {
+        return fetch('/api/ride/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${UserService.currentUser.userToken}`,
+            },
+            body: JSON.stringify({
+                From: rideDetails.from,
+                To: rideDetails.to,
+                TravelDate: rideDetails.date.toString(),
+                AvailableSeats: parseInt(viaPointProps.availableSeats),
+                RatePerKM: parseInt(viaPointProps.ratePerKM),
+                ViaPoints: JSON.stringify(ViaPoints).toString(),
+                OwnerId: carDetails.ownerId,
+                CarId: carDetails.id,
+                time: rideDetails.time
+            }),
+        }).then(async response => {
+            if (response.status === 200) {
+                sessionStorage.removeItem('carDetails');
+                sessionStorage.removeItem('rideDetails');
+                return Promise.resolve("Ok");
+            }
+            else if (response === 401) {
+                UserService.sessionExpired();
+                window.location.pathname = '/login';
+                return Promise.reject();
+            }
+            else if (response.status === 500) {
+                return Promise.reject('serverError');
+            }
+
+            return Promise.reject();
         }).catch(error => {
             return error;
         })
+    }
+    else {
+        return new Promise(function (resolve, reject) {
+            resolve('cityError');
+        });
+    }
 }
 
 function updateRide(viaPointProps) {

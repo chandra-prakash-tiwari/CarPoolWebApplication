@@ -25,6 +25,7 @@ namespace CarPoolingWebApiReact.Services.Services
                 return false;
 
             booking.Id = Extensions.GenerateId();
+            booking.BookingDate = DateTime.Now;
             this._db.Bookings.Add(this._mapper.Map<Models.Data.Booking>(booking));
 
             return this._db.SaveChanges() > 0;
@@ -48,7 +49,7 @@ namespace CarPoolingWebApiReact.Services.Services
         public List<Models.Client.Booking> Status(string id)
         {
             return this._mapper.Map<List<Models.Client.Booking>>
-                (this._db.Bookings.Where(a => (!string.IsNullOrEmpty(a.BookerId) && !string.IsNullOrEmpty(id)) && a.BookerId == id && a.Status != Models.Client.BookingStatus.Completed).ToList());
+                (this._db.Bookings.Where(a => (!string.IsNullOrEmpty(a.BookerId) && !string.IsNullOrEmpty(id)) && a.BookerId == id && a.Status != Models.Client.BookingStatus.Completed).OrderByDescending(_=>_.BookingDate).ToList());
         }
 
         public bool Response(string id, Models.Client.BookingStatus status)
@@ -72,19 +73,19 @@ namespace CarPoolingWebApiReact.Services.Services
         public List<Models.Client.Booking> GetByUserId(string userId)
         {
             return this._mapper.Map<List<Models.Client.Booking>>
-                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.BookerId) && !string.IsNullOrEmpty(userId)) && booking.BookerId == userId).ToList());
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.BookerId) && !string.IsNullOrEmpty(userId)) && booking.BookerId == userId).OrderByDescending(_=>_.BookingDate).ToList());
         }
 
         public List<Models.Client.Booking> GetAllByRideId(string rideId)
         {
             return this._mapper.Map<List<Models.Client.Booking>>
-                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.RideId) && !string.IsNullOrEmpty(rideId)) && booking.RideId == rideId).ToList());
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.RideId) && !string.IsNullOrEmpty(rideId)) && booking.RideId == rideId).OrderByDescending(_ => _.BookingDate).ToList());
         }
 
         public List<Models.Client.Booking> RequestPending(string rideId)
         {
             return this._mapper.Map<List<Models.Client.Booking>>
-                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.RideId) && !string.IsNullOrEmpty(rideId)) && booking.Status == Models.Client.BookingStatus.Pending && booking.RideId == rideId).ToList());
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.RideId) && !string.IsNullOrEmpty(rideId)) && booking.Status == Models.Client.BookingStatus.Pending && booking.RideId == rideId).OrderByDescending(_ => _.BookingDate).ToList());
         }
 
         public Models.Client.Booking GetById(string id)
@@ -95,7 +96,7 @@ namespace CarPoolingWebApiReact.Services.Services
         public List<Models.Client.Booking> GetByRideId(string rideId,string bookerId)
         {
             return this._mapper.Map<List<Models.Client.Booking>>
-                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.BookerId) && !string.IsNullOrEmpty(booking.RideId)) && booking.RideId == rideId && booking.BookerId == bookerId)).ToList();
+                (this._db.Bookings.Where(booking => (!string.IsNullOrEmpty(booking.BookerId) && !string.IsNullOrEmpty(booking.RideId)) && booking.RideId == rideId && booking.BookerId == bookerId)).OrderByDescending(_ => _.BookingDate).ToList();
         }
     }
 }

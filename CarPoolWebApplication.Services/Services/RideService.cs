@@ -45,10 +45,10 @@ namespace CarPoolingWebApiReact.Services.Services
 
                 var viaPoints = ser.Deserialize<List<Models.Client.Point>>(ride.ViaPoints);
                 var destIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => (a != null && !string.IsNullOrEmpty(a.City) && !string.IsNullOrEmpty(booking.To)) && a.City.ToLower() == booking.To.ToLower()));
-                var srcIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => (a != null && !string.IsNullOrEmpty(a.City) && !string.IsNullOrEmpty(booking.To)) && a.City.ToLower() == booking.From.ToLower()));
+                var srcIndex = viaPoints.IndexOf(viaPoints.FirstOrDefault(a => (a != null && !string.IsNullOrEmpty(a.City) && !string.IsNullOrEmpty(booking.From)) && a.City.ToLower() == booking.From.ToLower()));
 
 
-                if ( destIndex>srcIndex&& ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
+                if ( destIndex!=-1 && srcIndex!=-1 && destIndex>srcIndex && ride.TravelDate == booking.TravelDate && ride.AvailableSeats > 0)
                 {
                     ride.TotalDistance = 0;
                     for(int i = srcIndex; i < destIndex; i++)
@@ -102,7 +102,7 @@ namespace CarPoolingWebApiReact.Services.Services
             var booking = this._db.Bookings.FirstOrDefault(a => (!string.IsNullOrEmpty(a.Id) && !string.IsNullOrEmpty(bookingId)) && a.Id == bookingId);
             if (ride.AvailableSeats >= booking.NoofSeats)
             {
-                if (this._bookingService.Response(bookingId, status))
+                if (this._bookingService.Response(bookingId, status) && status==Models.Client.BookingStatus.Confirm )
                 {
                     ride.AvailableSeats -= booking.NoofSeats;
                     return this._db.SaveChanges() > 0;
@@ -137,7 +137,7 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Ride> GetByOwnerId(string ownerId)
         {
-            return this._mapper.Map<List<Models.Client.Ride>>(this._db.Rides.Where(ride =>(!string.IsNullOrEmpty(ride.OwnerId) && !string.IsNullOrEmpty(ownerId)) && ride.OwnerId == ownerId).ToList());
+            return this._mapper.Map<List<Models.Client.Ride>>(this._db.Rides.Where(ride =>(!string.IsNullOrEmpty(ride.OwnerId) && !string.IsNullOrEmpty(ownerId)) && ride.OwnerId == ownerId).OrderByDescending(_=>_.RideDate).ToList());
         }
 
         public bool IsCarAvailable(string carId, int time, DateTime date)

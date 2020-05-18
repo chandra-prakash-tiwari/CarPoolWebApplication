@@ -19,6 +19,8 @@ namespace CarPoolingWebApiReact.Models.Data
 
         public BookingStatus Status { get; set; }
 
+        public int Time { get; set; }
+
         public int NoofSeats { get; set; }
 
         public string RideId { get; set; }

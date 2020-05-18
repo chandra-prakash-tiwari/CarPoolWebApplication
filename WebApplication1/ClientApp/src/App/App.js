@@ -10,8 +10,7 @@ import AddNewCar from '../components/User/Car/AddNewCar';
 import CreateRide from '../components/User/Ride/CreateRide';
 import LoginLayout from './LoginLayout';
 import SignUpLayout from './SignUpLayout';
-import BookingLayout from './BookingLayout';
-import BookingSearchLayout from './BookingSearchLayout';
+import BookaRide from '../components/User/Booking/BookaRide';
 import MyRideLayout from './MyRideLayout';
 import UserProfile from '../components/User/UserProfile';
 
@@ -26,8 +25,7 @@ export default class App extends Component {
                             <Profile/>
                             <Switch>
                                 <Route exact path='/home' component={Home} />
-                                <Route exact path='/booking' component={BookingLayout} />
-                                <Route exact path='/booking/search' component={BookingSearchLayout} />
+                                <Route exact path='/booking' component={BookaRide} />
                                 <Route exact path='/ride/selectcar' component={CarSelector} />
                                 <Route exact path='/edit/ride/car' component={CarSelector} />
                                 <Route exact path='/edit/ride/details' component={CreateRide} />

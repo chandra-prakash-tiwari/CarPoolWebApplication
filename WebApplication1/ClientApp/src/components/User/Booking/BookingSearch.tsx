@@ -55,15 +55,12 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
     }
 
     componentDidMount() {
-        var bookingSearch = sessionStorage.getItem('bookingSearch');
-        if (bookingSearch === null)
-            return;
-        BookingService.searchRide(JSON.parse(bookingSearch)).then((searchBooking) => {
+        BookingService.searchRide(this.props.children).then((searchBooking) => {
             if (searchBooking !== undefined && searchBooking !== 'serverError')
                 this.setState({ bookings: searchBooking })
             else if (searchBooking === 'serverError') {
                 this.setState({ offer: false })
-                this.setState({ serverError:true })
+                this.setState({ serverError: true })
             }
         });
     }
@@ -218,7 +215,7 @@ export default class BookingSearch extends React.Component<{}, Bookings, Time> {
                         {this.state.requestSeat > 0 ? <span style={{color:'red'}}>You have already requested {this.state.requestSeat} for this ride</span> : ''}
                     </div>
                     <div className='via-points'>
-                        {this.state.requestPermission ? '' : <span style={{ color: 'red' }}> you are created this offer </span>}
+                        {this.state.requestPermission ? '' : <span style={{ color: 'red' }}> you created this offer </span>}
                     </div>
                     <button className='submit' style={{ display: (this.state.noofSeats > 0 && this.state.requestPermission) ? '' : 'none' }} onClick={this.onBookingConfirm}>Request</button>
                 </div>

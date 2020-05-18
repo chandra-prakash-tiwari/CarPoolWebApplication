@@ -1,4 +1,8 @@
-﻿.booking-a-ride .journey-details {
+﻿.booking{
+    height:auto;
+}
+
+.booking-a-ride .journey-details {
     margin: 1% 10%;
     padding: 9% 7%;
     background-color: white;

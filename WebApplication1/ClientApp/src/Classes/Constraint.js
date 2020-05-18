@@ -12,4 +12,4 @@ export const MobileNumberRegex = /^[6789]\d{9}$/;
 
 export const DrivingLicenceRegex = /^[0-9a-zA-Z]{4,9}$/;
 
-export const UserNameAvailability = 'taken by someone';
+export const UserNameAvailability = 'Already exists';

@@ -8,7 +8,7 @@
 }
 
     .home .welcome {
-        padding-left: 30%;
+        margin:auto 3%;
         font-size: 2rem;
         font-family: 'Open Sans', sans-serif;
         font-weight: 800;

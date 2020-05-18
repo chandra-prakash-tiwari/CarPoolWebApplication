@@ -22,6 +22,7 @@ namespace CarPoolingWebApiReact.Services.Services
         {
             if (car.OwnerId != null && car != null)
             {
+                car.CreatedDate = DateTime.Now;
                 car.Id = Extensions.GenerateId();
                 this._db.Cars.Add(this._mapper.Map<Models.Data.Car>(car));                
                 return this._db.SaveChanges() > 0;
@@ -44,7 +45,7 @@ namespace CarPoolingWebApiReact.Services.Services
 
         public List<Models.Client.Car> GetByOwnerId (string ownerId)
         {
-            return this._mapper.Map<List<Models.Client.Car>>(this._db.Cars.Where(a => (!string.IsNullOrEmpty(a.OwnerId) && !string.IsNullOrEmpty(ownerId)) && a.OwnerId == ownerId).ToList());
+            return this._mapper.Map<List<Models.Client.Car>>(this._db.Cars.Where(a => (!string.IsNullOrEmpty(a.OwnerId) && !string.IsNullOrEmpty(ownerId)) && a.OwnerId == ownerId).OrderByDescending(_=>_.CreatedDate).ToList());
         }
 
         public Models.Client.Car GetById(string id)

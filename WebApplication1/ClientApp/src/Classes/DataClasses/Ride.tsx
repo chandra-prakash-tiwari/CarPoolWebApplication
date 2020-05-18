@@ -8,6 +8,6 @@
         this.from = '';
         this.to = '';
         this.date = '';
-        this.time = 1
+        this.time = 0
     }
 }

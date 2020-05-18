@@ -24,8 +24,25 @@
     display: contents;
 }
 
+.confirm-dialog .MuiDialog-paperFullScreen {
+    height: auto;
+    width: auto;
+    border-radius: 1rem;
+}
+
+.car-selectors .header{
+    margin-bottom:1rem;
+    display:grid;
+}
+
+.car-selectors .header .error{
+    color:red;
+    font-size:1rem;
+    margin:auto 1rem;
+}
+
 .car-selectors .header .head {
-    margin: auto 1rem 2rem;
+    margin: auto 1rem;
     color: #9319ff;
     font-size: 2rem;
     font-weight: 700;

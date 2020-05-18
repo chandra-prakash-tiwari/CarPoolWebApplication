@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarPoolingWebApiReact.Models.Client
@@ -15,6 +16,8 @@ namespace CarPoolingWebApiReact.Models.Client
 
         [Required(ErrorMessage = "Please enter max number of seats")]
         public int NoofSeat { get; set; }
+
+        public DateTime CreatedDate { get; set; }
 
         public string OwnerId { get; set; }
     }

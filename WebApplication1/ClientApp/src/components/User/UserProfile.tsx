@@ -3,28 +3,38 @@ import { User } from '../../Classes/DataClasses/User';
 import UserService from '../../Services/UserService';
 import CloseIcon from '@material-ui/icons/Close';
 import { ButtonBase } from '@material-ui/core';
-import '../../css/user-profile.css'
+import '../../css/user-profile.css';
+import { Redirect } from 'react-router-dom';
 
-export default class UserProfile extends React.Component<{}, User> {
-    constructor(props: User) {
+export class UserProfileProps {
+    data: User;
+    homeRedirect: boolean;
+
+    constructor() {
+        this.data = new User();
+        this.homeRedirect = false;
+    }
+}
+
+export default class UserProfile extends React.Component<{}, UserProfileProps> {
+    constructor(props: UserProfileProps) {
         super(props);
-        this.state = new User();
+        this.state = new UserProfileProps();
     }
     componentDidMount() {
         UserService.getUser(UserService.currentUser.id).then((user: any) => {
-            this.setState({
-                name:user.name,
-                mobile: user.mobile,
-                address: user.address,
-                drivingLicence: user.drivingLicence,
-                email: user.email,
-                userName: user.userName
-            })
+            this.state.data.name = user.name;
+            this.state.data.mobile = user.mobile;
+            this.state.data.address = user.address;
+            this.state.data.drivingLicence = user.drivingLicence;
+            this.state.data.email = user.email;
+            this.state.data.userName = user.userName;
+            this.setState({ data: this.state.data })
         })
     }
 
     onClose = () => {
-        window.location.pathname='/home'
+        this.setState({ homeRedirect: true });
     }
 
     render() {
@@ -33,28 +43,29 @@ export default class UserProfile extends React.Component<{}, User> {
                 <ButtonBase onClick={this.onClose} className='close'><CloseIcon className='icon' /></ButtonBase>
                 <div className='block'>
                     <p className='left'>Name</p>
-                    <p className='right'> : {this.state.name}</p>
+                    <p className='right'> : {this.state.data.name}</p>
                 </div>
                 <div className='block'>
                     <p className='left'>Mobile</p>
-                    <p className='right'> : {this.state.mobile}</p>
+                    <p className='right'> : {this.state.data.mobile}</p>
                 </div>
                 <div className='block'>
                     <p className='left'>Address</p>
-                    <p className='right'> : {this.state.address}</p>
+                    <p className='right'> : {this.state.data.address}</p>
                 </div>
                 <div className='block'>
                     <p className='left'>Driving Licence</p>
-                    <p className='right'> : {this.state.drivingLicence}</p>
+                    <p className='right'> : {this.state.data.drivingLicence}</p>
                 </div>
                 <div className='block'>
                     <p className='left'>Email</p>
-                    <p className='right'> : {this.state.email}</p>
+                    <p className='right'> : {this.state.data.email}</p>
                 </div>
                 <div className='block'>
                     <p className='left'>UserName</p>
-                    <p className='right'>: {this.state.userName}</p>
+                    <p className='right'>: {this.state.data.userName}</p>
                 </div>
+                {this.state.homeRedirect ? <Redirect to='/home' />:''}
             </div>
             )
     }

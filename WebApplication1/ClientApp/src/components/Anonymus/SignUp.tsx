@@ -6,11 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import UserService from '../../Services/UserService';
 import '../../css/sign-up-form.css'
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import { InputAdornment, Tooltip } from '@material-ui/core';
+import { InputAdornment, Tooltip, ButtonBase } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { User } from '../../Classes/DataClasses/User';
 import { SignUpMeta } from '../../Classes/MetaClasses/User';
 import { Required, Invalid, NameRegex, EmailRegex, MobileNumberRegex, PasswordRegex, DrivingLicenceRegex, UserNameAvailability } from '../../Classes/Constraint';
+import { Redirect } from 'react-router-dom';
 
 export class SignUpProps {
     user: User;
@@ -36,10 +37,6 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         return !value.match(regex);
     }
 
-    hasUserName(value: string) {
-        return UserService.validUserName(value).then((valid) => { return valid });
-    }
-
     hasEmail(value: string) {
         return UserService.validEmail(value).then((valid) => { return valid })
     }
@@ -51,17 +48,31 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         let isValidExp = !this.isValid(value, NameRegex);
         this.state.meta.nameError = !emptyStatus ? Required : (!isValidExp ? Invalid : "")
         this.setState({ meta: this.state.meta });
-        return (emptyStatus && isValidExp);
+        return (emptyStatus && isValidExp) === true ? 0 : 1;
     }
 
     isValidEmail(value: string) {
         this.state.user.email = value;
         this.setState({ user: this.state.user })
-        let emptyStatus = !this.isEmpty(value);
-        let isValidExp = !this.isValid(value, EmailRegex);
-        this.state.meta.emailError = !emptyStatus ? Required : (!isValidExp ? Invalid : "");
+        let emptyStatus = this.isEmpty(value);
+
+        if (!emptyStatus) {
+            let isValidExp = !this.isValid(value, EmailRegex);
+            this.state.meta.emailError = !isValidExp ? Invalid : "";
+            this.setState({ meta: this.state.meta });
+            if (isValidExp) {
+                UserService.validEmail(value).then(async response => {
+                    this.state.meta.emailError = await response ? 'email is registered' : '';
+                    this.setState({ meta: this.state.meta });
+                    return await response ? 1 : 0;
+                })
+            }
+            return 0;
+        }
+
+        this.state.meta.emailError = emptyStatus ? Required : '';
         this.setState({ meta: this.state.meta });
-        return (emptyStatus && isValidExp);
+        return 1;
     }
 
     isValidMobileNumber(value: string) {
@@ -71,7 +82,7 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         let isValidExp = !this.isValid(value, MobileNumberRegex);
         this.state.meta.mobileError = !emptyStatus ? Required : (!isValidExp ? Invalid : "");
         this.setState({ ...this.state, meta: this.state.meta });
-        return (emptyStatus && isValidExp);
+        return (emptyStatus && isValidExp) === true ? 0 : 1;
     }
 
     isValidPassword(value: string) {
@@ -81,27 +92,34 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         let validStatus = !this.isValid(value, PasswordRegex);
         this.state.meta.passwordError = !emptyStatus ? Required : (!validStatus ? Invalid : "");
         this.setState({  meta: this.state.meta });
-        return (emptyStatus && validStatus);
+        return (emptyStatus && validStatus) === true ? 0 : 1;
     }
 
     isValidUserName(value: string) {
         this.state.user.userName = value;
         this.setState({ user: this.state.user })
-        let emptyStatus = !this.isEmpty(value);
-        const isAvailable = this.hasUserName(value);
-        this.state.meta.userNameError = !emptyStatus ? Required : (!isAvailable ? UserNameAvailability : "");
+        let emptyStatus = this.isEmpty(value);
+        if (!emptyStatus) {
+            UserService.validUserName(value).then((response) => {
+                this.state.meta.userNameError = response ? UserNameAvailability : "";
+                this.setState({ meta: this.state.meta });
+                return response ? 1 : 0;
+            });
+        }
+
+        this.state.meta.userNameError = emptyStatus ? Required : "";
         this.setState({ meta: this.state.meta });
-        return emptyStatus;
+        return emptyStatus === true ? 1 : 0;
     }
 
     isEqualPassword(value: string) {
         this.state.user.confirmPassword = value;
         this.setState({ user: this.state.user })
-        let emptyStatus = !this.isEmpty(value);
-        let validStatus = (value === this.state.user.password);
-        this.state.meta.passwordMatchError = !emptyStatus ? Required : (!validStatus ? "password not matched" : "");
+        let emptyStatus = this.isEmpty(value);
+        let validStatus = (value !== this.state.user.password);
+        this.state.meta.passwordMatchError = emptyStatus ? Required : (validStatus ? "password not matched" : "");
         this.setState({ meta: this.state.meta });
-        return (emptyStatus && validStatus);
+        return (emptyStatus && validStatus) === true ? 1 : 0;
     }
 
     isValidAddress(value: string) {
@@ -110,7 +128,7 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         let emptyStatus = !this.isEmpty(value);
         this.state.meta.addressError = !emptyStatus ? Required : "";
         this.setState({ ...this.state, meta: this.state.meta });
-        return emptyStatus;
+        return emptyStatus===true?0:1
     }
 
     isValidDrivingLicence(value: string) {
@@ -118,17 +136,26 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
         this.setState({ user: this.state.user })
     }
 
+    onLoginRedirect = () => {
+        this.setState({ ...this.state, meta: { ...this.state.meta, redirectLogin: true } })
+    }
+
     onSubmit = (event: any) => {
         event.preventDefault();
-        let isValid = this.isValidName(this.state.user.name) && this.isValidAddress(this.state.user.address) && this.isValidMobileNumber(this.state.user.mobile)
-            && this.isValidUserName(this.state.user.userName) && this.isValidPassword(this.state.user.password) && this.isEqualPassword(this.state.user.password)
-            && this.isValidEmail(this.state.user.email);
-
-        if (isValid) {
+        let isValid = this.isValidName(this.state.user.name) + this.isValidAddress(this.state.user.address) + this.isValidMobileNumber(this.state.user.mobile)
+            + this.isValidUserName(this.state.user.userName) + this.isValidPassword(this.state.user.password) + this.isEqualPassword(this.state.user.password)
+            + this.isValidEmail(this.state.user.email);
+        console.log(this.isValidName(this.state.user.name), this.isValidAddress(this.state.user.address), this.isValidMobileNumber(this.state.user.mobile)
+            ,this.isValidUserName(this.state.user.userName), this.isValidPassword(this.state.user.password), this.isEqualPassword(this.state.user.password)
+            ,this.isValidEmail(this.state.user.email))
+        if (isValid===0) {
             UserService.addNewUser(this.state.user).then((response) => {
-                if (response == 'Ok')
-                    window.location.pathname = '/login';
-                else if (response == 'Reject') {
+                console.log(response)
+                if (response === 'Ok') {
+                    this.state.meta.redirectLogin= true;
+                    this.setState({ meta: this.state.meta })
+                }                    
+                else if (response === 'Reject') {
                 }
             })
         }
@@ -191,11 +218,12 @@ export default class SignUp extends React.Component<{}, SignUpProps> {
                     <div className='footer'>
                         <p>Already a member ? </p>
                         <div className='link'>
-                            <Link href="/login"> LOGIN</Link>
+                            <div onClick={this.onLoginRedirect} className='login'> LOGIN</div>
                             <div className='footer-underline'></div>
                         </div>
                     </div>
                 </div>
+                {this.state.meta.redirectLogin ? <Redirect to='/login' />:''}
             </Grid>
         )
     }

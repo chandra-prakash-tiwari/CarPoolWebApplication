@@ -6,6 +6,8 @@
     displaySpan: string;
     wrongPasswordError: boolean;
     serverError: boolean;
+    redirectHome: boolean;
+    redirectSignUp: boolean;
 
     constructor() {
         this.userNameError = 'Required';
@@ -15,6 +17,8 @@
         this.errorDisaplyOnSubmit = true;
         this.wrongPasswordError = false;
         this.serverError = false;
+        this.redirectHome = false;
+        this.redirectSignUp = false;
     }
 }
 
@@ -27,7 +31,10 @@ export class SignUpMeta {
     emailError: string;
     passwordError: string;
     passwordMatchError: string;
+    userNameNotAvailable: boolean;
+    emailNotAvailable: boolean;
     passwordType: boolean;
+    redirectLogin: boolean;
 
     constructor() {
         this.nameError = '';
@@ -39,5 +46,8 @@ export class SignUpMeta {
         this.passwordError = '';
         this.passwordMatchError = '';
         this.passwordType = true;
+        this.userNameNotAvailable = false;
+        this.emailNotAvailable = false;
+        this.redirectLogin = false;
     }
 }

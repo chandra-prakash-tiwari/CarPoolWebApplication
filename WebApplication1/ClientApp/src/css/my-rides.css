@@ -11,15 +11,15 @@
     display:flex;
 }
 
-    .ride-line .left{
-        width:50%;
-        text-align:start;
-    }
+.ride-line .left{
+    width:50%;
+    text-align:start;
+}
 
-    .ride-line .right {
-        width: 50%;
-        text-align:start;
-    }
+.ride-line .right {
+    width: 50%;
+    text-align:start;
+}
 
 .label {
     color: #a3a1a3;
@@ -27,8 +27,14 @@
     font-weight:bolder;
 }
 
+.confirm-dialog{
+    height:auto;
+    width:auto;
+    border-radius:1rem;
+}
+
 .my-ride .head-card .header {
-    zwidth: 12rem;
+    width: 12rem;
     height: 2.7rem;
     background-color: #ffac19;
     color: white;
@@ -63,41 +69,41 @@
     display:inline-grid;
 }
 
-    .ride-dialog .ride-booking .confirm {
-        border-radius: 2rem;
-        background-color: #ac4fff;
-        margin: 1rem 0 0;
-        width: 6rem;
-        height: 2.5rem;
-        border: 0;
-    }
+.ride-dialog .ride-booking .confirm {
+    border-radius: 2rem;
+    background-color: #ac4fff;
+    margin: 1rem 0 0;
+    width: 6rem;
+    height: 2.5rem;
+    border: 0;
+}
 
-    .ride-dialog .MuiDialog-paperFullScreen{
-        display:inline-block;
-    }
+.ride-dialog .MuiDialog-paperFullScreen{
+    display:inline-block;
+}
 
-    .ride-dialog .ride-booking .confirm:disabled,
-    .ride-dialog .ride-booking .cancel:disabled {
-        display: none;
-    }
+.ride-dialog .ride-booking .confirm:disabled,
+.ride-dialog .ride-booking .cancel:disabled {
+    display: none;
+}
 
-        .ride-dialog .ride-booking .cancel {
-            border-radius: 2rem;
-            background-color: #ffac19;
-            margin: 1rem 2rem 0;
-            width: 6rem;
-            height: 2.5rem;
-            border: 0;
-        }
+.ride-dialog .ride-booking .cancel {
+    border-radius: 2rem;
+    background-color: #ffac19;
+    margin: 1rem 2rem 0;
+    width: 6rem;
+    height: 2.5rem;
+    border: 0;
+}
 
-    .ride-dialog .close {
-        width: 2rem;
-        align-self: flex-end;
-    }
+.ride-dialog .close {
+    width: 2rem;
+    align-self: flex-end;
+}
 
-        .ride-dialog .close .icon {
-            font-size: 1.8rem;
-        }
+.ride-dialog .close .icon {
+    font-size: 1.8rem;
+}
 
 .ride-dialog .ride-booking .head {
     display: flex;
@@ -107,23 +113,29 @@
         height: 3rem;
         text-align-last: end;
         font-size: 1.4rem;
-        background-color: blueviolet;
+        background-color: #ac4fff;
+        color:white;
     }
 
-    .ride-dialog .header button{
-        height:3rem;
-        margin:auto 0.5rem;
-    }
+.ride-dialog .header button{
+    height:3rem;
+    margin:auto 0.5rem;
+    padding:0.5rem;
+}
 
-    .ride-dialog .ride-full-details {
-        width: 80%;
-        height: auto;
-        border: 3px solid black;
-        border-radius: 2rem;
-        overflow: auto;
-        padding: 1.5rem;
-        margin: 5% auto;
-    }
+.ride-dialog .header button:hover {
+    background-color: #ffac19;
+}
+
+.ride-dialog .ride-full-details {
+    width: 80%;
+    height: auto;
+    border: 3px solid black;
+    border-radius: 2rem;
+    overflow: auto;
+    padding: 1.5rem;
+    margin: 5% auto;
+}
 
     .ride-dialog .ride-full-details  .content{
         display:flex;

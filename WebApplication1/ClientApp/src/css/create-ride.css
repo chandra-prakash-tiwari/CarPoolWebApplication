@@ -1,4 +1,8 @@
-﻿.ride-details {
+﻿.ride{
+    height:auto;
+}
+
+.ride-details {
     margin: 1% 12%;
     padding: 5% 7%;
     background-color: white;
@@ -71,6 +75,7 @@
     margin: 2rem auto 1.5rem;
     color: #ac4fff;
     font-size: 1.2rem;
+    cursor:pointer;
     font-family: 'Open Sans', sans-serif;
 }
 

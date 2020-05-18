@@ -10,6 +10,11 @@ import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import { CityService } from '../../../Services/CityService';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import { RideConfirm, ServerError, UpdateRideStatus } from '../Response';
+import { Redirect } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export class ViaPointsDetails {
     cities: ViaCity[];
@@ -22,6 +27,9 @@ export class ViaPointsDetails {
     serverError: boolean;
     rateError: string;
     rideUpdateStatus: boolean;
+    myRideRedirect: boolean;
+    viaCityError: string;
+    statusDialog: boolean;
 
     constructor() {
         this.cities = [new ViaCity()];
@@ -34,6 +42,9 @@ export class ViaPointsDetails {
         this.rideStatus = false;
         this.rideUpdateStatus = false;
         this.rateError = '';
+        this.myRideRedirect = false;
+        this.viaCityError = '';
+        this.statusDialog = false;
     }
 };
 
@@ -62,6 +73,7 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
         this.state = new ViaPointsDetails()
     }
 
+
     componentDidMount() {
         const list = [...this.state.cities];
         list.splice(0, 1);
@@ -71,13 +83,33 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
             var carDetails = JSON.parse(carDetailsStr);
             this.setState({ ...this.state, carCapacity: carDetails.noofSeat });
         }
+
+        if (window.location.pathname === '/edit/ride/details') {
+            var viaDetails = sessionStorage.getItem('viaDetails');
+            if (viaDetails !== null) {
+                var details = JSON.parse(viaDetails);
+                var viaCity = JSON.parse(details.viaPoints);
+                console.log(viaCity);
+                if (viaCity !== null) {
+                    for (let i = 1; i < (viaCity.length - 1); i++) {
+                        this.editViaCities(viaCity[i].city, i - 1)
+                        if (i !== viaCity.length - 2) {
+                            this.state.cities.push(new ViaCity());
+                            this.setState({ cities: this.state.cities })
+                        }
+                    }
+                }
+                this.setState({ ratePerKM: details.ratePerKM });
+            }
+        }
     }
 
     addViaCities = () => {
         this.setState({ cities: [...this.state.cities, { city: '' }] })
     }
 
-    editViaCities = (value: any, index: number) => {
+    editViaCities = (value: string, index: number) => {
+        console.log(value, index)
         this.state.cities[index].city = value;
         this.setState({ cities: this.state.cities });
     }
@@ -109,16 +141,23 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
     }
 
     isValidRate(value: number) {
-        let isValid = value > 0 ? false : true;
+        let isValid = (value > 0 && value <= 10) ? false : true;
         this.setState({ rateError: isValid ? 'Enter valid rate' : '' });
         return isValid;
     }
 
-    onChanges = (event:any) => {
+    onChanges = (event: any) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value
         });
+        if (this.state.viaCityError !== '') {
+            this.setState({ viaCityError: '' });
+        }   
+    }
+
+    redirect = () => {
+        this.setState({ myRideRedirect: true })
     }
 
     onSubmit = (event:any) => {
@@ -126,26 +165,36 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
         var isValid: any = this.isValidRate(this.state.ratePerKM);
         if (!isValid) {
             if (this.state !== null) {
-                this.setState({ offerStatus: false });
                 if (window.location.pathname === '/ride/details') {
-                    RideService.addRides(this.state)?.then((response) => {
+                    RideService.addRides(this.state)?.then((response:any) => {
                         if (response === 'Ok') {
-                            window.location.pathname = '/myride';
+                            this.setState({ statusDialog: true })
                         }
                         else if (response === 'serverError') {
+                            this.setState({ offerStatus: false });
                             this.setState({ serverError: true })
+                        }
+                        else if (response === 'cityError') {
+                            alert('Please enter min 2 different city');
+                        }
+                        else if (response === 'duplicate') {
+                            this.setState({ viaCityError: 'Stoppage is never same'});
                         }
                     })
                 }
 
                 else if (window.location.pathname === '/edit/ride/details') {
                     RideService.updateRide(this.state)?.then((response) => {
-                        console.log(response)
                         if (response === 'Ok') {
-                            this.setState({ rideUpdateStatus: true })
+                            this.setState({ myRideRedirect: true })
                         }
                         else if (response === 'serverError') {
                             this.setState({ serverError: true })
+                        } else if (response === 'cityError') {
+                            this.setState({ statusDialog: true });
+                        }
+                        else if (response === 'duplicate') {
+                            this.setState({ statusDialog: true });
                         }
                     })
                 }
@@ -156,7 +205,25 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
     }
 
     render() {
-        return (this.state.offerStatus?
+        const dialog = (
+            <Dialog fullScreen open={this.state.statusDialog} className='confirm-dialog' style={{ background: 'white' }}>
+                <DialogTitle>Ride successfully created</DialogTitle>
+                <DialogActions>
+                    <Button onClick={this.redirect} color="primary">Ok</Button>
+                </DialogActions>
+            </Dialog>
+        );
+
+        const viaCity = this.state.cities.map((city: any, index: number) => (
+            <div key={index} className='input-via-points'>
+                <Autocomplete freeSolo options={CityService.getValidCity(city.city).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.editViaCities(newInputvalue, index); }} value={this.state.cities[index].city} renderInput={(param) => (
+                    <TextField {...param} label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' onChange={(event: any) => { this.editViaCities(event.target.value, index); }} />
+                )} />
+                <ButtonBase className='icon' onClick={() => this.deleteViaCity(index)}><DeleteIcon /></ButtonBase>
+            </div>
+            ))
+
+        return (this.state.offerStatus ?
             <Grid className='add-viaPoints' item md={4} id='viapointdetails'>
                 <form className='form'>
                     <div className='header'>
@@ -168,29 +235,31 @@ export default class AddViaPointsView extends React.Component<{}, ViaPointsDetai
                         </div>
                         <p>add all new via points</p>
                     </div>
-                    {
-                        this.state.cities.map((city, index) => {
-                            return (
-                                <div key={index} className='input-via-points'>
-                                     <Autocomplete freeSolo options={CityService.getValidCity(city.city).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.editViaCities(newInputvalue, index); }} renderInput={(param) => (
-                                         <TextField {...param} label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' onChange={(event: any) => { this.editViaCities(event.target.value, index); }} />
-                                     )} />
-                                     <ButtonBase className='icon' onClick={() => this.deleteViaCity(index)}><DeleteIcon /></ButtonBase>
-                                </div>
-                            )
-                        })
+                    {this.state.myRideRedirect ? <Redirect to='/myride' /> : ''}
+                    {viaCity
+                        //this.state.cities.map((city, index) => {
+                        //    return (
+                        //        <div key={index} className='input-via-points'>
+                        //            <Autocomplete freeSolo options={CityService.getValidCity(city.city).map((option) => option.city)} onChange={(event: any, newInputvalue: any) => { this.editViaCities(newInputvalue, index); }} value={this.state.cities[index].city} renderInput={(param) => (
+                        //                 <TextField {...param} label={'stop ' + (index + 1)} style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='text' onChange={(event: any) => { this.editViaCities(event.target.value, index); }} />
+                        //             )} />
+                        //             <ButtonBase className='icon' onClick={() => this.deleteViaCity(index)}><DeleteIcon /></ButtonBase>
+                        //        </div>
+                        //    )
+                        //})
                     }
-                    
                     <ButtonBase className='add-icon' onClick={this.addViaCities}><AddCircleIcon /></ButtonBase><br />
+                    <span className='helper'>{this.state.viaCityError}</span>
                     <span className='helper'>{this.state.meta.cityError}</span>
                     <div>
                         <span>Available seats</span>
                         <Pagination count={this.state.carCapacity} hideNextButton hidePrevButton onChange={(event, number) => this.editNoofSeats(number)} />
                     </div>
-                    <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.onChanges} />
+                    <TextField label='Rate per km' style={{ width: '70%', marginBottom: '6%' }} InputLabelProps={{ shrink: true }} type='number' name='ratePerKM' value={this.state.ratePerKM} onChange={this.onChanges} inputProps={{min:1, max:10}} />
                     <span className='helper'>{this.state.rateError}</span>
                     <button type='submit' className='submitButton' onClick={this.onSubmit}><span>Submit </span></button>                 
                 </form>
+                {dialog}
             </Grid> : (
                 <div>
                     {this.state.rideStatus ? <RideConfirm /> : ''}

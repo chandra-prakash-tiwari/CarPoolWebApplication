@@ -7,10 +7,10 @@ export default class MyRideLayout extends React.Component {
     render() {
         return (
             <Grid container className='rides'>
-                <Grid item md={4}>
+                <Grid item md={5}>
                     <MyBookings />
                 </Grid>
-                <Grid item md={4}>
+                <Grid item md={5}>
                     <MyRides />
                 </Grid>
             </Grid>

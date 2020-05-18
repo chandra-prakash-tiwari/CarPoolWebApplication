@@ -18,6 +18,7 @@ function addBookings(booking, noofSeats) {
         travelDate: bookingSearch.date,
         bookingDate: bookingSearch.date,
         noofSeats: noofSeats,
+        time: booking.time,
         status:3
     }
     return fetch(`/api/booking/create?bookerId=${UserService.currentUser.id}`, {

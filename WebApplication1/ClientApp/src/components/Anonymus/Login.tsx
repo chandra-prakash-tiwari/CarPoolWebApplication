@@ -6,12 +6,13 @@ import Typography from '@material-ui/core/Typography';
 import '../../css/login-form.css';
 import UserService from '../../Services/UserService'
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import { InputAdornment, Tooltip } from '@material-ui/core';
+import { InputAdornment, Tooltip, ButtonBase } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { LoginRequest } from '../../Classes/DataClasses/User';
 import { LoginMeta } from '../../Classes/MetaClasses/User';
 import { WrongPassword, ServerError } from '../User/Response';
 import { Required } from '../../Classes/Constraint';
+import { Redirect } from 'react-router-dom';
 
 export class LoginProps{
     credentials: LoginRequest;
@@ -61,8 +62,9 @@ export default class Login extends React.Component<{}, LoginProps> {
 
         if (!isValid) {
             UserService.login(this.state.credentials).then((value) => {
-                if (value === 'ok')
+                if (value === 'ok') {
                     window.location.pathname = '/home';
+                }
                 else if (value === 'wrong') {
                     this.setState({ ...this.state, meta: { ...this.state.meta, wrongPasswordError: true } })
                 }
@@ -71,6 +73,10 @@ export default class Login extends React.Component<{}, LoginProps> {
                 }
             });
         }
+    }
+
+    onSignUpRedirect = () => {
+        this.setState({ ...this.state, meta: { ...this.state.meta, redirectSignUp:true } })
     }
 
     onChangePasswordType = () => {
@@ -88,7 +94,7 @@ export default class Login extends React.Component<{}, LoginProps> {
                     </div>
                     <form className='form'>
                         <div className='input-box'>
-                            <TextField variant="filled" className='input' value={this.state.credentials.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id " />
+                            <TextField variant="filled" className='input' value={this.state.credentials.userName} onChange={(event) => { this.onChanges(event); this.isValidUserName(event.target.value) }} name="userName" type='text' label="Enter Email or UserName Id " autoFocus />
                             <span style={{ display: this.state.meta.displaySpan }} className='helper'>{this.state.meta.userNameError}</span>
                         </div>
                         <div className='input-box'>
@@ -111,11 +117,13 @@ export default class Login extends React.Component<{}, LoginProps> {
                     <div className='footer'>
                         <p>Not a member yet ? </p>
                         <div className='link'>
-                            <Link href="/signup"> SIGN UP</Link>
+                            <div onClick={this.onSignUpRedirect} className='signup'> SIGN UP</div>
                             <div className='footer-underline'></div>
                         </div>
                     </div>
                 </div>
+                {this.state.meta.redirectSignUp ? <Redirect to='/signup' />:''}
+                {this.state.meta.redirectHome ? <Redirect to='/home' />:''}
             </Grid>
         )
     }

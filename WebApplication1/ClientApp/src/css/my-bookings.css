@@ -27,6 +27,12 @@
     font-weight:bolder;
 }
 
+.confirm-dialog .MuiDialog-paperFullScreen {
+    height: auto;
+    width: auto;
+    border-radius: 1rem;
+}
+
 .my-bookings .head-card .header {
     width: 12rem;
     height: 2.7rem;
@@ -42,6 +48,10 @@
     display:flex;
 }
 
+.bookings .head {
+    display: flex;
+}
+
 .my-bookings .all-bookings .no-bookings {
     font-size: 1.5rem;
     margin: 25% auto;
@@ -50,7 +60,6 @@
 .my-bookings .booking-line .cancel {
     border-radius: 2rem;
     background-color: #ffac19;
-    margin: 1rem 2rem 0;
     width: 6rem;
     height: 2.5rem;
     border: 0;

@@ -88,11 +88,10 @@ function deleteCar(id) {
         else if (response.status === 500) {
             return Promise.reject('serverError');
         }
-
         else
             return Promise.reject();
     }).catch(error => {
-        return error;
+        return ;
     })
 }
 
